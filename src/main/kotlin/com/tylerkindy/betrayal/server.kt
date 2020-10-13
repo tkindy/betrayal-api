@@ -16,7 +16,7 @@ import kotlinx.serialization.json.Json
 
 fun main() {
     val port = System.getenv("PORT")?.toInt() ?: 8080
-    embeddedServer(Netty, host = "127.0.0.1", port = port) {
+    embeddedServer(Netty, port = port) {
         install(ContentNegotiation) {
             json(
                 Json(DefaultJson) {
