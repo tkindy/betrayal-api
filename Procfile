@@ -1,2 +1,2 @@
 web: build/install/betrayal-api/bin/betrayal-api
-release: ./gradlew update
+release: ./gradlew --warn update
