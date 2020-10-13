@@ -19,15 +19,24 @@ repositories {
         url = uri("https://dl.bintray.com/kotlin/kotlinx")
     }
 }
+
+val ktorVersion = "1.4.1"
+
 dependencies {
     testImplementation(kotlin("test-junit5"))
-    implementation("io.ktor:ktor-server-netty:1.4.0")
+    implementation("io.ktor:ktor-server-netty:$ktorVersion")
+    implementation("io.ktor:ktor-serialization:$ktorVersion")
 }
+
+application {
+    mainClassName = "com.tylerkindy.betrayal.ServerKt"
+}
+
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
     dependsOn(tasks.withType<KtlintFormatTask>())
 }
 
-application {
-    mainClassName = "ServerKt"
+tasks.register("stage") {
+    dependsOn("installDist")
 }
