@@ -24,12 +24,17 @@ repositories {
 
 val ktorVersion = "1.4.1"
 val postgresVersion = "42.2.17"
+val exposedVersion = "0.25.1"
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
+    implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
+    implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
+    implementation("com.zaxxer:HikariCP:3.4.5")
 
     liquibaseRuntime("org.liquibase:liquibase-core:3.8.1")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")
