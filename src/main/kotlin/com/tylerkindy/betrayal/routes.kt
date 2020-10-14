@@ -5,16 +5,33 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Routing
+import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val gameIdCharacters = ('A'..'Z').toList()
 
 val gameRoutes: Routing.() -> Unit = {
     route("games") {
+        get("{id}") {
+            val id = call.parameters["id"]!!
+            val game = transaction {
+                Games.select { Games.id eq id }
+                    .map { Game(id = it[Games.id], name = it[Games.name]) }
+                    .firstOrNull()
+            }
+
+            if (game == null) {
+                call.respond(HttpStatusCode.NotFound)
+                return@get
+            }
+
+            call.respond(game)
+        }
         post {
             val gameRequest = call.runCatching { receiveOrNull<GameRequest>() }
                 .getOrNull()
