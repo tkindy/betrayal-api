@@ -30,6 +30,7 @@ dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
+    implementation("org.koin:koin-core:2.1.6")
 
     liquibaseRuntime("org.liquibase:liquibase-core:3.8.1")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")
