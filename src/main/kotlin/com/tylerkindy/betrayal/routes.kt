@@ -21,8 +21,8 @@ val gameRoutes: Routing.() -> Unit = {
             val id = call.parameters["id"]!!
             val game = transaction {
                 Games.select { Games.id eq id }
-                    .map { Game(id = it[Games.id], name = it[Games.name]) }
                     .firstOrNull()
+                    ?.let { Game(id = it[Games.id], name = it[Games.name]) }
             }
 
             if (game == null) {
