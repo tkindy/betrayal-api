@@ -1,4 +1,4 @@
-package com.tylerkindy.betrayal.data
+package com.tylerkindy.betrayal
 
 import org.jetbrains.exposed.sql.Table
 

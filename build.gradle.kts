@@ -3,6 +3,7 @@ import org.jlleitschuh.gradle.ktlint.KtlintFormatTask
 
 plugins {
     kotlin("jvm") version "1.4.10"
+    kotlin("plugin.serialization") version "1.4.10"
     application
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("com.github.ben-manes.versions") version "0.33.0"
@@ -25,6 +26,7 @@ repositories {
 val ktorVersion = "1.4.1"
 val postgresVersion = "42.2.17"
 val exposedVersion = "0.25.1"
+val log4jVersion = "2.13.3"
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
@@ -35,6 +37,9 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("com.zaxxer:HikariCP:3.4.5")
+    implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
+    implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
 
     liquibaseRuntime("org.liquibase:liquibase-core:3.8.1")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")

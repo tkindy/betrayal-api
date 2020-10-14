@@ -43,6 +43,7 @@ fun main() {
                 val randomString = "${(min until max).shuffled().last()}"
                 call.respond(mapOf("value" to randomString))
             }
+            gameRoutes()
         }
     }.start(wait = true)
 }
