@@ -13,41 +13,29 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import kotlinx.serialization.json.Json
-import org.koin.core.KoinComponent
-import org.koin.core.context.startKoin
 
 fun main() {
-    startKoin {
-        printLogger()
-    }
+    val port = System.getenv("PORT")?.toInt() ?: 8080
 
-    BetrayalServer().start()
-}
-
-class BetrayalServer : KoinComponent {
-    fun start() {
-        val port = System.getenv("PORT")?.toInt() ?: 8080
-
-        embeddedServer(Netty, port = port) {
-            install(ContentNegotiation) {
-                json(
-                    Json(DefaultJson) {
-                        prettyPrint = true
-                    }
-                )
-            }
-
-            routing {
-                get("/") {
-                    call.respondText("Hello, world!", ContentType.Text.Html)
+    embeddedServer(Netty, port = port) {
+        install(ContentNegotiation) {
+            json(
+                Json(DefaultJson) {
+                    prettyPrint = true
                 }
-                get("random/{min}/{max}") {
-                    val min = call.parameters["min"]?.toIntOrNull() ?: 0
-                    val max = call.parameters["max"]?.toIntOrNull() ?: 10
-                    val randomString = "${(min until max).shuffled().last()}"
-                    call.respond(mapOf("value" to randomString))
-                }
+            )
+        }
+
+        routing {
+            get("/") {
+                call.respondText("Hello, world!", ContentType.Text.Html)
             }
-        }.start(wait = true)
-    }
+            get("random/{min}/{max}") {
+                val min = call.parameters["min"]?.toIntOrNull() ?: 0
+                val max = call.parameters["max"]?.toIntOrNull() ?: 10
+                val randomString = "${(min until max).shuffled().last()}"
+                call.respond(mapOf("value" to randomString))
+            }
+        }
+    }.start(wait = true)
 }
