@@ -16,7 +16,8 @@ val gameIdCharacters = ('A'..'Z').toList()
 val gameRoutes: Routing.() -> Unit = {
     route("games") {
         post {
-            val gameRequest = call.receiveOrNull<GameRequest>()
+            val gameRequest = call.runCatching { receiveOrNull<GameRequest>() }
+                .getOrNull()
 
             if (gameRequest == null) {
                 call.respond(HttpStatusCode.BadRequest, "Missing 'name'")
@@ -35,7 +36,7 @@ val gameRoutes: Routing.() -> Unit = {
                 }
             }
 
-            call.respond(Game(gameId, gameRequest.name))
+            call.respond(Game(id = gameId, name = gameRequest.name))
         }
     }
 }
@@ -49,5 +50,6 @@ fun buildGameId(): String {
 
 @Serializable
 data class GameRequest(val name: String)
+
 @Serializable
 data class Game(val id: String, val name: String)
