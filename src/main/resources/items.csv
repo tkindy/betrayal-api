@@ -1,51 +1,51 @@
-name,subtype,flavorText,description,rollTable
-Chainsaw,WEAPON,"Vroom, baby, vroom.","If you make chainsaw noises, add 1 die to your Might roll. You can do this even when you defend.
+id,name,subtype,flavorText,description,rollTable
+0,Chainsaw,WEAPON,"Vroom, baby, vroom.","If you make chainsaw noises, add 1 die to your Might roll. You can do this even when you defend.
 You can’t use another weapon while you’re using this one.",
-Sacrificial Dagger,WEAPON,A twisted shard of iron covered in mysterious symbols and stained with blood.,"When making a Might attack with this weapon, you roll 3 extra dice (maximum of 8 dice), but you must make a Knowledge roll first:
+1,Sacrificial Dagger,WEAPON,A twisted shard of iron covered in mysterious symbols and stained with blood.,"When making a Might attack with this weapon, you roll 3 extra dice (maximum of 8 dice), but you must make a Knowledge roll first:
 <rollTable>
 You can’t use another weapon while you’re using this one.","6+  No effect.
 3-5  Lose 1 from a mental trait.
 0-2  The dagger twists in your hand! Take 2 dice of physical damage. You can’t attack this turn."
-Bell,,A brass bell that makes a resonant clang.,"Gain 1 Sanity now.
+2,Bell,,A brass bell that makes a resonant clang.,"Gain 1 Sanity now.
 Lose 1 Sanity if you lose the Bell.
 Once during your turn after the haunt is revealed, you can attempt a Sanity roll to use the Bell:
 <rollTable>","5+  Move any number of unimpeded heroes 1 space closer to you.
 0-4  The traitor can move any number of monsters 1 space closer to you. (If you are the traitor, this result has no effect.) If there is no traitor, all monsters move 1 space closer to you."
-Snake Oil,,The worn label has vague promises of renewed vigor. It doesn’t smell poisonous.,Discard this item to choose an explorer in your room (including yourself) and raise one of their physical traits and/or one of their mental traits to their starting values.,
-Lucky Stone,,"A smooth, ordinary-looking rock. You sense it will bring you good fortune.","After you attempt a roll of any kind, you can rub the stone once to reroll any number of those dice.
+3,Snake Oil,,The worn label has vague promises of renewed vigor. It doesn’t smell poisonous.,Discard this item to choose an explorer in your room (including yourself) and raise one of their physical traits and/or one of their mental traits to their starting values.,
+4,Lucky Stone,,"A smooth, ordinary-looking rock. You sense it will bring you good fortune.","After you attempt a roll of any kind, you can rub the stone once to reroll any number of those dice.
 Discard this item after you use it.",
-Locket,,A memento of love on a thin gold chain.,"Gain 1 Sanity.
+5,Locket,,A memento of love on a thin gold chain.,"Gain 1 Sanity.
 Any time (not just once per turn) you take mental damage, take 1 less point of damage.
 If you lose this card, lose 1 Sanity.",
-Boomstick,WEAPON,"Rusted and well-used, someone took a hacksaw to the barrel. At least they left two good shells.","When you draw this card, put 2 item tokens on this card. Discard  token to make a Speed 7 attack instead of a Might attack. When there are no tokens left, discard this item.
+6,Boomstick,WEAPON,"Rusted and well-used, someone took a hacksaw to the barrel. At least they left two good shells.","When you draw this card, put 2 item tokens on this card. Discard  token to make a Speed 7 attack instead of a Might attack. When there are no tokens left, discard this item.
 You can’t use another weapon while you’re using this one.",
-Healing Salve,,A sticky paste in a shallow bowl.,"You can apply the Healing Salve to yourself or to another living explorer in the same room. If that explorer’s Might or Speed is below its starting value, raise one or both traits to its starting value.
+7,Healing Salve,,A sticky paste in a shallow bowl.,"You can apply the Healing Salve to yourself or to another living explorer in the same room. If that explorer’s Might or Speed is below its starting value, raise one or both traits to its starting value.
 Discard this item after you use it.",
-Ceremonial Robe,,Not sure if it’s for the sacrificer or the sacrificee.,"Once per turn, when you make a Sanity or Knowledge roll, you may reroll any number of those dice.",
-Teapot,,"A porcelain teapot with a motif of delicate pink flowers. It grants wishes, at a price.","Once during your turn, when an explorer in your room (including yourself) takes physical damage, you may draw an item card. If you are or become the traitor, shuffle this item card into the item stack.",
-Revolver,WEAPON,"An old, potent-looking weapon.","You can use the Revolver to attack with Speed instead of Might. (Your opponent then defends with Speed and takes physical damage.)
+8,Ceremonial Robe,,Not sure if it’s for the sacrificer or the sacrificee.,"Once per turn, when you make a Sanity or Knowledge roll, you may reroll any number of those dice.",
+9,Teapot,,"A porcelain teapot with a motif of delicate pink flowers. It grants wishes, at a price.","Once during your turn, when an explorer in your room (including yourself) takes physical damage, you may draw an item card. If you are or become the traitor, shuffle this item card into the item stack.",
+10,Revolver,WEAPON,"An old, potent-looking weapon.","You can use the Revolver to attack with Speed instead of Might. (Your opponent then defends with Speed and takes physical damage.)
 Roll 1 additional die on your Speed attack roll (maximum of 8 dice).
 With the Revolver, you can attack anyone in the same room or within line of sight (through an uninterrupted straight line of doors). If you attack someone in another room and lose, you don’t take damage.
 You can’t use another weapon while you’re using this one.",
-Music Box,,"A hand-crafted antique.
+11,Music Box,,"A hand-crafted antique.
 It plays a haunting melody that gets stuck in your head.","Once per turn, you can open or close the Music Box.
 When the Music Box is open, any explorer or monster with a Sanity trait that enters of starts its turn in the same room must make a Sanity rool of 4+. If the roll fails, the explorer or monster ends its turn as it is mesmerized by the music.
 If an explorer or monster carrying the Music Box is mesmerized, it drops the Music Box. If the Music Box is open when it is dropped, it remains open.",
-Pickpocket’s Gloves,,Helping yourself has never seemed so easy.,"When you are in the same room as another explorer, you can discard this item to take any item that explorer is carrying.",
-Effigy,,"Handmade with care, the doll is dressed in a tiny copy of your own clothes.","While you have the Effigy, add 1 die to all trait rolls, except when you attack or defend.
+12,Pickpocket’s Gloves,,Helping yourself has never seemed so easy.,"When you are in the same room as another explorer, you can discard this item to take any item that explorer is carrying.",
+13,Effigy,,"Handmade with care, the doll is dressed in a tiny copy of your own clothes.","While you have the Effigy, add 1 die to all trait rolls, except when you attack or defend.
 If you ever lose or drop the Effigy, reduce each of your traits by 1 die.",
-Puzzle Box,,There must be a way to open it.,"Once during your turn, you can attempt a Knowledge roll to open the box:
+14,Puzzle Box,,There must be a way to open it.,"Once during your turn, you can attempt a Knowledge roll to open the box:
 <rollTable>","6+  You open the box. Draw 2 item cards and discard the Puzzle Box.
 0-5  You just can’t get it open."
-Candle,,"It makes the shadows move—at least, you hope it’s doing that.","If you draw an event card, roll 1 additional die (maximum of 8 dice) for that event’s trait rolls.
+15,Candle,,"It makes the shadows move—at least, you hope it’s doing that.","If you draw an event card, roll 1 additional die (maximum of 8 dice) for that event’s trait rolls.
 If you have the Bell, Book, and Candle, gain 2 in each trait. The first time you lose one of those 3 items later in the game, lose 2 from each trait.",
-Blueprint,,An old map of the house.,"When you roll for your movement or to enter, exit, or cross a room, you may choose your result. You may travel between rooms that have a dumbwaiter.",
-Blood Dagger,WEAPON,A nasty weapon. Needles and tubes extend from the handle… and plunge right into your veins.,"You roll 3 additional dice (maximum of 8 dice) when making a Might attack with this weapon. If you do, lose 1 Speed.
+16,Blueprint,,An old map of the house.,"When you roll for your movement or to enter, exit, or cross a room, you may choose your result. You may travel between rooms that have a dumbwaiter.",
+17,Blood Dagger,WEAPON,A nasty weapon. Needles and tubes extend from the handle… and plunge right into your veins.,"You roll 3 additional dice (maximum of 8 dice) when making a Might attack with this weapon. If you do, lose 1 Speed.
 You can’t use another weapon while you’re using this one.
 This item can’t be traded or dropped. If it’s stolen, take 2 dice of physical damage.",
-Amulet of the Ages,,"Ancient silver and inlaid gems, inscribed with blessings.","Gain 1 Might, 1 Speed, 1 Knowledge, and 1 Sanity now.
+18,Amulet of the Ages,,"Ancient silver and inlaid gems, inscribed with blessings.","Gain 1 Might, 1 Speed, 1 Knowledge, and 1 Sanity now.
 Lose 3 Might, 3 Speed, 3 Knowledge, and 3 Sanity if you lose the Amulet.",
-Bottle,,An opaque vial containing a black liquid.,"Once during your turn after the haunt is revealed, you can roll 3 dice and drink from the bottle:
+19,Bottle,,An opaque vial containing a black liquid.,"Once during your turn after the haunt is revealed, you can roll 3 dice and drink from the bottle:
 <rollTable>
 Discard this item after you use it.","6  Choose a room and put  your explorer there.
 5  Gain 2 Might and 2 Speed.
@@ -54,15 +54,15 @@ Discard this item after you use it.","6  Choose a room and put  your explorer th
 2  Lose 2 Knowledge and 2 Sanity.
 1  Lose 2 Might and 2 Speed.
 0  Lose 2 from each trait."
-Camcorder,,"Left by a previous explorer, there seems to be something on the tape. You should totally watch it.","When you draw this card, put a number of triangular Knowledge Roll tokens on this card equal to the number of explorers. An explorer in possession of the Camcorder can take a Knowledge roll token to gain 1 Knowledge. You may not gain a Knowledge roll token if you already have one. When there are no tokens left, discard this card and all those Knowledge roll tokens.",
-Idol,,Perhaps it’s chosen you for some greater purpose. Like human sacrifice.,"Once per turn, you can rub the Idol before making any trait, combat, or event roll to add 2 dice to the roll (to a maximum of 8 dice). Each time you do, lose 1 Sanity.",
-Smelling Salts,,"Whew, that’s a lungful.","If your or another living explorer’s Knowledge is below its starting value, and you’re in the same room, you can raise that trait to its starting value by using the Smelling Salts.
+20,Camcorder,,"Left by a previous explorer, there seems to be something on the tape. You should totally watch it.","When you draw this card, put a number of triangular Knowledge Roll tokens on this card equal to the number of explorers. An explorer in possession of the Camcorder can take a Knowledge roll token to gain 1 Knowledge. You may not gain a Knowledge roll token if you already have one. When there are no tokens left, discard this card and all those Knowledge roll tokens.",
+21,Idol,,Perhaps it’s chosen you for some greater purpose. Like human sacrifice.,"Once per turn, you can rub the Idol before making any trait, combat, or event roll to add 2 dice to the roll (to a maximum of 8 dice). Each time you do, lose 1 Sanity.",
+22,Smelling Salts,,"Whew, that’s a lungful.","If your or another living explorer’s Knowledge is below its starting value, and you’re in the same room, you can raise that trait to its starting value by using the Smelling Salts.
 Discard this item after you use it.",
-Device,,A jumble of wires and glass instruments used to measure thing that are not of this world.,"At the end of your turn, if you are in the same room as an opponent, gain 1 Knowledge.
+23,Device,,A jumble of wires and glass instruments used to measure thing that are not of this world.,"At the end of your turn, if you are in the same room as an opponent, gain 1 Knowledge.
 Discard this card to add 3 dice to your attack roll, but you may only use that attack to steal something.",
-Armor,,"It’s just prop armor from a Renaissance fair, but it’s still metal.","Any time (not just once per turn) you take physical damage, take 1 less point of damage.
+24,Armor,,"It’s just prop armor from a Renaissance fair, but it’s still metal.","Any time (not just once per turn) you take physical damage, take 1 less point of damage.
 This item can’t be stolen.",
-Dark Dice,,Are you feeling lucky?,"Once per turn, you can roll 3 dice:
+25,Dark Dice,,Are you feeling lucky?,"Once per turn, you can roll 3 dice:
 <rollTable>","6  Move to the location of any explorer not revealed as a traitor.
 5  Move one other explorer in the same room into an adjacent room.
 4  Gain 1 in a physical trait.
@@ -70,21 +70,21 @@ Dark Dice,,Are you feeling lucky?,"Once per turn, you can roll 3 dice:
 2  Gain 1 in a mental trait.
 1  Draw an event card.
 0  Reduce all of your traits to the lowest value above the skull symbol. Discard the Dark Dice."
-Chalk,,A simple drawing stick made of ground bone and wax.,You may roll Knowledge instead of Might on defense rolls.,
-Axe,WEAPON,Very sharp.,"You roll 1 additional die (maximum of 8 dice) when making a Might attack with this weapon.
+26,Chalk,,A simple drawing stick made of ground bone and wax.,You may roll Knowledge instead of Might on defense rolls.,
+27,Axe,WEAPON,Very sharp.,"You roll 1 additional die (maximum of 8 dice) when making a Might attack with this weapon.
 You can’t use another weapon while you’re using this one.",
-Rabbit’s Foot,,Not so lucky for the rabbit.,"Once during your turn, you can reroll 1 die. You must keep the second roll.",
-Medical Kit,,"A doctor’s bag, depleted in some critical resources.","Once during your turn, you can attempt a Knowledge roll to heal yourself or another explorer in the same room:
+28,Rabbit’s Foot,,Not so lucky for the rabbit.,"Once during your turn, you can reroll 1 die. You must keep the second roll.",
+29,Medical Kit,,"A doctor’s bag, depleted in some critical resources.","Once during your turn, you can attempt a Knowledge roll to heal yourself or another explorer in the same room:
 <rollTable>
 You can’t raise a trait above its starting value with the Medical Kit.","8+  Gain up to 3 poins of physical traits.
 6-7  Gain up to 2 points of physical traits.
 4-5  Gain 1 point in a physical trait.
 0-3  Nothing happens."
-Angel Feather,,A perfect feather fluttering in your hand.,"When you attempt a roll of any kind, you can call out a number from 0 to 8. Use that number instead of rolling the dice.
+30,Angel Feather,,A perfect feather fluttering in your hand.,"When you attempt a roll of any kind, you can call out a number from 0 to 8. Use that number instead of rolling the dice.
 Discard this item after you use it.",
-Adrenaline Shot,,A syringe containing a strange flourescent liquid.,"Before you attempt a trait roll, you can use this item to add 4 to the result of that roll.
+31,Adrenaline Shot,,A syringe containing a strange flourescent liquid.,"Before you attempt a trait roll, you can use this item to add 4 to the result of that roll.
 Discard this item after you use it.",
-Dynamite,,The fuse isn’t lit… yet.,"Instead of attacking, you can throw the Dynamite through a connecting door into an adjacent room. Each explorer and monster with Might and Speed traits in that room must attempt a Speed roll:
+32,Dynamite,,The fuse isn’t lit… yet.,"Instead of attacking, you can throw the Dynamite through a connecting door into an adjacent room. Each explorer and monster with Might and Speed traits in that room must attempt a Speed roll:
 <rollTable>
 Discard this item after you use it.","5+  Take no damage from Dynamite.
 0-4  Take 4 points of physical damage."
