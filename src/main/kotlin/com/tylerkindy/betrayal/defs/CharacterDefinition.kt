@@ -1,10 +1,13 @@
 package com.tylerkindy.betrayal.defs
 
 import com.tylerkindy.betrayal.CharacterColor
+import com.tylerkindy.betrayal.Trait
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
 
-data class TraitDefinition(val scale: List<Int>, val startingIndex: Int)
+data class TraitDefinition(val scale: List<Int>, val startingIndex: Int) {
+    fun toTrait(index: Int = startingIndex) = Trait(value = scale[index], index = index)
+}
 
 data class CharacterDefinition(
     val id: Short,

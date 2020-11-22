@@ -10,7 +10,7 @@ object Games : Table() {
 }
 
 object Players : Table() {
-    val id = integer("id")
+    val id = integer("id").autoIncrement(idSeqName = "players_id_seq")
     val gameId = varchar("gameId", 6)
     val characterId = short("characterId")
     val speedIndex = short("speedIndex")

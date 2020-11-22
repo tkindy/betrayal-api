@@ -9,7 +9,7 @@ enum class CharacterColor {
 }
 
 @Serializable
-data class Trait(val value: Int, val index: Short)
+data class Trait(val value: Int, val index: Int)
 
 @Serializable
 data class Player(
@@ -23,7 +23,7 @@ data class Player(
 )
 
 @Serializable
-data class GameRequest(val name: String)
+data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
 data class Game(val id: String, val name: String, val players: List<Player>)
