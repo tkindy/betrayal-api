@@ -2,9 +2,9 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
-import com.tylerkindy.betrayal.Games
 import com.tylerkindy.betrayal.Player
-import com.tylerkindy.betrayal.Players
+import com.tylerkindy.betrayal.db.Games
+import com.tylerkindy.betrayal.db.Players
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
 import io.ktor.application.call
