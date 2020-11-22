@@ -5,6 +5,7 @@ import com.tylerkindy.betrayal.GameRequest
 import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.db.Games
 import com.tylerkindy.betrayal.db.Players
+import com.tylerkindy.betrayal.db.getPlayers
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
 import io.ktor.application.call
@@ -26,24 +27,7 @@ val gameRoutes: Routing.() -> Unit = {
             val game = transaction {
                 val gameRow = Games.select { Games.id eq id }
                     .firstOrNull() ?: return@transaction null
-
-                val players =
-                    Players.select { Players.gameId eq id }
-                        .map {
-                            val characterId = it[Players.characterId]
-                            val characterDef = characters[characterId]
-                                ?: error("No character defined with ID $characterId")
-
-                            Player(
-                                id = it[Players.id],
-                                characterName = characterDef.name,
-                                color = characterDef.color,
-                                speed = characterDef.speed.toTrait(it[Players.speedIndex].toInt()),
-                                might = characterDef.might.toTrait(it[Players.mightIndex].toInt()),
-                                sanity = characterDef.sanity.toTrait(it[Players.sanityIndex].toInt()),
-                                knowledge = characterDef.knowledge.toTrait(it[Players.knowledgeIndex].toInt())
-                            )
-                        }
+                val players = getPlayers(id)
 
                 Game(id = gameRow[Games.id], name = gameRow[Games.name], players = players)
             } ?: return@get call.respond(HttpStatusCode.NotFound)
