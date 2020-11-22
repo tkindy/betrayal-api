@@ -28,6 +28,7 @@ val characters = CSVFormat.DEFAULT.withFirstRecordAsHeader()
             knowledgeScale = parseTraitScale(it["knowledge"])
         )
     }
+    .associateBy { it.id }
 
 private fun parseTraitScale(value: String): List<Int> =
     value.split(",").map { it.toInt() }
