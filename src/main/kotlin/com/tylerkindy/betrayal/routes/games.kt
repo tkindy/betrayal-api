@@ -1,5 +1,7 @@
 package com.tylerkindy.betrayal.routes
 
+import com.tylerkindy.betrayal.Game
+import com.tylerkindy.betrayal.GameRequest
 import com.tylerkindy.betrayal.Games
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -9,7 +11,6 @@ import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
-import kotlinx.serialization.Serializable
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -65,9 +66,3 @@ fun buildGameId(): String {
         .fold(StringBuilder()) { builder, char -> builder.append(char) }
         .toString()
 }
-
-@Serializable
-data class GameRequest(val name: String)
-
-@Serializable
-data class Game(val id: String, val name: String)
