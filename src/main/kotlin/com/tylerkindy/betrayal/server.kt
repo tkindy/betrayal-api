@@ -1,5 +1,6 @@
 package com.tylerkindy.betrayal
 
+import com.tylerkindy.betrayal.routes.gameRoutes
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.install
 import io.ktor.features.ContentNegotiation

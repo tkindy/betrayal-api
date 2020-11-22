@@ -1,5 +1,6 @@
-package com.tylerkindy.betrayal
+package com.tylerkindy.betrayal.routes
 
+import com.tylerkindy.betrayal.Games
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveOrNull
