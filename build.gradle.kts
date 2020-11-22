@@ -27,9 +27,9 @@ val ktorVersion = "1.4.2"
 val postgresVersion = "42.2.18"
 val exposedVersion = "0.28.1"
 val log4jVersion = "2.14.0"
+val kotestVersion = "4.3.1"
 
 dependencies {
-    testImplementation(kotlin("test-junit5"))
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("org.postgresql:postgresql:$postgresVersion")
@@ -45,6 +45,9 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core:4.2.0")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")
     liquibaseRuntime("javax.xml.bind:jaxb-api:2.3.1")
+
+    testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
+    testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
 }
 
 application {
@@ -69,4 +72,8 @@ tasks.withType<KotlinCompile> {
 
 tasks.register("stage") {
     dependsOn("installDist")
+}
+
+tasks.withType<Test> {
+    useJUnitPlatform()
 }
