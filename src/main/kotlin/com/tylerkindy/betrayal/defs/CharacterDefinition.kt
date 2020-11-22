@@ -1,11 +1,11 @@
 package com.tylerkindy.betrayal.defs
 
 import com.tylerkindy.betrayal.CharacterColor
-import java.io.InputStreamReader
 import org.apache.commons.csv.CSVFormat
+import java.io.InputStreamReader
 
 data class CharacterDefinition(
-    val id: Int,
+    val id: Short,
     val name: String,
     val color: CharacterColor,
     val speedScale: List<Int>,
@@ -19,7 +19,7 @@ val characters = CSVFormat.DEFAULT.withFirstRecordAsHeader()
     .parse(InputStreamReader(fileStream))
     .map {
         CharacterDefinition(
-            id = it["id"].toInt(),
+            id = it["id"].toShort(),
             name = it["name"],
             color = CharacterColor.valueOf(it["color"]),
             speedScale = parseTraitScale(it["speed"]),
