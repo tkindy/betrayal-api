@@ -38,7 +38,7 @@ CREATE TABLE "stacks" (
     "id" SERIAL PRIMARY KEY,
     "gameId" VARCHAR(6) NOT NULL,
     "stackTypeId" SMALLINT NOT NULL,
-    "curIndex" SMALLINT NOT NULL
+    "curIndex" SMALLINT
 );
 
 CREATE UNIQUE INDEX ON "stacks" ("gameId", "stackTypeId");

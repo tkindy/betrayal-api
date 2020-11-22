@@ -36,7 +36,7 @@ object Stacks : Table() {
     val id = integer("id").autoIncrement(idSeqName = "stacks_id_seq")
     val gameId = varchar("gameId", 6)
     val stackTypeId = short("stackTypeId")
-    val curIndex = short("curIndex")
+    val curIndex = short("curIndex").nullable()
 }
 
 object StackContents : Table() {
