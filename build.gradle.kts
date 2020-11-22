@@ -2,11 +2,11 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.KtlintFormatTask
 
 plugins {
-    kotlin("jvm") version "1.4.10"
-    kotlin("plugin.serialization") version "1.4.10"
+    kotlin("jvm") version "1.4.20"
+    kotlin("plugin.serialization") version "1.4.20"
     application
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
-    id("com.github.ben-manes.versions") version "0.33.0"
+    id("com.github.ben-manes.versions") version "0.36.0"
     id("org.liquibase.gradle") version "2.0.4"
 }
 group = "com.tylerkindy"
@@ -23,10 +23,10 @@ repositories {
     }
 }
 
-val ktorVersion = "1.4.1"
-val postgresVersion = "42.2.17"
-val exposedVersion = "0.25.1"
-val log4jVersion = "2.13.3"
+val ktorVersion = "1.4.2"
+val postgresVersion = "42.2.18"
+val exposedVersion = "0.28.1"
+val log4jVersion = "2.14.0"
 
 dependencies {
     testImplementation(kotlin("test-junit5"))
@@ -41,7 +41,7 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
     implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
 
-    liquibaseRuntime("org.liquibase:liquibase-core:3.8.1")
+    liquibaseRuntime("org.liquibase:liquibase-core:4.2.0")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")
     liquibaseRuntime("javax.xml.bind:jaxb-api:2.3.1")
 }
