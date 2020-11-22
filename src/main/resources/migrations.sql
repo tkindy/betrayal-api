@@ -32,3 +32,22 @@ CREATE TABLE "rooms" (
 );
 
 CREATE INDEX ON "rooms" ("gameId");
+
+--changeset tkindy:4
+CREATE TABLE "stacks" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "stackTypeId" SMALLINT NOT NULL,
+    "curIndex" SMALLINT NOT NULL
+);
+
+CREATE UNIQUE INDEX ON "stacks" ("gameId", "stackTypeId");
+
+CREATE TABLE "stackContents" (
+    "id" SERIAL PRIMARY KEY,
+    "stackId" INT NOT NULL,
+    "index": SMALLINT NOT NULL,
+    "contentId" SMALLINT NOT NULL
+);
+
+CREATE UNIQUE INDEX ON "stackContents" ("stackId", "index")
