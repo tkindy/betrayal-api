@@ -4,17 +4,19 @@ import com.tylerkindy.betrayal.CharacterColor
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
 
+data class TraitDefinition(val scale: List<Int>, val startingIndex: Int)
+
 data class CharacterDefinition(
     val id: Short,
     val name: String,
     val color: CharacterColor,
-    val speedScale: List<Int>,
-    val mightScale: List<Int>,
-    val sanityScale: List<Int>,
-    val knowledgeScale: List<Int>
+    val speed: TraitDefinition,
+    val might: TraitDefinition,
+    val sanity: TraitDefinition,
+    val knowledge: TraitDefinition
 )
 
-private val fileStream = CharacterDefinition::class.java.getResourceAsStream("characters.csv")
+private val fileStream = CharacterDefinition::class.java.getResourceAsStream("/characters.csv")
 val characters = CSVFormat.DEFAULT.withFirstRecordAsHeader()
     .parse(InputStreamReader(fileStream))
     .map {
@@ -22,13 +24,35 @@ val characters = CSVFormat.DEFAULT.withFirstRecordAsHeader()
             id = it["id"].toShort(),
             name = it["name"],
             color = CharacterColor.valueOf(it["color"]),
-            speedScale = parseTraitScale(it["speed"]),
-            mightScale = parseTraitScale(it["might"]),
-            sanityScale = parseTraitScale(it["sanity"]),
-            knowledgeScale = parseTraitScale(it["knowledge"])
+            speed = parseTraitDefinition(it["speed"]),
+            might = parseTraitDefinition(it["might"]),
+            sanity = parseTraitDefinition(it["sanity"]),
+            knowledge = parseTraitDefinition(it["knowledge"])
         )
     }
     .associateBy { it.id }
 
-private fun parseTraitScale(value: String): List<Int> =
-    value.split(",").map { it.toInt() }
+internal fun parseTraitDefinition(value: String): TraitDefinition {
+    data class Acc(val scale: List<Int> = emptyList(), val startingIndex: Int? = null)
+
+    return value.split(",")
+        .foldIndexed(Acc()) { i, acc, scaleItem ->
+            var startingIndex = acc.startingIndex
+
+            if (scaleItem.endsWith("*")) {
+                if (startingIndex != null) {
+                    throw IllegalArgumentException("Multiple starting values in $value")
+                }
+                startingIndex = i
+            }
+
+            Acc(acc.scale + scaleItem.substringBefore("*").toInt(), startingIndex)
+        }
+        .let {
+            TraitDefinition(
+                scale = it.scale,
+                startingIndex = it.startingIndex
+                    ?: throw IllegalArgumentException("No starting value set in $value")
+            )
+        }
+}

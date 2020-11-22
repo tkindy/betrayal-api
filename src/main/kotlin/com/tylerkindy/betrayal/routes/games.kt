@@ -6,6 +6,7 @@ import com.tylerkindy.betrayal.Games
 import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.Players
 import com.tylerkindy.betrayal.Trait
+import com.tylerkindy.betrayal.defs.TraitDefinition
 import com.tylerkindy.betrayal.defs.characters
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -40,10 +41,10 @@ val gameRoutes: Routing.() -> Unit = {
                         id = it[Players.id],
                         characterName = characterDef.name,
                         color = characterDef.color,
-                        speed = buildTrait(it[Players.speedIndex], characterDef.speedScale),
-                        might = buildTrait(it[Players.mightIndex], characterDef.mightScale),
-                        sanity = buildTrait(it[Players.sanityIndex], characterDef.sanityScale),
-                        knowledge = buildTrait(it[Players.knowledgeIndex], characterDef.knowledgeScale)
+                        speed = buildTrait(it[Players.speedIndex], characterDef.speed),
+                        might = buildTrait(it[Players.mightIndex], characterDef.might),
+                        sanity = buildTrait(it[Players.sanityIndex], characterDef.sanity),
+                        knowledge = buildTrait(it[Players.knowledgeIndex], characterDef.knowledge)
                     )
                 }
 
@@ -81,5 +82,5 @@ private fun buildGameId(): String {
         .toString()
 }
 
-private fun buildTrait(index: Short, scale: List<Int>): Trait =
-    Trait(value = scale[index.toInt()], index = index)
+private fun buildTrait(index: Short, traitDef: TraitDefinition): Trait =
+    Trait(value = traitDef.scale[index.toInt()], index = index)
