@@ -32,9 +32,9 @@ val gameRoutes: Routing.() -> Unit = {
 
             call.respond(game)
         }
+
         post {
-            val gameRequest = call.runCatching { receiveOrNull<GameRequest>() }
-                .getOrNull()
+            val gameRequest = call.receiveOrNull<GameRequest>()
 
             if (gameRequest == null) {
                 call.respond(HttpStatusCode.BadRequest, "Missing 'name'")
