@@ -1,5 +1,6 @@
 package com.tylerkindy.betrayal.db
 
+import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.defs.characters
 import org.jetbrains.exposed.sql.select
@@ -15,6 +16,7 @@ fun getPlayers(gameId: String): List<Player> {
                 id = it[Players.id],
                 characterName = characterDef.name,
                 color = characterDef.color,
+                loc = GridLoc(it[Players.gridX], it[Players.gridY]),
                 speed = characterDef.speed.toTrait(it[Players.speedIndex].toInt()),
                 might = characterDef.might.toTrait(it[Players.mightIndex].toInt()),
                 sanity = characterDef.sanity.toTrait(it[Players.sanityIndex].toInt()),

@@ -2,6 +2,7 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
+import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.db.Games
 import com.tylerkindy.betrayal.db.Players
@@ -59,6 +60,8 @@ val gameRoutes: Routing.() -> Unit = {
                     val playerId = Players.insert {
                         it[this.gameId] = gameId
                         it[characterId] = character.id
+                        it[gridX] = 0
+                        it[gridY] = 0
                         it[speedIndex] = character.speed.startingIndex.toShort()
                         it[mightIndex] = character.might.startingIndex.toShort()
                         it[sanityIndex] = character.might.startingIndex.toShort()
@@ -69,6 +72,7 @@ val gameRoutes: Routing.() -> Unit = {
                         id = playerId,
                         characterName = character.name,
                         color = character.color,
+                        loc = GridLoc(0, 0),
                         speed = character.speed.toTrait(),
                         might = character.might.toTrait(),
                         sanity = character.sanity.toTrait(),

@@ -12,10 +12,14 @@ enum class CharacterColor {
 data class Trait(val value: Int, val index: Int)
 
 @Serializable
+data class GridLoc(val gridX: Int, val gridY: Int)
+
+@Serializable
 data class Player(
     val id: Int,
     val characterName: String,
     val color: CharacterColor,
+    val loc: GridLoc,
     val speed: Trait,
     val might: Trait,
     val sanity: Trait,
