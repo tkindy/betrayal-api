@@ -3,6 +3,7 @@ package com.tylerkindy.betrayal
 import com.tylerkindy.betrayal.routes.gameRoutes
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.install
+import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.routing.routing
@@ -29,6 +30,10 @@ fun main() {
                     prettyPrint = true
                 }
             )
+        }
+        install(CORS) {
+            header("content-type")
+            host("localhost:3000")
         }
         install(CallLogging) {
             level = Level.INFO
