@@ -32,6 +32,7 @@ val rooms = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
             barrier = parseBarrier(it["barrier"], it["barrierFeatures"])
         )
     }
+    .associateBy { it.id }
 
 fun parseBarrier(direction: String?, features: String?): Barrier? {
     if (direction == null) {
