@@ -34,7 +34,7 @@ enum class Floor(val defEncoding: Char) {
     ROOF('R');
 
     companion object {
-        private val index = Floor.values().associateBy { it.defEncoding }
+        private val index = values().associateBy { it.defEncoding }
 
         fun parse(defEncoding: Char) = index[defEncoding]
             ?: throw IllegalArgumentException("No floor for encoding '$defEncoding'")
@@ -49,7 +49,7 @@ enum class Direction(val defEncoding: Char) {
     WEST('W');
 
     companion object {
-        private val index = Direction.values().associateBy { it.defEncoding }
+        private val index = values().associateBy { it.defEncoding }
 
         fun parse(defEncoding: Char) = index[defEncoding]
             ?: throw IllegalArgumentException("No direction for encoding '$defEncoding'")
@@ -61,10 +61,11 @@ enum class Feature(val defEncoding: Char) {
     EVENT('E'),
     ITEM('I'),
     OMEN('O'),
+    ANY('A'),
     DUMBWAITER('D');
 
     companion object {
-        private val index = Feature.values().associateBy { it.defEncoding }
+        private val index = values().associateBy { it.defEncoding }
 
         fun parse(defEncoding: Char) = index[defEncoding]
             ?: throw IllegalArgumentException("No feature for encoding '$defEncoding'")
@@ -77,7 +78,7 @@ enum class BarrierDirection(val defEncoding: Char) {
     HORIZONTAL('H');
 
     companion object {
-        private val index = BarrierDirection.values().associateBy { it.defEncoding }
+        private val index = values().associateBy { it.defEncoding }
 
         fun parse(defEncoding: Char) = index[defEncoding]
             ?: throw IllegalArgumentException("No barrier direction for encoding '$defEncoding'")
