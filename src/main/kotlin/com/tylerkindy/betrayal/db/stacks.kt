@@ -45,14 +45,14 @@ fun draw(gameId: String, stackType: StackType): Short {
         .orderBy(StackContents.index, SortOrder.ASC)
         .map { it[StackContents.index] }
 
-    val nextIndex = remainingIndices.firstOrNull { it > content.index } ?:
-            remainingIndices.firstOrNull()
+    val nextIndex = remainingIndices.firstOrNull { it > content.index }
+        ?: remainingIndices.firstOrNull()
 
-     Stacks.update(where = { Stacks.id eq stack.id }) {
-         it[curIndex] = nextIndex
-     }
+    Stacks.update(where = { Stacks.id eq stack.id }) {
+        it[curIndex] = nextIndex
+    }
 
-    return content.contentId;
+    return content.contentId
 }
 
 class StackEmptyException : IllegalStateException()
