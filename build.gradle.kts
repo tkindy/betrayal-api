@@ -26,7 +26,6 @@ repositories {
 val ktorVersion = "1.4.2"
 val postgresVersion = "42.2.18"
 val exposedVersion = "0.28.1"
-val log4jVersion = "2.14.0"
 val kotestVersion = "4.3.1"
 
 dependencies {
@@ -37,9 +36,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
     implementation("com.zaxxer:HikariCP:3.4.5")
-    implementation("org.apache.logging.log4j:log4j-api:$log4jVersion")
-    implementation("org.apache.logging.log4j:log4j-core:$log4jVersion")
-    implementation("org.apache.logging.log4j:log4j-slf4j-impl:$log4jVersion")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("org.apache.commons:commons-csv:1.8")
 
     liquibaseRuntime("org.liquibase:liquibase-core:4.2.0")
