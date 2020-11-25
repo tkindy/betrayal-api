@@ -23,17 +23,19 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 val gameRoutes: Routing.() -> Unit = {
     route("games") {
-        get("{id}") {
-            val id = call.parameters["id"]!!
-            val game = transaction {
-                val gameRow = Games.select { Games.id eq id }
-                    .firstOrNull() ?: return@transaction null
-                val players = getPlayers(id)
+        route("{gameId}") {
+            get {
+                val gameId = call.parameters["gameId"]!!
+                val game = transaction {
+                    val gameRow = Games.select { Games.id eq gameId }
+                        .firstOrNull() ?: return@transaction null
+                    val players = getPlayers(gameId)
 
-                Game(id = gameRow[Games.id], name = gameRow[Games.name], players = players)
-            } ?: return@get call.respond(HttpStatusCode.NotFound)
+                    Game(id = gameRow[Games.id], name = gameRow[Games.name], players = players)
+                } ?: return@get call.respond(HttpStatusCode.NotFound)
 
-            call.respond(game)
+                call.respond(game)
+            }
         }
 
         post {
