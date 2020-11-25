@@ -27,6 +27,53 @@ data class Player(
 )
 
 @Serializable
+enum class Floor(val defEncoding: Char) {
+    BASEMENT('B'),
+    GROUND('G'),
+    UPPER('U'),
+    ROOF('R')
+}
+
+@Serializable
+enum class Direction(val defEncoding: Char) {
+    NORTH('N'),
+    SOUTH('S'),
+    EAST('E'),
+    WEST('W')
+}
+
+@Serializable
+enum class Feature(val defEncoding: Char) {
+    EVENT('E'),
+    ITEM('I'),
+    OMEN('O'),
+    DUMBWAITER('D')
+}
+
+@Serializable
+enum class BarrierDirection(val defEncoding: Char) {
+    VERTICAL('V'),
+    HORIZONTAL('H')
+}
+
+@Serializable
+data class Barrier(
+    val direction: BarrierDirection,
+    val features: List<Feature>
+)
+
+@Serializable
+data class Room(
+    val id: Int,
+    val name: String,
+    val floors: Set<Floor>,
+    val doors: Set<Direction>,
+    val features: List<Feature>,
+    val description: String?,
+    val barrier: Barrier?
+)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
