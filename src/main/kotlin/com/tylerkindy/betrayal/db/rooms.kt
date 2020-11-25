@@ -21,8 +21,9 @@ fun getRooms(gameId: String): List<Room> {
                     id = it[Rooms.id],
                     name = roomDef.name,
                     floors = roomDef.floors,
-                    doors = rotateDoors(roomDef.doors, it[Rooms.rotation]),
+                    doorDirections = rotateDoors(roomDef.doors, it[Rooms.rotation]),
                     features = roomDef.features,
+                    loc = GridLoc(gridX = it[Rooms.gridX], gridY = it[Rooms.gridY]),
                     description = roomDef.description,
                     barrier = roomDef.barrier
                 )

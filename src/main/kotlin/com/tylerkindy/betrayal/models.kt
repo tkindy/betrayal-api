@@ -96,8 +96,9 @@ data class Room(
     val id: Int,
     val name: String,
     val floors: Set<Floor>,
-    val doors: Set<Direction>,
+    val doorDirections: Set<Direction>,
     val features: List<Feature>,
+    val loc: GridLoc,
     val description: String?,
     val barrier: Barrier?
 )
