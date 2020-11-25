@@ -1,8 +1,11 @@
 package com.tylerkindy.betrayal.db
 
 import com.tylerkindy.betrayal.Direction
+import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Room
+import com.tylerkindy.betrayal.defs.RoomDefinition
 import com.tylerkindy.betrayal.defs.rooms
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -24,6 +27,36 @@ fun getRooms(gameId: String): List<Room> {
                     barrier = roomDef.barrier
                 )
             }
+    }
+}
+
+private data class StartingRoom(
+    val def: RoomDefinition,
+    val loc: GridLoc
+)
+private val startingRooms = listOf(
+    // Entrance Hall
+    StartingRoom(rooms[0]!!, GridLoc(4, 3)),
+    // Foyer
+    StartingRoom(rooms[1]!!, GridLoc(3, 3)),
+    // Grand Staircase
+    StartingRoom(rooms[2]!!, GridLoc(2, 3)),
+    // Upper Landing
+    StartingRoom(rooms[8]!!, GridLoc(-8, -8)),
+    // Roof Landing
+    StartingRoom(rooms[10]!!, GridLoc(10, -8)),
+    // Basement Landing
+    StartingRoom(rooms[33]!!, GridLoc(2, 12))
+)
+fun insertStartingRooms(gameId: String) {
+    transaction {
+        Rooms.batchInsert(startingRooms) { (def, loc) ->
+            this[Rooms.gameId] = gameId
+            this[Rooms.roomDefId] = def.id
+            this[Rooms.gridX] = loc.gridX
+            this[Rooms.gridY] = loc.gridY
+            this[Rooms.rotation] = 0
+        }
     }
 }
 

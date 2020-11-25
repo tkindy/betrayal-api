@@ -7,6 +7,7 @@ import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.db.Games
 import com.tylerkindy.betrayal.db.Players
 import com.tylerkindy.betrayal.db.getPlayers
+import com.tylerkindy.betrayal.db.insertStartingRooms
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
 import io.ktor.application.call
@@ -53,12 +54,14 @@ val gameRoutes: Routing.() -> Unit = {
             val gameId = buildGameId()
             val characters = getRandomCharacters(gameRequest.numPlayers)
 
-            val players = transaction {
+            transaction {
                 Games.insert {
                     it[id] = gameId
                     it[name] = gameRequest.name
                 }
+            }
 
+            val players = transaction {
                 characters.map { character ->
                     val playerId = Players.insert {
                         it[this.gameId] = gameId
@@ -83,6 +86,8 @@ val gameRoutes: Routing.() -> Unit = {
                     )
                 }
             }
+
+            insertStartingRooms(gameId)
 
             call.respond(Game(id = gameId, name = gameRequest.name, players = players))
         }
