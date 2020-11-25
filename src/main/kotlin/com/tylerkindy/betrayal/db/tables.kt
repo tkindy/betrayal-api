@@ -29,4 +29,5 @@ object Rooms : Table() {
     val roomDefId = short("roomDefId")
     val gridX = integer("gridX")
     val gridY = integer("gridY")
+    val rotation = short("rotation")
 }

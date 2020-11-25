@@ -27,7 +27,8 @@ CREATE TABLE "rooms" (
     "gameId" VARCHAR(6) NOT NULL,
     "roomDefId" SMALLINT NOT NULL,
     "gridX" INT NOT NULL,
-    "gridY" INT NOT NULL
+    "gridY" INT NOT NULL,
+    "rotation" SMALLINT NOT NULL
 );
 
 CREATE INDEX ON "rooms" ("gameId");
