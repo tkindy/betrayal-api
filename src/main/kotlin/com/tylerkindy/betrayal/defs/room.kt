@@ -27,7 +27,7 @@ val rooms = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
             name = it["name"],
             floors = it["floors"].map(Floor.Companion::parse).toSet(),
             doors = it["doors"].map(Direction.Companion::parse).toSet(),
-            features = it["features"].map(Feature.Companion::parse),
+            features = it["features"]?.map(Feature.Companion::parse) ?: emptyList(),
             description = it["description"],
             barrier = parseBarrier(it["barrier"], it["barrierFeatures"])
         )
