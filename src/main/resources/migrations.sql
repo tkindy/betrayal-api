@@ -20,3 +20,14 @@ CREATE TABLE "players" (
 );
 
 CREATE INDEX ON "players" ("gameId");
+
+--changeset tkindy:3
+CREATE TABLE "rooms" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "roomDefId" SMALLINT NOT NULL,
+    "gridX" INT NOT NULL,
+    "gridY" INT NOT NULL
+);
+
+CREATE INDEX ON "rooms" ("gameId");
