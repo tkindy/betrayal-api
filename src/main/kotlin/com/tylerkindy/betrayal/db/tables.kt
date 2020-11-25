@@ -22,3 +22,12 @@ object Players : Table() {
 
     override val primaryKey = PrimaryKey(id)
 }
+
+object Rooms : Table() {
+    val id = integer("id").autoIncrement(idSeqName = "rooms_id_seq")
+    val gameId = varchar("gameId", 6)
+    val roomDefId = short("roomDefId")
+    val gridX = integer("gridX")
+    val gridY = integer("gridY")
+    val rotation = short("rotation")
+}

@@ -4,7 +4,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.StringSpec
 import io.kotest.matchers.shouldBe
 
-class CharacterDefinitionKtTest : StringSpec({
+class CharacterKtTest : StringSpec({
     "parseTraitDefinition works" {
         parseTraitDefinition("2,2,3,5*,5,5,6,6") shouldBe TraitDefinition(
             scale = listOf(2, 2, 3, 5, 5, 5, 6, 6),

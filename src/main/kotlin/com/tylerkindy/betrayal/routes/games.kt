@@ -7,6 +7,7 @@ import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.db.Games
 import com.tylerkindy.betrayal.db.Players
 import com.tylerkindy.betrayal.db.getPlayers
+import com.tylerkindy.betrayal.db.insertStartingRooms
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
 import io.ktor.application.call
@@ -23,17 +24,20 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 val gameRoutes: Routing.() -> Unit = {
     route("games") {
-        get("{id}") {
-            val id = call.parameters["id"]!!
-            val game = transaction {
-                val gameRow = Games.select { Games.id eq id }
-                    .firstOrNull() ?: return@transaction null
-                val players = getPlayers(id)
+        route("{gameId}") {
+            get {
+                val gameId = call.parameters["gameId"]!!
+                val game = transaction {
+                    val gameRow = Games.select { Games.id eq gameId }
+                        .firstOrNull() ?: return@transaction null
+                    val players = getPlayers(gameId)
 
-                Game(id = gameRow[Games.id], name = gameRow[Games.name], players = players)
-            } ?: return@get call.respond(HttpStatusCode.NotFound)
+                    Game(id = gameRow[Games.id], name = gameRow[Games.name], players = players)
+                } ?: return@get call.respond(HttpStatusCode.NotFound)
 
-            call.respond(game)
+                call.respond(game)
+            }
+            roomRoutes()
         }
 
         post {
@@ -50,12 +54,14 @@ val gameRoutes: Routing.() -> Unit = {
             val gameId = buildGameId()
             val characters = getRandomCharacters(gameRequest.numPlayers)
 
-            val players = transaction {
+            transaction {
                 Games.insert {
                     it[id] = gameId
                     it[name] = gameRequest.name
                 }
+            }
 
+            val players = transaction {
                 characters.map { character ->
                     val playerId = Players.insert {
                         it[this.gameId] = gameId
@@ -80,6 +86,8 @@ val gameRoutes: Routing.() -> Unit = {
                     )
                 }
             }
+
+            insertStartingRooms(gameId)
 
             call.respond(Game(id = gameId, name = gameRequest.name, players = players))
         }
