@@ -34,6 +34,7 @@ val gameRoutes: Routing.() -> Unit = {
             }
             roomRoutes()
             playerRoutes()
+            roomStackRoutes()
         }
 
         post {
