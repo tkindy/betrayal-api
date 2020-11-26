@@ -41,7 +41,7 @@ CREATE TABLE "roomStacks" (
     "flipped" BOOLEAN
 );
 
-CREATE UNIQUE INDEX "roomStacks" ("gameId");
+CREATE UNIQUE INDEX ON "roomStacks" ("gameId");
 
 CREATE TABLE "roomStackContents" (
     "id" SERIAL PRIMARY KEY,
