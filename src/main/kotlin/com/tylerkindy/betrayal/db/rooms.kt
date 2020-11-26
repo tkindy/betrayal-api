@@ -5,29 +5,33 @@ import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Room
 import com.tylerkindy.betrayal.defs.RoomDefinition
 import com.tylerkindy.betrayal.defs.rooms
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
+fun ResultRow.toRoom(): Room {
+    val roomDefId = this[Rooms.roomDefId]
+    val roomDef = rooms[roomDefId]
+        ?: error("No room defined with ID $roomDefId")
+
+    return Room(
+        id = this[Rooms.id],
+        name = roomDef.name,
+        floors = roomDef.floors,
+        doorDirections = rotateDoors(roomDef.doors, this[Rooms.rotation]),
+        features = roomDef.features,
+        loc = GridLoc(gridX = this[Rooms.gridX], gridY = this[Rooms.gridY]),
+        description = roomDef.description,
+        barrier = roomDef.barrier
+    )
+}
+
 fun getRooms(gameId: String): List<Room> {
     return transaction {
         Rooms.select { Rooms.gameId eq gameId }
-            .map {
-                val roomDefId = it[Rooms.roomDefId]
-                val roomDef = rooms[roomDefId]
-                    ?: error("No room defined with ID $roomDefId")
-
-                Room(
-                    id = it[Rooms.id],
-                    name = roomDef.name,
-                    floors = roomDef.floors,
-                    doorDirections = rotateDoors(roomDef.doors, it[Rooms.rotation]),
-                    features = roomDef.features,
-                    loc = GridLoc(gridX = it[Rooms.gridX], gridY = it[Rooms.gridY]),
-                    description = roomDef.description,
-                    barrier = roomDef.barrier
-                )
-            }
+            .map { it.toRoom() }
     }
 }
 
@@ -35,9 +39,10 @@ private data class StartingRoom(
     val def: RoomDefinition,
     val loc: GridLoc
 )
+val entranceHallLoc = GridLoc(4, 3)
 private val startingRooms = listOf(
     // Entrance Hall
-    StartingRoom(rooms[0]!!, GridLoc(4, 3)),
+    StartingRoom(rooms[0]!!, entranceHallLoc),
     // Foyer
     StartingRoom(rooms[1]!!, GridLoc(3, 3)),
     // Grand Staircase
@@ -67,7 +72,7 @@ private val rotated = mapOf(
     Direction.WEST to Direction.SOUTH,
     Direction.SOUTH to Direction.EAST
 )
-fun rotateDoors(directions: Set<Direction>, rotation: Short): Set<Direction> {
+internal fun rotateDoors(directions: Set<Direction>, rotation: Short): Set<Direction> {
     if (!(0..3).contains(rotation)) {
         throw IllegalArgumentException("Invalid rotation $rotation")
     }
@@ -78,4 +83,14 @@ fun rotateDoors(directions: Set<Direction>, rotation: Short): Set<Direction> {
     return directions.map { direction ->
         (0 until rotation).fold(direction) { dir, _ -> rotated[dir]!! }
     }.toSet()
+}
+
+fun getRoomAtLoc(gameId: String, loc: GridLoc): Room? {
+    return transaction {
+        Rooms.select {
+            (Rooms.gameId eq gameId) and
+                (Rooms.gridX eq loc.gridX) and
+                (Rooms.gridY eq loc.gridY)
+        }.firstOrNull()?.toRoom()
+    }
 }
