@@ -32,8 +32,13 @@ fun main() {
             )
         }
         install(CORS) {
-            header("content-type")
+            allowNonSimpleContentTypes = true
             host("localhost:3000")
+            host(
+                "herokuapp.com",
+                schemes = listOf("https"),
+                subDomains = listOf("betrayal-ui")
+            )
         }
         install(CallLogging) {
             level = Level.INFO
