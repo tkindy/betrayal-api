@@ -72,16 +72,6 @@ fun getRoomStackState(gameId: String): RoomStackResponse {
     }
 }
 
-fun getStackRoom(gameId: String): StackRoom? {
-    return transaction {
-        val stack = getRoomStack(gameId)
-        stack.curIndex ?: return@transaction null
-
-        getRoomInStack(stack.id, stack.curIndex)
-            ?.toStackRoom()
-    }
-}
-
 fun advanceRoomStack(gameId: String): StackRoom {
     return transaction {
         val stack = getRoomStack(gameId)
@@ -215,13 +205,6 @@ data class RoomStack(
 data class RoomStackContentRequest(
     val index: Short,
     val roomDefId: Short
-)
-
-data class RoomStackContent(
-    val id: Int,
-    val stackId: Int,
-    val index: Short,
-    val roomDefId: Short,
 )
 
 fun getRoomInStack(stackId: Int, index: Short): ResultRow? {
