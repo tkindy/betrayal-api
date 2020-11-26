@@ -26,6 +26,7 @@ data class Player(
     val knowledge: Trait
 )
 
+@Suppress("unused")
 @Serializable
 enum class Floor(val defEncoding: Char) {
     BASEMENT('B'),
@@ -56,6 +57,7 @@ enum class Direction(val defEncoding: Char) {
     }
 }
 
+@Suppress("unused")
 @Serializable
 enum class Feature(val defEncoding: Char) {
     EVENT('E'),
@@ -72,6 +74,7 @@ enum class Feature(val defEncoding: Char) {
     }
 }
 
+@Suppress("unused")
 @Serializable
 enum class BarrierDirection(val defEncoding: Char) {
     VERTICAL('V'),
@@ -107,4 +110,4 @@ data class Room(
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
-data class Game(val id: String, val name: String, val players: List<Player>)
+data class Game(val id: String, val name: String)

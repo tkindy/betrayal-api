@@ -2,14 +2,9 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
-import com.tylerkindy.betrayal.GridLoc
-import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.db.Games
-import com.tylerkindy.betrayal.db.Players
-import com.tylerkindy.betrayal.db.getPlayers
+import com.tylerkindy.betrayal.db.insertStartingPlayers
 import com.tylerkindy.betrayal.db.insertStartingRooms
-import com.tylerkindy.betrayal.defs.CharacterDefinition
-import com.tylerkindy.betrayal.defs.characters
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveOrNull
@@ -28,16 +23,17 @@ val gameRoutes: Routing.() -> Unit = {
             get {
                 val gameId = call.parameters["gameId"]!!
                 val game = transaction {
-                    val gameRow = Games.select { Games.id eq gameId }
-                        .firstOrNull() ?: return@transaction null
-                    val players = getPlayers(gameId)
-
-                    Game(id = gameRow[Games.id], name = gameRow[Games.name], players = players)
+                    Games.select { Games.id eq gameId }
+                        .firstOrNull()
+                        ?.let {
+                            Game(id = it[Games.id], name = it[Games.name])
+                        }
                 } ?: return@get call.respond(HttpStatusCode.NotFound)
 
                 call.respond(game)
             }
             roomRoutes()
+            playerRoutes()
         }
 
         post {
@@ -52,7 +48,6 @@ val gameRoutes: Routing.() -> Unit = {
             }
 
             val gameId = buildGameId()
-            val characters = getRandomCharacters(gameRequest.numPlayers)
 
             transaction {
                 Games.insert {
@@ -61,35 +56,10 @@ val gameRoutes: Routing.() -> Unit = {
                 }
             }
 
-            val players = transaction {
-                characters.map { character ->
-                    val playerId = Players.insert {
-                        it[this.gameId] = gameId
-                        it[characterId] = character.id
-                        it[gridX] = 0
-                        it[gridY] = 0
-                        it[speedIndex] = character.speed.startingIndex.toShort()
-                        it[mightIndex] = character.might.startingIndex.toShort()
-                        it[sanityIndex] = character.might.startingIndex.toShort()
-                        it[knowledgeIndex] = character.knowledge.startingIndex.toShort()
-                    } get Players.id
-
-                    Player(
-                        id = playerId,
-                        characterName = character.name,
-                        color = character.color,
-                        loc = GridLoc(0, 0),
-                        speed = character.speed.toTrait(),
-                        might = character.might.toTrait(),
-                        sanity = character.sanity.toTrait(),
-                        knowledge = character.knowledge.toTrait()
-                    )
-                }
-            }
-
             insertStartingRooms(gameId)
+            insertStartingPlayers(gameId, gameRequest.numPlayers)
 
-            call.respond(Game(id = gameId, name = gameRequest.name, players = players))
+            call.respond(Game(id = gameId, name = gameRequest.name))
         }
     }
 }
@@ -100,12 +70,4 @@ private fun buildGameId(): String {
         .map { gameIdCharacters.random() }
         .fold(StringBuilder()) { builder, char -> builder.append(char) }
         .toString()
-}
-
-private fun getRandomCharacters(numPlayers: Int): List<CharacterDefinition> {
-    return characters.values
-        .groupBy { it.color }.values
-        .map { it.random() } // randomly pick one of each color
-        .shuffled()
-        .subList(0, numPlayers)
 }
