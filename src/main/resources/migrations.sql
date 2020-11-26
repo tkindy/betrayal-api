@@ -50,3 +50,22 @@ CREATE TABLE "roomStackContents" (
     "index" SMALLINT NOT NULL,
     "roomDefId" SMALLINT NOT NULL
 );
+
+--changeset tkindy:5
+CREATE TABLE "cardStacks" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "cardTypeId" SMALLINT NOT NULL,
+    "curIndex" SMALLINT
+);
+
+CREATE UNIQUE INDEX ON "cardStacks" ("gameId", "cardTypeId");
+
+CREATE TABLE "cardStackContents" (
+    "id" SERIAL PRIMARY KEY,
+    "stackId" INT NOT NULL,
+    "index" SMALLINT NOT NULL,
+    "cardDefId" SMALLINT NOT NULL
+);
+
+CREATE UNIQUE INDEX ON "cardStackContents" ("stackId", "index")
