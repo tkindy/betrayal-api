@@ -1,5 +1,8 @@
 package com.tylerkindy.betrayal.db
 
+import com.tylerkindy.betrayal.FlippedRoom
+import com.tylerkindy.betrayal.GridLoc
+import com.tylerkindy.betrayal.RoomStackResponse
 import com.tylerkindy.betrayal.StackRoom
 import com.tylerkindy.betrayal.defs.initialStackRooms
 import com.tylerkindy.betrayal.defs.rooms
@@ -7,7 +10,6 @@ import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
-import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -37,12 +39,42 @@ fun createRoomStack(gameId: String) {
     }
 }
 
+fun getRoomStackState(gameId: String): RoomStackResponse {
+    return transaction {
+        val stack = getRoomStack(gameId)
+        stack.curIndex ?: return@transaction RoomStackResponse()
+
+        val roomStackContentRow = RoomStackContents.select {
+            (RoomStackContents.stackId eq stack.id) and (RoomStackContents.index eq stack.curIndex)
+        }
+            .firstOrNull()
+            ?: error("No room in stack for game $gameId with index ${stack.curIndex}")
+
+        val roomDefId = roomStackContentRow[RoomStackContents.roomDefId]
+        val room = rooms[roomDefId]
+            ?: error("No room def with ID $roomDefId")
+
+        if (stack.flipped) {
+            RoomStackResponse(
+                flippedRoom = FlippedRoom(
+                    name = room.name,
+                    doorDirections = room.doors,
+                    features = room.features
+                )
+            )
+        } else {
+            RoomStackResponse(
+                nextRoom = StackRoom(
+                    possibleFloors = room.floors
+                )
+            )
+        }
+    }
+}
+
 fun getStackRoom(gameId: String): StackRoom? {
     return transaction {
-        val stack = RoomStacks.select { RoomStacks.gameId eq gameId }
-            .firstOrNull()
-            ?.toRoomStack() ?: error("No room stack found for game $gameId")
-
+        val stack = getRoomStack(gameId)
         stack.curIndex ?: return@transaction null
 
         RoomStackContents.select {
@@ -57,6 +89,7 @@ fun advanceRoomStack(gameId: String): StackRoom {
     return transaction {
         val stack = getRoomStack(gameId)
         stack.curIndex ?: throw StackEmptyException()
+        if (stack.flipped) throw AlreadyFlippedException()
 
         val nextIndex = getNextIndex(stack)
         RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
@@ -71,12 +104,16 @@ fun advanceRoomStack(gameId: String): StackRoom {
     }
 }
 
-fun flipRoom(gameId: String): Short {
+fun flipRoom(gameId: String): FlippedRoom {
     val content = transaction {
         val stack = getRoomStack(gameId)
         stack.curIndex ?: throw StackEmptyException()
+        if (stack.flipped) throw AlreadyFlippedException()
 
-        val content = RoomStackContents.select {
+        RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+            it[flipped] = true
+        }
+        RoomStackContents.select {
             (RoomStackContents.stackId eq stack.id) and (RoomStackContents.index eq stack.curIndex)
         }
             .firstOrNull()
@@ -88,18 +125,24 @@ fun flipRoom(gameId: String): Short {
                     roomDefId = it[RoomStackContents.roomDefId]
                 )
             } ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
-
-        RoomStackContents.deleteWhere { RoomStackContents.id eq content.id }
-
-        val nextIndex = getNextIndex(stack)
-        RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
-            it[curIndex] = nextIndex
-        }
-
-        content
     }
 
-    return content.roomDefId
+    val roomDef = rooms[content.roomDefId]
+        ?: error("No room with ID ${content.roomDefId}")
+    return FlippedRoom(
+        name = roomDef.name,
+        doorDirections = roomDef.doors,
+        features = roomDef.features
+    )
+}
+
+fun placeRoom(gameId: String, loc: GridLoc) {
+    transaction {
+        val stack = getRoomStack(gameId)
+        if (!stack.flipped) throw NotFlippedException()
+
+        TODO()
+    }
 }
 
 private fun getRoomStack(gameId: String): RoomStack {
@@ -123,6 +166,8 @@ private fun getNextIndex(stack: RoomStack): Short {
 }
 
 class StackEmptyException : IllegalStateException()
+class AlreadyFlippedException : IllegalStateException()
+class NotFlippedException : IllegalStateException()
 
 data class RoomStack(
     val id: Int,
