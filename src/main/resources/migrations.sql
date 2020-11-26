@@ -46,7 +46,7 @@ CREATE UNIQUE INDEX ON "stacks" ("gameId", "stackTypeId");
 CREATE TABLE "stackContents" (
     "id" SERIAL PRIMARY KEY,
     "stackId" INT NOT NULL,
-    "index": SMALLINT NOT NULL,
+    "index" SMALLINT NOT NULL,
     "contentId" SMALLINT NOT NULL
 );
 
