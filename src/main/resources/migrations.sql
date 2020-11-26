@@ -38,7 +38,8 @@ CREATE TABLE "roomStacks" (
     "id" SERIAL PRIMARY KEY,
     "gameId" VARCHAR(6) NOT NULL,
     "curIndex" SMALLINT,
-    "flipped" BOOLEAN NOT NULL
+    "flipped" BOOLEAN NOT NULL,
+    "rotation" SMALLINT
 );
 
 CREATE UNIQUE INDEX ON "roomStacks" ("gameId");
