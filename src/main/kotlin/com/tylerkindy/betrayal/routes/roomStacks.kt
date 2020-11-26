@@ -1,11 +1,15 @@
 package com.tylerkindy.betrayal.routes
 
+import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.RoomStackResponse
 import com.tylerkindy.betrayal.db.advanceRoomStack
 import com.tylerkindy.betrayal.db.flipRoom
 import com.tylerkindy.betrayal.db.getRoomStackState
+import com.tylerkindy.betrayal.db.placeRoom
 import com.tylerkindy.betrayal.db.rotateFlipped
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
+import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
@@ -43,6 +47,15 @@ val roomStackRoutes: Route.() -> Unit = {
                 RoomStackResponse(
                     flippedRoom = rotateFlipped(gameId)
                 )
+            )
+        }
+
+        post("place") {
+            val gameId = call.parameters["gameId"]!!
+            val loc = call.receiveOrNull<GridLoc>()
+                ?: return@post call.respond(HttpStatusCode.BadRequest, "Must pass grid location for room")
+            call.respond(
+                placeRoom(gameId, loc)
             )
         }
     }

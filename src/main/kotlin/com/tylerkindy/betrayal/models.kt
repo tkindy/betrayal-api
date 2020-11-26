@@ -125,6 +125,12 @@ data class RoomStackResponse(
 )
 
 @Serializable
+data class PlaceRoomResponse(
+    val rooms: List<Room>,
+    val nextRoom: StackRoom?
+)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable

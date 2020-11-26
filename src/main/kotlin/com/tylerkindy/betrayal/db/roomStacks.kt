@@ -2,14 +2,17 @@ package com.tylerkindy.betrayal.db
 
 import com.tylerkindy.betrayal.FlippedRoom
 import com.tylerkindy.betrayal.GridLoc
+import com.tylerkindy.betrayal.PlaceRoomResponse
 import com.tylerkindy.betrayal.RoomStackResponse
 import com.tylerkindy.betrayal.StackRoom
+import com.tylerkindy.betrayal.defs.RoomDefinition
 import com.tylerkindy.betrayal.defs.initialStackRooms
 import com.tylerkindy.betrayal.defs.rooms
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -86,6 +89,8 @@ fun advanceRoomStack(gameId: String): StackRoom {
         if (stack.flipped) throw AlreadyFlippedException()
 
         val nextIndex = getNextIndex(stack)
+            ?: error("No remaining contents in stack $stack")
+
         RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
             it[curIndex] = nextIndex
         }
@@ -134,12 +139,41 @@ fun rotateFlipped(gameId: String): FlippedRoom {
     }
 }
 
-fun placeRoom(gameId: String, loc: GridLoc) {
-    transaction {
+fun placeRoom(gameId: String, loc: GridLoc): PlaceRoomResponse {
+    return transaction {
         val stack = getRoomStack(gameId)
+        stack.curIndex ?: throw StackEmptyException()
         if (!stack.flipped) throw NotFlippedException()
+        stack.rotation ?: error("Missing rotation value for flipped room stack")
 
-        TODO()
+        // TODO: add backend validation of room placement; currently relying on the frontend to do it
+        val contentsRow = getRoomInStack(stack.id, stack.curIndex)
+            ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
+
+        val rowId = contentsRow[RoomStackContents.id]
+        val room = contentsRow.toRoomDef()
+
+        Rooms.insert {
+            it[this.gameId] = gameId
+            it[roomDefId] = room.id
+            it[gridX] = loc.gridX
+            it[gridY] = loc.gridY
+            it[rotation] = stack.rotation
+        }
+
+        RoomStackContents.deleteWhere { RoomStackContents.id eq rowId }
+
+        val nextIndex = getNextIndex(stack)
+        RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+            it[curIndex] = nextIndex
+            it[flipped] = false
+            it[rotation] = null
+        }
+
+        return@transaction PlaceRoomResponse(
+            rooms = getRooms(gameId),
+            nextRoom = nextIndex?.let { getRoomInStack(stack.id, it) }?.toStackRoom()
+        )
     }
 }
 
@@ -149,7 +183,7 @@ private fun getRoomStack(gameId: String): RoomStack {
         ?.toRoomStack() ?: error("No room stack found for game $gameId")
 }
 
-private fun getNextIndex(stack: RoomStack): Short {
+private fun getNextIndex(stack: RoomStack): Short? {
     stack.curIndex ?: throw StackEmptyException()
 
     val remainingIndices = RoomStackContents
@@ -160,7 +194,6 @@ private fun getNextIndex(stack: RoomStack): Short {
 
     return remainingIndices.firstOrNull { it > stack.curIndex }
         ?: remainingIndices.firstOrNull()
-        ?: error("No remaining contents in stack $stack")
 }
 
 private fun rotate(rotation: Short): Short {
@@ -217,10 +250,14 @@ fun ResultRow.toStackRoom(): StackRoom {
     )
 }
 
-fun ResultRow.toFlippedRoom(rotation: Short): FlippedRoom {
+fun ResultRow.toRoomDef(): RoomDefinition {
     val roomDefId = this[RoomStackContents.roomDefId]
-    val room = rooms[roomDefId]
+    return rooms[roomDefId]
         ?: error("No room def with ID $roomDefId")
+}
+
+fun ResultRow.toFlippedRoom(rotation: Short): FlippedRoom {
+    val room = toRoomDef()
     return FlippedRoom(
         name = room.name,
         doorDirections = rotateDoors(room.doors, rotation),
