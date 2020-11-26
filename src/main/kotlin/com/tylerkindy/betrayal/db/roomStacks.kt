@@ -44,10 +44,7 @@ fun getRoomStackState(gameId: String): RoomStackResponse {
         val stack = getRoomStack(gameId)
         stack.curIndex ?: return@transaction RoomStackResponse()
 
-        val roomStackContentRow = RoomStackContents.select {
-            (RoomStackContents.stackId eq stack.id) and (RoomStackContents.index eq stack.curIndex)
-        }
-            .firstOrNull()
+        val roomStackContentRow = getRoomInStack(stack.id, stack.curIndex)
             ?: error("No room in stack for game $gameId with index ${stack.curIndex}")
 
         val roomDefId = roomStackContentRow[RoomStackContents.roomDefId]
@@ -77,10 +74,7 @@ fun getStackRoom(gameId: String): StackRoom? {
         val stack = getRoomStack(gameId)
         stack.curIndex ?: return@transaction null
 
-        RoomStackContents.select {
-            (RoomStackContents.stackId eq stack.id) and (RoomStackContents.index eq stack.curIndex)
-        }
-            .firstOrNull()
+        getRoomInStack(stack.id, stack.curIndex)
             ?.toStackRoom()
     }
 }
@@ -95,45 +89,49 @@ fun advanceRoomStack(gameId: String): StackRoom {
         RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
             it[curIndex] = nextIndex
         }
-        RoomStackContents.select {
-            (RoomStackContents.stackId eq stack.id) and (RoomStackContents.index eq nextIndex)
-        }
-            .firstOrNull()
+        getRoomInStack(stack.id, nextIndex)
             ?.toStackRoom()
             ?: error("No room in stack for index $nextIndex")
     }
 }
 
 fun flipRoom(gameId: String): FlippedRoom {
-    val content = transaction {
+    return transaction {
         val stack = getRoomStack(gameId)
         stack.curIndex ?: throw StackEmptyException()
         if (stack.flipped) throw AlreadyFlippedException()
 
+        val rotation: Short = 0
+
         RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
             it[flipped] = true
+            it[this.rotation] = rotation
         }
-        RoomStackContents.select {
-            (RoomStackContents.stackId eq stack.id) and (RoomStackContents.index eq stack.curIndex)
-        }
-            .firstOrNull()
-            ?.let {
-                RoomStackContent(
-                    id = it[RoomStackContents.id],
-                    stackId = stack.id,
-                    index = stack.curIndex,
-                    roomDefId = it[RoomStackContents.roomDefId]
-                )
-            } ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
-    }
 
-    val roomDef = rooms[content.roomDefId]
-        ?: error("No room with ID ${content.roomDefId}")
-    return FlippedRoom(
-        name = roomDef.name,
-        doorDirections = roomDef.doors,
-        features = roomDef.features
-    )
+        getRoomInStack(stack.id, stack.curIndex)
+            ?.toFlippedRoom(rotation)
+            ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
+    }
+}
+
+fun rotateFlipped(gameId: String): FlippedRoom {
+    return transaction {
+        val stack = getRoomStack(gameId)
+        stack.curIndex ?: throw StackEmptyException()
+        if (!stack.flipped) throw NotFlippedException()
+
+        val newRotation = rotate(
+            stack.rotation ?: error("Missing rotation value for flipped room stack")
+        )
+
+        RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+            it[rotation] = newRotation
+        }
+
+        getRoomInStack(stack.id, stack.curIndex)
+            ?.toFlippedRoom(newRotation)
+            ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
+    }
 }
 
 fun placeRoom(gameId: String, loc: GridLoc) {
@@ -165,6 +163,10 @@ private fun getNextIndex(stack: RoomStack): Short {
         ?: error("No remaining contents in stack $stack")
 }
 
+private fun rotate(rotation: Short): Short {
+    return ((rotation + 1) % 4).toShort()
+}
+
 class StackEmptyException : IllegalStateException()
 class AlreadyFlippedException : IllegalStateException()
 class NotFlippedException : IllegalStateException()
@@ -173,7 +175,8 @@ data class RoomStack(
     val id: Int,
     val gameId: String,
     val curIndex: Short?,
-    val flipped: Boolean
+    val flipped: Boolean,
+    val rotation: Short?
 )
 
 data class RoomStackContentRequest(
@@ -188,12 +191,20 @@ data class RoomStackContent(
     val roomDefId: Short,
 )
 
+fun getRoomInStack(stackId: Int, index: Short): ResultRow? {
+    return RoomStackContents.select {
+        (RoomStackContents.stackId eq stackId) and (RoomStackContents.index eq index)
+    }
+        .firstOrNull()
+}
+
 fun ResultRow.toRoomStack(): RoomStack {
     return RoomStack(
         id = this[RoomStacks.id],
         gameId = this[RoomStacks.gameId],
         curIndex = this[RoomStacks.curIndex],
-        flipped = this[RoomStacks.flipped]
+        flipped = this[RoomStacks.flipped],
+        rotation = this[RoomStacks.rotation]
     )
 }
 
@@ -203,5 +214,16 @@ fun ResultRow.toStackRoom(): StackRoom {
         ?: error("No room def with ID $roomDefId")
     return StackRoom(
         possibleFloors = room.floors
+    )
+}
+
+fun ResultRow.toFlippedRoom(rotation: Short): FlippedRoom {
+    val roomDefId = this[RoomStackContents.roomDefId]
+    val room = rooms[roomDefId]
+        ?: error("No room def with ID $roomDefId")
+    return FlippedRoom(
+        name = room.name,
+        doorDirections = rotateDoors(room.doors, rotation),
+        features = room.features
     )
 }

@@ -37,6 +37,7 @@ object RoomStacks : Table("\"roomStacks\"") {
     val gameId = varchar("gameId", 6)
     val curIndex = short("curIndex").nullable()
     val flipped = bool("flipped")
+    val rotation = short("rotation").nullable()
 }
 
 object RoomStackContents : Table("\"roomStackContents\"") {
