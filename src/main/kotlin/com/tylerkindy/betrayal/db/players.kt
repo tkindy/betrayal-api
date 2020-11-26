@@ -4,9 +4,11 @@ import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 fun getPlayers(gameId: String): List<Player> {
     return transaction {
@@ -52,4 +54,20 @@ private fun getRandomCharacters(numPlayers: Int): List<CharacterDefinition> {
         .map { it.random() } // randomly pick one of each color
         .shuffled()
         .subList(0, numPlayers)
+}
+
+fun movePlayer(gameId: String, playerId: Int, loc: GridLoc) {
+    getRoomAtLoc(gameId, loc)
+        ?: throw IllegalArgumentException("Can't place player in empty space")
+
+    val numUpdated = transaction {
+        Players.update(where = { (Players.gameId eq gameId) and (Players.id eq playerId) }) {
+            it[gridX] = loc.gridX
+            it[gridY] = loc.gridY
+        }
+    }
+
+    if (numUpdated == 0) {
+        throw IllegalArgumentException("No player $playerId in game $gameId")
+    }
 }
