@@ -107,6 +107,24 @@ data class Room(
 )
 
 @Serializable
+data class StackRoom(
+    val possibleFloors: Set<Floor>
+)
+
+@Serializable
+data class FlippedRoom(
+    val name: String,
+    val doorDirections: Set<Direction>,
+    val features: List<Feature>
+)
+
+@Serializable
+data class RoomStackResponse(
+    val nextRoom: StackRoom? = null,
+    val flippedRoom: FlippedRoom? = null
+)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
