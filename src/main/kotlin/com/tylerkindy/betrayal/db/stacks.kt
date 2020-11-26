@@ -1,11 +1,14 @@
 package com.tylerkindy.betrayal.db
 
 import com.tylerkindy.betrayal.StackRoom
+import com.tylerkindy.betrayal.defs.initialStackRooms
 import com.tylerkindy.betrayal.defs.rooms
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.jetbrains.exposed.sql.update
@@ -18,6 +21,31 @@ enum class StackType(val id: Short) {
         private val index = values().associateBy { it.id }
         fun fromId(id: Short) = index[id]
             ?: throw IllegalArgumentException("No stack type with ID $id")
+    }
+}
+
+fun createStacks(gameId: String) {
+    // TODO: items, events, omens
+    val roomStackContents = initialStackRooms.shuffled()
+        .mapIndexed { i, room ->
+            StackContentRequest(
+                index = i.toShort(),
+                contentId = room.id
+            )
+        }
+
+    transaction {
+        val stackId = Stacks.insert {
+            it[this.gameId] = gameId
+            it[stackTypeId] = StackType.ROOM.id
+            it[curIndex] = 0
+        } get Stacks.id
+
+        StackContents.batchInsert(roomStackContents) {
+            this[StackContents.stackId] = stackId
+            this[StackContents.index] = it.index
+            this[StackContents.contentId] = it.contentId
+        }
     }
 }
 
@@ -95,6 +123,11 @@ data class Stack(
     val gameId: String,
     val stackType: StackType,
     val curIndex: Short?
+)
+
+data class StackContentRequest(
+    val index: Short,
+    val contentId: Short
 )
 
 data class StackContent(

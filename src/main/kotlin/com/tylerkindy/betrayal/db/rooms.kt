@@ -3,7 +3,6 @@ package com.tylerkindy.betrayal.db
 import com.tylerkindy.betrayal.Direction
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Room
-import com.tylerkindy.betrayal.defs.RoomDefinition
 import com.tylerkindy.betrayal.defs.rooms
 import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.and
@@ -36,29 +35,31 @@ fun getRooms(gameId: String): List<Room> {
 }
 
 private data class StartingRoom(
-    val def: RoomDefinition,
+    val roomDefId: Short,
     val loc: GridLoc
 )
 val entranceHallLoc = GridLoc(4, 3)
 private val startingRooms = listOf(
     // Entrance Hall
-    StartingRoom(rooms[0]!!, entranceHallLoc),
+    StartingRoom(0, entranceHallLoc),
     // Foyer
-    StartingRoom(rooms[1]!!, GridLoc(3, 3)),
+    StartingRoom(1, GridLoc(3, 3)),
     // Grand Staircase
-    StartingRoom(rooms[2]!!, GridLoc(2, 3)),
+    StartingRoom(2, GridLoc(2, 3)),
     // Upper Landing
-    StartingRoom(rooms[8]!!, GridLoc(-8, -8)),
+    StartingRoom(8, GridLoc(-8, -8)),
     // Roof Landing
-    StartingRoom(rooms[10]!!, GridLoc(10, -8)),
+    StartingRoom(10, GridLoc(10, -8)),
     // Basement Landing
-    StartingRoom(rooms[33]!!, GridLoc(2, 12))
+    StartingRoom(33, GridLoc(2, 12))
 )
+val startingRoomIds = startingRooms.map { it.roomDefId }
+
 fun insertStartingRooms(gameId: String) {
     transaction {
-        Rooms.batchInsert(startingRooms) { (def, loc) ->
+        Rooms.batchInsert(startingRooms) { (roomDefId, loc) ->
             this[Rooms.gameId] = gameId
-            this[Rooms.roomDefId] = def.id
+            this[Rooms.roomDefId] = roomDefId
             this[Rooms.gridX] = loc.gridX
             this[Rooms.gridY] = loc.gridY
             this[Rooms.rotation] = 0
