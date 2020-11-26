@@ -42,7 +42,7 @@ fun insertStartingPlayers(gameId: String, numPlayers: Int) {
             this[Players.gridY] = entranceHallLoc.gridY
             this[Players.speedIndex] = character.speed.startingIndex.toShort()
             this[Players.mightIndex] = character.might.startingIndex.toShort()
-            this[Players.sanityIndex] = character.might.startingIndex.toShort()
+            this[Players.sanityIndex] = character.sanity.startingIndex.toShort()
             this[Players.knowledgeIndex] = character.knowledge.startingIndex.toShort()
         }
     }
