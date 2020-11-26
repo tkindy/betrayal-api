@@ -1,5 +1,8 @@
 package com.tylerkindy.betrayal.db
 
+import com.tylerkindy.betrayal.StackRoom
+import com.tylerkindy.betrayal.defs.rooms
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.deleteWhere
@@ -9,21 +12,45 @@ import org.jetbrains.exposed.sql.update
 
 @Suppress("unused")
 enum class StackType(val id: Short) {
-    ROOM(0), EVENT(1), ITEM(2), OMEN(3)
+    ROOM(0), EVENT(1), ITEM(2), OMEN(3);
+
+    companion object {
+        private val index = values().associateBy { it.id }
+        fun fromId(id: Short) = index[id]
+            ?: throw IllegalArgumentException("No stack type with ID $id")
+    }
+}
+
+fun getStackRoom(gameId: String): StackRoom? {
+    return transaction {
+        val stack = Stacks.select {
+            (Stacks.gameId eq gameId) and (Stacks.stackTypeId eq StackType.ROOM.id)
+        }
+            .firstOrNull()
+            ?.toStack() ?: error("No room stack found for game $gameId")
+
+        stack.curIndex ?: return@transaction null
+
+        StackContents.select {
+            (StackContents.stackId eq stack.id) and (StackContents.index eq stack.curIndex)
+        }
+            .firstOrNull()
+            ?.let {
+                val roomDefId = it[StackContents.contentId]
+                val room = rooms[roomDefId]
+                    ?: error("No room def with ID $roomDefId")
+                StackRoom(
+                    possibleFloors = room.floors
+                )
+            }
+    }
 }
 
 fun draw(gameId: String, stackType: StackType): Short {
     val content = transaction {
         val stack = Stacks.select { (Stacks.gameId eq gameId) and (Stacks.stackTypeId eq stackType.id) }
             .firstOrNull()
-            ?.let {
-                Stack(
-                    id = it[Stacks.id],
-                    gameId = gameId,
-                    stackType = stackType,
-                    curIndex = it[Stacks.curIndex]
-                )
-            } ?: error("No stack of type $stackType found for game $gameId")
+            ?.toStack() ?: error("No stack of type $stackType found for game $gameId")
 
         stack.curIndex ?: throw StackEmptyException()
 
@@ -76,3 +103,12 @@ data class StackContent(
     val index: Short,
     val contentId: Short,
 )
+
+fun ResultRow.toStack(): Stack {
+    return Stack(
+        id = this[Stacks.id],
+        gameId = this[Stacks.gameId],
+        stackType = StackType.fromId(this[Stacks.stackTypeId]),
+        curIndex = this[Stacks.curIndex]
+    )
+}
