@@ -1,53 +1,53 @@
-name,subtype,flavorText,description,rollTable
-Bite,,"A growl, the scent of death.
+id,name,subtype,flavorText,description,rollTable
+0,Bite,,"A growl, the scent of death.
 Pain. Darkness. Gone.","When you draw this card, something bites you. The player on your right rolls a Might 4 attack against you for the mysterious something (before it runs away into the darkness). You defend against this attack as normal, by rolling dice equal to your Might.
 This omen can’t be dropped, traded, or stolen.",
-Key,,"You’ve been wondering how to open all the locks in the house. The question is, why did they get locked in the first place?","Add 4 dice to trait rolls to open or take something from a card or room tile, such as the Locked Room, Safe, or Vault.
+1,Key,,"You’ve been wondering how to open all the locks in the house. The question is, why did they get locked in the first place?","Add 4 dice to trait rolls to open or take something from a card or room tile, such as the Locked Room, Safe, or Vault.
 You may pass through the Locked Room without removing a Lock. At the start of each turn, you may choose to put a Lock token on an unlocked door in the Locked Room, if you are next to that door.",
-Letter,,"Scrawled in ink, or whatever.","You may hand one of your explorer tokens to another explorer. On your turn, you may move to that explorer’s room, then discard this omen and the explorer discards your explorer token.",
-Box,,They were always telling you to think outside of it. Now you’re worried you’ll end up inside it.,"When you draw this card, draw an item card and put it on this card. That item cannot be dropped or traded. If someone would steal that item, you can instead discard the Box. On your turn, you may remove that item from the Box and put a different item in your possession into the Box. If it is empty, you may put an item in the Box. The Box cannot be stolen.",
-Holy Symbol,,A symbol of calm in an unsettling world.,"Gain 2 Sanity now.
+2,Letter,,"Scrawled in ink, or whatever.","You may hand one of your explorer tokens to another explorer. On your turn, you may move to that explorer’s room, then discard this omen and the explorer discards your explorer token.",
+3,Box,,They were always telling you to think outside of it. Now you’re worried you’ll end up inside it.,"When you draw this card, draw an item card and put it on this card. That item cannot be dropped or traded. If someone would steal that item, you can instead discard the Box. On your turn, you may remove that item from the Box and put a different item in your possession into the Box. If it is empty, you may put an item in the Box. The Box cannot be stolen.",
+4,Holy Symbol,,A symbol of calm in an unsettling world.,"Gain 2 Sanity now.
 Lose 2 Sanity if you lose the Holy Symbol.",
-Cat,COMPANION,"It crossed your path, and you’re supposed to have bad luck. But maybe you crossed its path, and it’s the one that isn’t too happy about it. Now it accompanies you.","You may call on the Cat for luck before your trait roll. Roll 1 die:
+5,Cat,COMPANION,"It crossed your path, and you’re supposed to have bad luck. But maybe you crossed its path, and it’s the one that isn’t too happy about it. Now it accompanies you.","You may call on the Cat for luck before your trait roll. Roll 1 die:
 <rollTable>
 This omen cannot be dropped, traded, or stolen.","0  Subtract 2 form the result of that trait roll.
 1+  Add 2 to the result of the trait roll."
-Vial,,The old and crazy woman said you should drink this potion that glows with an amber light. Maybe that’s how she got so old and crazy.,"Once on your turn, you may drink the Vial. Roll 2 dice:
+6,Vial,,The old and crazy woman said you should drink this potion that glows with an amber light. Maybe that’s how she got so old and crazy.,"Once on your turn, you may drink the Vial. Roll 2 dice:
 <rollTable>","0  Poison! Take 2 points of physical damage.
 1  Visions and dreams. Take 2 points of mental damage. Draw an item card.
 2  Failed experiment. No effect.
 3  Invigorating tonic. Gain 1 in any physical trait.
 4  The blood of something unknown. Gain 1 in each trait but Sanity. Lose 2 Sanity."
-Crystal Ball,,Hazy images appear in the glass.,"Once during your turn, after the haunt is revealed, you can attempt a Knowledge roll to peer into the Crystal Ball:
+7,Crystal Ball,,Hazy images appear in the glass.,"Once during your turn, after the haunt is revealed, you can attempt a Knowledge roll to peer into the Crystal Ball:
 <rollTable>","4+  You see the truth. Search the item or event stack for a card of your choice. Shuffle that stack. Then place that card on top.
 1-3  You avert your eyes. Lose 1 Sanity.
 0  You stare into Hell. Lose 2 Sanity."
-Mask,,A somber mask to hide your intentions.,"Once your during your turn, you can attempt a Sanity roll to use the Mask:
+8,Mask,,A somber mask to hide your intentions.,"Once your during your turn, you can attempt a Sanity roll to use the Mask:
 <rollTable>","4+  You can put on or take off the Mask. If you put on the Mask, gain 2 Knowledge and lose 2 Sanity. If you take off the Mask, gain 2 Sanity and lose 2 Knowledge.
 0-3  You can’t use the Mask this turn."
-Girl,COMPANION,"A girl.
+9,Girl,COMPANION,"A girl.
 Trapped.
 Alone.
 You free her!","Gain 1 Sanity and 1 Knowledge now.
 Lose 1 Sanity and 1 Knowledg if you lose custody of the Girl.
 This omen can’t be dropped, traded, or stolen.",
-Book,,A diary or lab notes? Ancient script or modern ravings?,"Gain 2 Knowledge now.
+10,Book,,A diary or lab notes? Ancient script or modern ravings?,"Gain 2 Knowledge now.
 Lose 2 Knowledge if you lose the Book.",
-Bloodstone,,"Smooth and the deep green of a midnight forest, the stone is veined with crimson. They say you can’t get blood a stone. They didn’t ask this one.","Once per turn, you may lose 1 from any trait to add 2 dice (maximum of 8 dice) to your trait roll.",
-Skull,,"A skull, cracked and missing teeth.","If you take mental damage, you can take all of it as physical damage instead.",
-Dog,COMPANION,This mangy dog seems friendly. At least you hope it is.,"Gain 1 Might and 1 Sanity now.
+11,Bloodstone,,"Smooth and the deep green of a midnight forest, the stone is veined with crimson. They say you can’t get blood a stone. They didn’t ask this one.","Once per turn, you may lose 1 from any trait to add 2 dice (maximum of 8 dice) to your trait roll.",
+12,Skull,,"A skull, cracked and missing teeth.","If you take mental damage, you can take all of it as physical damage instead.",
+13,Dog,COMPANION,This mangy dog seems friendly. At least you hope it is.,"Gain 1 Might and 1 Sanity now.
 Lose 1 Might and 1 Sanity if you lose custody of the Dog.
 Take a small monster token to represent the Dog. Put it in your room. (Use a token of a different color from other monsters, if any.) Once during your turn, the Dog can move to any explored room up to 6 spaces away, using doors and stairs, and then return. It can pick up, carry, and/or drop 1 item before it returns.
 The Dog isn’t slowed by opponents. It can’t use one-way passages or rooms that require a roll. It can’t carry items that slow movement.
 This omen can’t be dropped, traded, or stolen.",
-Photograph,,"It changes as you look at it, showing different rooms in this house. Probably this house.","When discovering a room, you may discard the first drawn room tile and discover the next eligible room in the room stack instead.",
-Ring,,A battered ring with an incomprehensible inscription.,"If you attack an opponent that has a Sanity trait, you can attack with Sanity instead of Might. (Your opponent then defends with Sanity, and damage is mental instead of physical.)",
-Spirit Board,,A board with letters and numbers to call the dead.,"Before you move during your turn, you can look at the top tile of the room stack.
+14,Photograph,,"It changes as you look at it, showing different rooms in this house. Probably this house.","When discovering a room, you may discard the first drawn room tile and discover the next eligible room in the room stack instead.",
+15,Ring,,A battered ring with an incomprehensible inscription.,"If you attack an opponent that has a Sanity trait, you can attack with Sanity instead of Might. (Your opponent then defends with Sanity, and damage is mental instead of physical.)",
+16,Spirit Board,,A board with letters and numbers to call the dead.,"Before you move during your turn, you can look at the top tile of the room stack.
 If you use the Spirit Board after the haunt has been revealed, the traitor can move any number of monsters 1 space closer to you. (If you are the traitor, you don’t have to move those monsters.) If there is no traitor, all monsters move 1 space closer to you.",
-Madman,COMPANION,"A raving, frothing madman.","Gain 2 Might and lose 1 Sanity now.
+17,Madman,COMPANION,"A raving, frothing madman.","Gain 2 Might and lose 1 Sanity now.
 Lose 2 Might and gain 1 Sanity if you lose custody of the Madman.
 This omen can’t be dropped, traded, or stolen.",
-Spear,WEAPON,A weapon pulsing with power.,"You roll 2 additional dice (maximum of 8 dice) when making a Might attack with this weapon.
+18,Spear,WEAPON,A weapon pulsing with power.,"You roll 2 additional dice (maximum of 8 dice) when making a Might attack with this weapon.
 You can’t use another weapon while you’re using this one.",
-Rope,,It probably wasn’t used to hang anybody. Today.,"You may move up the Coal Chute, and from the Ballroom to the Gallery. You do not need to roll for crossing the Chasm. You do not take damage from the Collapsed Room, and can move from the room with the Below Collapsed Room token into the Collapsed Room. When moving via a dumbwaiter, you may move to any landing.",
-Medallion,,A medallion inscribed with a pentagram.,"You are immune to the effects of the Pentagram Chamber, Crypt, and Graveyard.",
+19,Rope,,It probably wasn’t used to hang anybody. Today.,"You may move up the Coal Chute, and from the Ballroom to the Gallery. You do not need to roll for crossing the Chasm. You do not take damage from the Collapsed Room, and can move from the room with the Below Collapsed Room token into the Collapsed Room. When moving via a dumbwaiter, you may move to any landing.",
+20,Medallion,,A medallion inscribed with a pentagram.,"You are immune to the effects of the Pentagram Chamber, Crypt, and Graveyard.",

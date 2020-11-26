@@ -31,3 +31,18 @@ object Rooms : Table() {
     val gridY = integer("gridY")
     val rotation = short("rotation")
 }
+
+object RoomStacks : Table("\"roomStacks\"") {
+    val id = integer("id").autoIncrement(idSeqName = "roomStacks_id_seq")
+    val gameId = varchar("gameId", 6)
+    val curIndex = short("curIndex").nullable()
+    val flipped = bool("flipped")
+    val rotation = short("rotation").nullable()
+}
+
+object RoomStackContents : Table("\"roomStackContents\"") {
+    val id = integer("id").autoIncrement(idSeqName = "roomStackContents_id_seq")
+    val stackId = integer("stackId")
+    val index = short("index")
+    val roomDefId = short("roomDefId")
+}

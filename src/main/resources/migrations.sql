@@ -32,3 +32,21 @@ CREATE TABLE "rooms" (
 );
 
 CREATE INDEX ON "rooms" ("gameId");
+
+--changeset tkindy:4
+CREATE TABLE "roomStacks" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "curIndex" SMALLINT,
+    "flipped" BOOLEAN NOT NULL,
+    "rotation" SMALLINT
+);
+
+CREATE UNIQUE INDEX ON "roomStacks" ("gameId");
+
+CREATE TABLE "roomStackContents" (
+    "id" SERIAL PRIMARY KEY,
+    "stackId" INT NOT NULL,
+    "index" SMALLINT NOT NULL,
+    "roomDefId" SMALLINT NOT NULL
+);

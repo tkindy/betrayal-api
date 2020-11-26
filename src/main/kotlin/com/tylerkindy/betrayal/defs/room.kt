@@ -5,6 +5,7 @@ import com.tylerkindy.betrayal.BarrierDirection
 import com.tylerkindy.betrayal.Direction
 import com.tylerkindy.betrayal.Feature
 import com.tylerkindy.betrayal.Floor
+import com.tylerkindy.betrayal.db.startingRoomIds
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
 
@@ -33,6 +34,7 @@ val rooms = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
         )
     }
     .associateBy { it.id }
+val initialStackRooms = rooms.values.filter { it.id !in startingRoomIds }
 
 fun parseBarrier(direction: String?, features: String?): Barrier? {
     if (direction == null) {
