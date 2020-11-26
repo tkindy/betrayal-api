@@ -26,6 +26,7 @@ fun createRoomStack(gameId: String) {
         val stackId = RoomStacks.insert {
             it[this.gameId] = gameId
             it[curIndex] = 0
+            it[flipped] = false
         } get RoomStacks.id
 
         RoomStackContents.batchInsert(roomStackContents) {
