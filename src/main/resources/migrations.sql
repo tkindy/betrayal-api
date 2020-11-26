@@ -39,13 +39,13 @@ CREATE TABLE "roomStacks" (
     "gameId" VARCHAR(6) NOT NULL,
     "curIndex" SMALLINT,
     "flipped" BOOLEAN
-)
+);
 
-CREATE UNIQUE INDEX "roomStacks" ("gameId")
+CREATE UNIQUE INDEX "roomStacks" ("gameId");
 
 CREATE TABLE "roomStackContents" (
     "id" SERIAL PRIMARY KEY,
     "stackId" INT NOT NULL,
     "index" SMALLINT NOT NULL,
     "roomDefId" SMALLINT NOT NULL
-)
+);
