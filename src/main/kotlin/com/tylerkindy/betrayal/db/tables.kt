@@ -39,7 +39,7 @@ object Stacks : Table() {
     val curIndex = short("curIndex").nullable()
 }
 
-object StackContents : Table() {
+object StackContents : Table("\"stackContents\"") {
     val id = integer("id").autoIncrement(idSeqName = "stackContents_id_seq")
     val stackId = integer("stackId")
     val index = short("index")
