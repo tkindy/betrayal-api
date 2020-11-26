@@ -63,23 +63,29 @@ fun getStackRoom(gameId: String): StackRoom? {
             (StackContents.stackId eq stack.id) and (StackContents.index eq stack.curIndex)
         }
             .firstOrNull()
-            ?.let {
-                val roomDefId = it[StackContents.contentId]
-                val room = rooms[roomDefId]
-                    ?: error("No room def with ID $roomDefId")
-                StackRoom(
-                    possibleFloors = room.floors
-                )
-            }
+            ?.toStackRoom()
+    }
+}
+
+fun advanceRoomStack(gameId: String): StackRoom {
+    return transaction {
+        val stack = getStack(gameId, StackType.ROOM)
+        stack.curIndex ?: throw StackEmptyException()
+
+        val nextIndex = getNextIndex(stack)
+        Stacks.update(where = { Stacks.id eq stack.id }) {
+            it[curIndex] = nextIndex
+        }
+        StackContents.select { (StackContents.stackId eq stack.id) and (StackContents.index eq nextIndex) }
+            .firstOrNull()
+            ?.toStackRoom()
+            ?: error("No room in stack for index $nextIndex")
     }
 }
 
 fun draw(gameId: String, stackType: StackType): Short {
     val content = transaction {
-        val stack = Stacks.select { (Stacks.gameId eq gameId) and (Stacks.stackTypeId eq stackType.id) }
-            .firstOrNull()
-            ?.toStack() ?: error("No stack of type $stackType found for game $gameId")
-
+        val stack = getStack(gameId, stackType)
         stack.curIndex ?: throw StackEmptyException()
 
         val content = StackContents.select {
@@ -97,15 +103,7 @@ fun draw(gameId: String, stackType: StackType): Short {
 
         StackContents.deleteWhere { StackContents.id eq content.id }
 
-        val remainingIndices = StackContents
-            .slice(StackContents.index)
-            .select { StackContents.stackId eq stack.id }
-            .orderBy(StackContents.index, SortOrder.ASC)
-            .map { it[StackContents.index] }
-
-        val nextIndex = remainingIndices.firstOrNull { it > content.index }
-            ?: remainingIndices.firstOrNull()
-
+        val nextIndex = getNextIndex(stack)
         Stacks.update(where = { Stacks.id eq stack.id }) {
             it[curIndex] = nextIndex
         }
@@ -114,6 +112,26 @@ fun draw(gameId: String, stackType: StackType): Short {
     }
 
     return content.contentId
+}
+
+private fun getStack(gameId: String, stackType: StackType): Stack {
+    return Stacks.select { (Stacks.gameId eq gameId) and (Stacks.stackTypeId eq stackType.id) }
+        .firstOrNull()
+        ?.toStack() ?: error("No stack of type $stackType found for game $gameId")
+}
+
+private fun getNextIndex(stack: Stack): Short {
+    stack.curIndex ?: throw StackEmptyException()
+
+    val remainingIndices = StackContents
+        .slice(StackContents.index)
+        .select { StackContents.stackId eq stack.id }
+        .orderBy(StackContents.index, SortOrder.ASC)
+        .map { it[StackContents.index] }
+
+    return remainingIndices.firstOrNull { it > stack.curIndex }
+        ?: remainingIndices.firstOrNull()
+        ?: error("No remaining contents in stack $stack")
 }
 
 class StackEmptyException : IllegalStateException()
@@ -143,5 +161,14 @@ fun ResultRow.toStack(): Stack {
         gameId = this[Stacks.gameId],
         stackType = StackType.fromId(this[Stacks.stackTypeId]),
         curIndex = this[Stacks.curIndex]
+    )
+}
+
+fun ResultRow.toStackRoom(): StackRoom {
+    val roomDefId = this[StackContents.contentId]
+    val room = rooms[roomDefId]
+        ?: error("No room def with ID $roomDefId")
+    return StackRoom(
+        possibleFloors = room.floors
     )
 }
