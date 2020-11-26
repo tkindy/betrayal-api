@@ -36,8 +36,8 @@ fun insertStartingPlayers(gameId: String, numPlayers: Int) {
         Players.batchInsert(characters) { character ->
             this[Players.gameId] = gameId
             this[Players.characterId] = character.id
-            this[Players.gridX] = 0
-            this[Players.gridY] = 0
+            this[Players.gridX] = entranceHallLoc.gridX
+            this[Players.gridY] = entranceHallLoc.gridY
             this[Players.speedIndex] = character.speed.startingIndex.toShort()
             this[Players.mightIndex] = character.might.startingIndex.toShort()
             this[Players.sanityIndex] = character.might.startingIndex.toShort()
