@@ -32,16 +32,16 @@ object Rooms : Table() {
     val rotation = short("rotation")
 }
 
-object Stacks : Table() {
-    val id = integer("id").autoIncrement(idSeqName = "stacks_id_seq")
+object RoomStacks : Table("\"roomStacks\"") {
+    val id = integer("id").autoIncrement(idSeqName = "roomStacks_id_seq")
     val gameId = varchar("gameId", 6)
-    val stackTypeId = short("stackTypeId")
     val curIndex = short("curIndex").nullable()
+    val flipped = bool("flipped")
 }
 
-object StackContents : Table("\"stackContents\"") {
-    val id = integer("id").autoIncrement(idSeqName = "stackContents_id_seq")
+object RoomStackContents : Table("\"roomStackContents\"") {
+    val id = integer("id").autoIncrement(idSeqName = "roomStackContents_id_seq")
     val stackId = integer("stackId")
     val index = short("index")
-    val contentId = short("contentId")
+    val roomDefId = short("roomDefId")
 }
