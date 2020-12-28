@@ -1,5 +1,7 @@
 package com.tylerkindy.betrayal
 
+import com.tylerkindy.betrayal.defs.RollTable
+import com.tylerkindy.betrayal.defs.Subtype
 import kotlinx.serialization.Serializable
 
 @Suppress("unused")
@@ -128,6 +130,16 @@ data class RoomStackResponse(
 data class PlaceRoomResponse(
     val rooms: List<Room>,
     val nextRoom: StackRoom?
+)
+
+@Serializable
+data class ItemCard(
+    val id: Int,
+    val name: String,
+    val subtype: Subtype?,
+    val flavorText: String?,
+    val description: String,
+    val rollTable: RollTable?
 )
 
 @Serializable

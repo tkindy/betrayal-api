@@ -81,6 +81,7 @@ sealed class RollTarget {
     }
 }
 
+@Serializable
 data class RollTableRow(
     val target: RollTarget,
     val outcome: String
@@ -108,6 +109,7 @@ data class EventDefinition(
     val rollTable: RollTable?
 )
 
+@Serializable
 enum class Subtype {
     COMPANION, WEAPON
 }
