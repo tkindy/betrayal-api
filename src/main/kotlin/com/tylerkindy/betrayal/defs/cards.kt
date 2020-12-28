@@ -1,21 +1,54 @@
 package com.tylerkindy.betrayal.defs
 
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encoding.Decoder
+import kotlinx.serialization.encoding.Encoder
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
 
+@Serializable
 sealed class RollTarget {
+    @Serializable
+    @SerialName("EXACT")
     data class ExactRollTarget(val target: Int) : RollTarget() {
         override fun matches(roll: Int): Boolean {
             return target == roll
         }
     }
 
-    data class RangeRollTarget(val target: IntRange) : RollTarget() {
+    @Serializable(with = RangeRollTarget.Serializer::class)
+    @SerialName("RANGE")
+    data class RangeRollTarget(val targetRange: IntRange) : RollTarget() {
         override fun matches(roll: Int): Boolean {
-            return target.contains(roll)
+            return targetRange.contains(roll)
+        }
+
+        object Serializer : KSerializer<RangeRollTarget> {
+            override val descriptor: SerialDescriptor = RangeSurrogate.serializer().descriptor
+
+            override fun serialize(encoder: Encoder, value: RangeRollTarget) {
+                encoder.encodeSerializableValue(
+                    RangeSurrogate.serializer(),
+                    RangeSurrogate(start = value.targetRange.first, end = value.targetRange.last)
+                )
+            }
+
+            override fun deserialize(decoder: Decoder): RangeRollTarget {
+                val surrogate = decoder.decodeSerializableValue(RangeSurrogate.serializer())
+                return RangeRollTarget(targetRange = surrogate.start..surrogate.end)
+            }
+
+            @Serializable
+            @SerialName("RANGE")
+            private class RangeSurrogate(val start: Int, val end: Int)
         }
     }
 
+    @Serializable
+    @SerialName("MIN")
     data class MinRollTarget(val minimum: Int) : RollTarget() {
         override fun matches(roll: Int): Boolean {
             return roll >= minimum
