@@ -133,3 +133,9 @@ val omens = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
             rollTable = parseRollTable(it["rollTable"])
         )
     }
+
+enum class CardType(val id: Short) {
+    EVENT(0),
+    ITEM(1),
+    OMEN(2)
+}
