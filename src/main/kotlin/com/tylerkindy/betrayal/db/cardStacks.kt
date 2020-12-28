@@ -1,29 +1,36 @@
 package com.tylerkindy.betrayal.db
 
+import com.tylerkindy.betrayal.ItemCard
 import com.tylerkindy.betrayal.defs.CardType
 import com.tylerkindy.betrayal.defs.events
 import com.tylerkindy.betrayal.defs.items
 import com.tylerkindy.betrayal.defs.omens
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.SortOrder
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
+import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 fun createCardStacks(gameId: String) {
-    val itemStackContents = items.shuffled()
+    val itemStackContents = items.values.shuffled()
         .mapIndexed { i, item ->
             CardStackContentRequest(
                 index = i.toShort(),
                 cardDefId = item.id
             )
         }
-    val eventStackContents = events.shuffled()
+    val eventStackContents = events.values.shuffled()
         .mapIndexed { i, event ->
             CardStackContentRequest(
                 index = i.toShort(),
                 cardDefId = event.id
             )
         }
-    val omenStackContents = omens.shuffled()
+    val omenStackContents = omens.values.shuffled()
         .mapIndexed { i, omen ->
             CardStackContentRequest(
                 index = i.toShort(),
@@ -38,7 +45,7 @@ fun createCardStacks(gameId: String) {
     }
 }
 
-fun createCardStack(gameId: String, cardType: CardType, contents: List<CardStackContentRequest>) {
+private fun createCardStack(gameId: String, cardType: CardType, contents: List<CardStackContentRequest>) {
     val stackId = CardStacks.insert {
         it[this.gameId] = gameId
         it[cardTypeId] = cardType.id
@@ -51,6 +58,73 @@ fun createCardStack(gameId: String, cardType: CardType, contents: List<CardStack
         this[CardStackContents.cardDefId] = it.cardDefId
     }
 }
+
+fun drawItem(gameId: String): ItemCard {
+    return drawCard(gameId, CardType.ITEM) {
+        val cardDefId = this[CardStackContents.cardDefId]
+        val cardDef = items[cardDefId] ?: error("No item def with ID $cardDefId")
+        ItemCard(
+            id = this[CardStackContents.id],
+            name = cardDef.name,
+            subtype = cardDef.subtype,
+            flavorText = cardDef.flavorText,
+            description = cardDef.description,
+            rollTable = cardDef.rollTable
+        )
+    }
+}
+
+private fun <T> drawCard(
+    gameId: String,
+    cardType: CardType,
+    buildCard: ResultRow.() -> T
+): T {
+    return transaction {
+        val stack = CardStacks.select {
+            (CardStacks.gameId eq gameId) and (CardStacks.cardTypeId eq cardType.id)
+        }
+            .firstOrNull()
+            ?.toCardStack() ?: error("No $cardType stack found for game $gameId")
+
+        stack.curIndex ?: throw IllegalStateException()
+
+        val contentRow = CardStackContents.select {
+            (CardStackContents.stackId eq stack.id) and (CardStackContents.index eq stack.curIndex)
+        }
+            .firstOrNull()
+            ?: error("No $cardType card in stack ${stack.id} at index ${stack.curIndex}")
+
+        CardStackContents.deleteWhere { CardStackContents.id eq contentRow[CardStackContents.id] }
+
+        val nextIndex = CardStackContents.slice(CardStackContents.index)
+            .select { CardStackContents.stackId eq stack.id }
+            .orderBy(CardStackContents.index, SortOrder.ASC)
+            .firstOrNull()
+            ?.get(CardStackContents.index)
+
+        CardStacks.update(where = { CardStacks.id eq stack.id }) {
+            it[curIndex] = nextIndex
+        }
+
+        contentRow.buildCard()
+    }
+}
+
+private fun ResultRow.toCardStack(): CardStack {
+    return CardStack(
+        id = this[CardStacks.id],
+        gameId = this[CardStacks.gameId],
+        cardType = CardType.values().first { it.id == this[CardStacks.cardTypeId] },
+        curIndex = this[CardStacks.curIndex]
+    )
+}
+
+data class CardStack(
+    val id: Int,
+    val gameId: String,
+    val cardType: CardType,
+    val curIndex: Short?
+)
 
 data class CardStackContentRequest(
     val index: Short,

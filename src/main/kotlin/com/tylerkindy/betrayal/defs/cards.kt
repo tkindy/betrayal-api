@@ -144,6 +144,7 @@ val events = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
             rollTable = parseRollTable(it["rollTable"])
         )
     }
+    .associateBy { it.id }
 val items = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
     .parse(InputStreamReader(ItemDefinition::class.java.getResourceAsStream("/items.csv")))
     .map {
@@ -156,6 +157,7 @@ val items = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
             rollTable = parseRollTable(it["rollTable"])
         )
     }
+    .associateBy { it.id }
 val omens = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
     .parse(InputStreamReader(OmenDefinition::class.java.getResourceAsStream("/omens.csv")))
     .map {
@@ -168,6 +170,7 @@ val omens = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
             rollTable = parseRollTable(it["rollTable"])
         )
     }
+    .associateBy { it.id }
 
 enum class CardType(val id: Short) {
     EVENT(0),
