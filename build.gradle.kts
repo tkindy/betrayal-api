@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jmailen.gradle.kotlinter.tasks.FormatTask
 
 plugins {
     kotlin("jvm") version "1.4.20"
@@ -64,6 +65,7 @@ liquibase {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
+    dependsOn(tasks.withType<FormatTask>())
 }
 
 tasks.register("stage") {
