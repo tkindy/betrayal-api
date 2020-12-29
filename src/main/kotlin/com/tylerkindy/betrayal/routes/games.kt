@@ -37,6 +37,7 @@ val gameRoutes: Routing.() -> Unit = {
             roomRoutes()
             playerRoutes()
             roomStackRoutes()
+            cardRoutes()
         }
 
         post {
