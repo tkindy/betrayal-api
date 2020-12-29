@@ -1,11 +1,10 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jlleitschuh.gradle.ktlint.KtlintFormatTask
 
 plugins {
     kotlin("jvm") version "1.4.20"
     kotlin("plugin.serialization") version "1.4.20"
     application
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
+    id("org.jmailen.kotlinter") version "3.3.0"
     id("com.github.ben-manes.versions") version "0.36.0"
     id("org.liquibase.gradle") version "2.0.4"
 }
@@ -65,7 +64,6 @@ liquibase {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions.jvmTarget = "11"
-    dependsOn(tasks.withType<KtlintFormatTask>())
 }
 
 tasks.register("stage") {
