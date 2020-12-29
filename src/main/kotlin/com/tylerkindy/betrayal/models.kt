@@ -153,6 +153,16 @@ data class EventCard(
 )
 
 @Serializable
+data class OmenCard(
+    val id: Int,
+    val name: String,
+    val subtype: Subtype?,
+    val flavorText: String?,
+    val description: String,
+    val rollTable: RollTable?
+)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
