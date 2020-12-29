@@ -1,5 +1,6 @@
 package com.tylerkindy.betrayal.db
 
+import com.tylerkindy.betrayal.EventCard
 import com.tylerkindy.betrayal.ItemCard
 import com.tylerkindy.betrayal.defs.CardType
 import com.tylerkindy.betrayal.defs.events
@@ -67,6 +68,21 @@ fun drawItem(gameId: String): ItemCard {
             id = this[CardStackContents.id],
             name = cardDef.name,
             subtype = cardDef.subtype,
+            flavorText = cardDef.flavorText,
+            description = cardDef.description,
+            rollTable = cardDef.rollTable
+        )
+    }
+}
+
+fun drawEvent(gameId: String): EventCard {
+    return drawCard(gameId, CardType.EVENT) {
+        val cardDefId = this[CardStackContents.cardDefId]
+        val cardDef = events[cardDefId] ?: error("No event def with ID $cardDefId")
+        EventCard(
+            id = this[CardStackContents.id],
+            name = cardDef.name,
+            condition = cardDef.condition,
             flavorText = cardDef.flavorText,
             description = cardDef.description,
             rollTable = cardDef.rollTable

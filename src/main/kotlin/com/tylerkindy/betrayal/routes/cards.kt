@@ -1,5 +1,6 @@
 package com.tylerkindy.betrayal.routes
 
+import com.tylerkindy.betrayal.db.drawEvent
 import com.tylerkindy.betrayal.db.drawItem
 import io.ktor.application.call
 import io.ktor.response.respond
@@ -13,6 +14,13 @@ val cardRoutes: Route.() -> Unit = {
             post("draw") {
                 val gameId = call.parameters["gameId"]!!
                 call.respond(drawItem(gameId))
+            }
+        }
+
+        route("events") {
+            post("draw") {
+                val gameId = call.parameters["gameId"]!!
+                call.respond(drawEvent(gameId))
             }
         }
     }

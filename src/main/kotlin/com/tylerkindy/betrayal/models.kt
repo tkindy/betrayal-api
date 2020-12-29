@@ -143,6 +143,16 @@ data class ItemCard(
 )
 
 @Serializable
+data class EventCard(
+    val id: Int,
+    val name: String,
+    val condition: String?,
+    val flavorText: String?,
+    val description: String,
+    val rollTable: RollTable?
+)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
