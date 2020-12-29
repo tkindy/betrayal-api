@@ -49,7 +49,7 @@ dependencies {
 }
 
 application {
-    mainClassName = "com.tylerkindy.betrayal.ServerKt"
+    mainClass.set("com.tylerkindy.betrayal.ServerKt")
 }
 
 liquibase {
