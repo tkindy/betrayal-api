@@ -7,7 +7,6 @@ import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.routing.routing
-import io.ktor.serialization.DefaultJson
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
@@ -26,8 +25,9 @@ fun main() {
     embeddedServer(Netty, port = port) {
         install(ContentNegotiation) {
             json(
-                Json(DefaultJson) {
-                    prettyPrint = true
+                Json {
+                    encodeDefaults = true
+                    isLenient = true
                 }
             )
         }
