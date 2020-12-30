@@ -45,7 +45,13 @@ val cardRoutes: Route.() -> Unit = {
         route("drawn") {
             get {
                 val gameId = call.parameters["gameId"]!!
-                val card: Card = getDrawnCard(gameId)
+                val card = getDrawnCard(gameId)
+
+                if (card == null) {
+                    call.respond(HttpStatusCode.NotFound, "")
+                    return@get
+                }
+
                 call.respondWithCard(card)
             }
             post("discard") {

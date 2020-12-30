@@ -9,16 +9,17 @@ import org.jetbrains.exposed.sql.deleteWhere
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
-fun getDrawnCard(gameId: String): Card {
+fun getDrawnCard(gameId: String): Card? {
     return transaction {
-        val row = DrawnCards.select { DrawnCards.gameId eq gameId }
-            .firstOrNull() ?: throw IllegalStateException("No drawn card")
-
-        when (CardType.fromId(row[DrawnCards.cardTypeId])) {
-            CardType.EVENT -> events[row[DrawnCards.cardDefId]]!!.toCard()
-            CardType.ITEM -> items[row[DrawnCards.cardDefId]]!!.toCard()
-            CardType.OMEN -> omens[row[DrawnCards.cardDefId]]!!.toCard()
-        }
+        DrawnCards.select { DrawnCards.gameId eq gameId }
+            .firstOrNull()
+            ?.let { row ->
+                when (CardType.fromId(row[DrawnCards.cardTypeId])) {
+                    CardType.EVENT -> events[row[DrawnCards.cardDefId]]!!.toCard()
+                    CardType.ITEM -> items[row[DrawnCards.cardDefId]]!!.toCard()
+                    CardType.OMEN -> omens[row[DrawnCards.cardDefId]]!!.toCard()
+                }
+            }
     }
 }
 
