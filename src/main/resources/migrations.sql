@@ -69,3 +69,13 @@ CREATE TABLE "cardStackContents" (
 );
 
 CREATE UNIQUE INDEX ON "cardStackContents" ("stackId", "index")
+
+--changeset tkindy:6
+CREATE TABLE "drawnCards" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "cardTypeId" SMALLINT NOT NULL,
+    "cardDefId" SMALLINT NOT NULL
+);
+
+CREATE UNIQUE INDEX ON "drawnCards" ("gameId");

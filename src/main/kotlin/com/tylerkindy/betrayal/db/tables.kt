@@ -60,3 +60,10 @@ object CardStackContents : Table("\"cardStackContents\"") {
     val index = short("index")
     val cardDefId = short("cardDefId")
 }
+
+object DrawnCards : Table("\"drawnCards\"") {
+    val id = integer("id").autoIncrement(idSeqName = "drawnCards_id_seq")
+    val gameId = integer("gameId")
+    val cardTypeId = short("cardTypeId")
+    val cardDefId = short("cardDefId")
+}
