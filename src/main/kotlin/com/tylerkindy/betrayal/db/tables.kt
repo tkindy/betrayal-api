@@ -46,3 +46,24 @@ object RoomStackContents : Table("\"roomStackContents\"") {
     val index = short("index")
     val roomDefId = short("roomDefId")
 }
+
+object CardStacks : Table("\"cardStacks\"") {
+    val id = integer("id").autoIncrement(idSeqName = "cardStacks_id_seq")
+    val gameId = varchar("gameId", 6)
+    val cardTypeId = short("cardTypeId")
+    val curIndex = short("curIndex").nullable()
+}
+
+object CardStackContents : Table("\"cardStackContents\"") {
+    val id = integer("id").autoIncrement(idSeqName = "cardStackContents_id_seq")
+    val stackId = integer("stackId")
+    val index = short("index")
+    val cardDefId = short("cardDefId")
+}
+
+object DrawnCards : Table("\"drawnCards\"") {
+    val id = integer("id").autoIncrement(idSeqName = "drawnCards_id_seq")
+    val gameId = varchar("gameId", 6)
+    val cardTypeId = short("cardTypeId")
+    val cardDefId = short("cardDefId")
+}

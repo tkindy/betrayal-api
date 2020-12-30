@@ -1,5 +1,8 @@
 package com.tylerkindy.betrayal
 
+import com.tylerkindy.betrayal.defs.RollTable
+import com.tylerkindy.betrayal.defs.Subtype
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Suppress("unused")
@@ -129,6 +132,39 @@ data class PlaceRoomResponse(
     val rooms: List<Room>,
     val nextRoom: StackRoom?
 )
+
+@Serializable
+sealed class Card {
+    @Serializable
+    @SerialName("ITEM")
+    data class ItemCard(
+        val name: String,
+        val subtype: Subtype?,
+        val flavorText: String?,
+        val description: String,
+        val rollTable: RollTable?
+    ) : Card()
+
+    @Serializable
+    @SerialName("EVENT")
+    data class EventCard(
+        val name: String,
+        val condition: String?,
+        val flavorText: String?,
+        val description: String,
+        val rollTable: RollTable?
+    ) : Card()
+
+    @Serializable
+    @SerialName("OMEN")
+    data class OmenCard(
+        val name: String,
+        val subtype: Subtype?,
+        val flavorText: String?,
+        val description: String,
+        val rollTable: RollTable?
+    ) : Card()
+}
 
 @Serializable
 data class GameRequest(val name: String, val numPlayers: Int)

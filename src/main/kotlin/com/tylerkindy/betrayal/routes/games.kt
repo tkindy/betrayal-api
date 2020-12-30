@@ -3,6 +3,7 @@ package com.tylerkindy.betrayal.routes
 import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
 import com.tylerkindy.betrayal.db.Games
+import com.tylerkindy.betrayal.db.createCardStacks
 import com.tylerkindy.betrayal.db.createRoomStack
 import com.tylerkindy.betrayal.db.insertStartingPlayers
 import com.tylerkindy.betrayal.db.insertStartingRooms
@@ -36,6 +37,7 @@ val gameRoutes: Routing.() -> Unit = {
             roomRoutes()
             playerRoutes()
             roomStackRoutes()
+            cardRoutes()
         }
 
         post {
@@ -61,6 +63,7 @@ val gameRoutes: Routing.() -> Unit = {
             insertStartingRooms(gameId)
             insertStartingPlayers(gameId, gameRequest.numPlayers)
             createRoomStack(gameId)
+            createCardStacks(gameId)
 
             call.respond(Game(id = gameId, name = gameRequest.name))
         }
