@@ -143,7 +143,7 @@ sealed class Card {
         val flavorText: String?,
         val description: String,
         val rollTable: RollTable?
-    )
+    ) : Card()
 
     @Serializable
     @SerialName("EVENT")
@@ -153,7 +153,7 @@ sealed class Card {
         val flavorText: String?,
         val description: String,
         val rollTable: RollTable?
-    )
+    ) : Card()
 
     @Serializable
     @SerialName("OMEN")
@@ -163,7 +163,7 @@ sealed class Card {
         val flavorText: String?,
         val description: String,
         val rollTable: RollTable?
-    )
+    ) : Card()
 }
 
 @Serializable
