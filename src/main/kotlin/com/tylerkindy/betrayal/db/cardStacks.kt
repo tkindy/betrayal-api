@@ -1,8 +1,6 @@
 package com.tylerkindy.betrayal.db
 
-import com.tylerkindy.betrayal.EventCard
-import com.tylerkindy.betrayal.ItemCard
-import com.tylerkindy.betrayal.OmenCard
+import com.tylerkindy.betrayal.Card
 import com.tylerkindy.betrayal.defs.CardType
 import com.tylerkindy.betrayal.defs.events
 import com.tylerkindy.betrayal.defs.items
@@ -61,48 +59,27 @@ private fun createCardStack(gameId: String, cardType: CardType, contents: List<C
     }
 }
 
-fun drawItem(gameId: String): ItemCard {
+fun drawItem(gameId: String): Card.ItemCard {
     return drawCard(gameId, CardType.ITEM) {
         val cardDefId = this[CardStackContents.cardDefId]
         val cardDef = items[cardDefId] ?: error("No item def with ID $cardDefId")
-        ItemCard(
-            id = this[CardStackContents.id],
-            name = cardDef.name,
-            subtype = cardDef.subtype,
-            flavorText = cardDef.flavorText,
-            description = cardDef.description,
-            rollTable = cardDef.rollTable
-        )
+        cardDef.toCard()
     }
 }
 
-fun drawEvent(gameId: String): EventCard {
+fun drawEvent(gameId: String): Card.EventCard {
     return drawCard(gameId, CardType.EVENT) {
         val cardDefId = this[CardStackContents.cardDefId]
         val cardDef = events[cardDefId] ?: error("No event def with ID $cardDefId")
-        EventCard(
-            id = this[CardStackContents.id],
-            name = cardDef.name,
-            condition = cardDef.condition,
-            flavorText = cardDef.flavorText,
-            description = cardDef.description,
-            rollTable = cardDef.rollTable
-        )
+        cardDef.toCard()
     }
 }
 
-fun drawOmen(gameId: String): OmenCard {
+fun drawOmen(gameId: String): Card.OmenCard {
     return drawCard(gameId, CardType.OMEN) {
         val cardDefId = this[CardStackContents.cardDefId]
         val cardDef = omens[cardDefId] ?: error("No omen def with ID $cardDefId")
-        OmenCard(
-            id = this[CardStackContents.id],
-            name = cardDef.name,
-            subtype = cardDef.subtype,
-            flavorText = cardDef.flavorText,
-            description = cardDef.description,
-            rollTable = cardDef.rollTable
-        )
+        cardDef.toCard()
     }
 }
 

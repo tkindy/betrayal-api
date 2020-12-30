@@ -2,6 +2,7 @@ package com.tylerkindy.betrayal
 
 import com.tylerkindy.betrayal.defs.RollTable
 import com.tylerkindy.betrayal.defs.Subtype
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Suppress("unused")
@@ -133,34 +134,37 @@ data class PlaceRoomResponse(
 )
 
 @Serializable
-data class ItemCard(
-    val id: Int,
-    val name: String,
-    val subtype: Subtype?,
-    val flavorText: String?,
-    val description: String,
-    val rollTable: RollTable?
-)
+sealed class Card {
+    @Serializable
+    @SerialName("ITEM")
+    data class ItemCard(
+        val name: String,
+        val subtype: Subtype?,
+        val flavorText: String?,
+        val description: String,
+        val rollTable: RollTable?
+    )
 
-@Serializable
-data class EventCard(
-    val id: Int,
-    val name: String,
-    val condition: String?,
-    val flavorText: String?,
-    val description: String,
-    val rollTable: RollTable?
-)
+    @Serializable
+    @SerialName("EVENT")
+    data class EventCard(
+        val name: String,
+        val condition: String?,
+        val flavorText: String?,
+        val description: String,
+        val rollTable: RollTable?
+    )
 
-@Serializable
-data class OmenCard(
-    val id: Int,
-    val name: String,
-    val subtype: Subtype?,
-    val flavorText: String?,
-    val description: String,
-    val rollTable: RollTable?
-)
+    @Serializable
+    @SerialName("OMEN")
+    data class OmenCard(
+        val name: String,
+        val subtype: Subtype?,
+        val flavorText: String?,
+        val description: String,
+        val rollTable: RollTable?
+    )
+}
 
 @Serializable
 data class GameRequest(val name: String, val numPlayers: Int)

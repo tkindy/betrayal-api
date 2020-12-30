@@ -1,5 +1,6 @@
 package com.tylerkindy.betrayal.defs
 
+import com.tylerkindy.betrayal.Card
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
@@ -107,7 +108,17 @@ data class EventDefinition(
     val flavorText: String?,
     val description: String,
     val rollTable: RollTable?
-)
+) {
+    fun toCard(): Card.EventCard {
+        return Card.EventCard(
+            name = name,
+            condition = condition,
+            flavorText = flavorText,
+            description = description,
+            rollTable = rollTable
+        )
+    }
+}
 
 @Serializable
 enum class Subtype {
@@ -121,7 +132,17 @@ data class ItemDefinition(
     val flavorText: String?,
     val description: String,
     val rollTable: RollTable?
-)
+) {
+    fun toCard(): Card.ItemCard {
+        return Card.ItemCard(
+            name = name,
+            subtype = subtype,
+            flavorText = flavorText,
+            description = description,
+            rollTable = rollTable
+        )
+    }
+}
 
 data class OmenDefinition(
     val id: Short,
@@ -130,7 +151,17 @@ data class OmenDefinition(
     val flavorText: String?,
     val description: String,
     val rollTable: RollTable?
-)
+) {
+    fun toCard(): Card.OmenCard {
+        return Card.OmenCard(
+            name = name,
+            subtype = subtype,
+            flavorText = flavorText,
+            description = description,
+            rollTable = rollTable
+        )
+    }
+}
 
 val events = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
     .parse(InputStreamReader(EventDefinition::class.java.getResourceAsStream("/events.csv")))
