@@ -63,7 +63,7 @@ object CardStackContents : Table("\"cardStackContents\"") {
 
 object DrawnCards : Table("\"drawnCards\"") {
     val id = integer("id").autoIncrement(idSeqName = "drawnCards_id_seq")
-    val gameId = integer("gameId")
+    val gameId = varchar("gameId", 6)
     val cardTypeId = short("cardTypeId")
     val cardDefId = short("cardDefId")
 }

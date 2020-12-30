@@ -112,6 +112,13 @@ private fun <T> drawCard(
     buildCard: ResultRow.() -> T
 ): T {
     return transaction {
+        val drawnCard = DrawnCards.select { DrawnCards.gameId eq gameId }
+            .firstOrNull()
+
+        if (drawnCard != null) {
+            throw IllegalStateException("There's already a card drawn")
+        }
+
         val stack = CardStacks.select {
             (CardStacks.gameId eq gameId) and (CardStacks.cardTypeId eq cardType.id)
         }
@@ -127,6 +134,11 @@ private fun <T> drawCard(
             ?: error("No $cardType card in stack ${stack.id} at index ${stack.curIndex}")
 
         CardStackContents.deleteWhere { CardStackContents.id eq contentRow[CardStackContents.id] }
+        DrawnCards.insert {
+            it[this.gameId] = gameId
+            it[cardTypeId] = cardType.id
+            it[cardDefId] = contentRow[CardStackContents.cardDefId]
+        }
 
         val nextIndex = CardStackContents.slice(CardStackContents.index)
             .select { CardStackContents.stackId eq stack.id }
