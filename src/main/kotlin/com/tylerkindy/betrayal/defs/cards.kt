@@ -175,5 +175,11 @@ val omens = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
 enum class CardType(val id: Short) {
     EVENT(0),
     ITEM(1),
-    OMEN(2)
+    OMEN(2);
+
+    companion object {
+        fun fromId(id: Short): CardType {
+            return values().first { it.id == id }
+        }
+    }
 }

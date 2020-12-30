@@ -158,7 +158,7 @@ private fun ResultRow.toCardStack(): CardStack {
     return CardStack(
         id = this[CardStacks.id],
         gameId = this[CardStacks.gameId],
-        cardType = CardType.values().first { it.id == this[CardStacks.cardTypeId] },
+        cardType = CardType.fromId(this[CardStacks.cardTypeId]),
         curIndex = this[CardStacks.curIndex]
     )
 }
