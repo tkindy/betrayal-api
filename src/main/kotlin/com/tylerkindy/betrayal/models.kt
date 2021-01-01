@@ -167,6 +167,23 @@ sealed class Card {
 }
 
 @Serializable
+data class HeldCard(
+    val id: Int,
+    val card: Card
+)
+
+@Serializable
+data class PlayerInventory(
+    val playerId: Int,
+    val cards: List<HeldCard>
+)
+
+@Serializable
+data class GiveToPlayerBody(
+    val playerId: Int
+)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable

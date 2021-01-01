@@ -79,3 +79,13 @@ CREATE TABLE "drawnCards" (
 );
 
 CREATE UNIQUE INDEX ON "drawnCards" ("gameId");
+
+--changeset tkindy:7
+CREATE TABLE "playerInventories" (
+    "id" SERIAL PRIMARY KEY,
+    "playerId" INT NOT NULL,
+    "cardTypeId" SMALLINT NOT NULL,
+    "cardDefId" SMALLINT NOT NULL
+);
+
+CREATE INDEX ON "playerInventories" ("playerId");
