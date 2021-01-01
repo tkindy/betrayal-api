@@ -1,6 +1,7 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.GridLoc
+import com.tylerkindy.betrayal.db.getAllPlayerInventories
 import com.tylerkindy.betrayal.db.getPlayers
 import com.tylerkindy.betrayal.db.movePlayer
 import io.ktor.application.call
@@ -30,6 +31,11 @@ val playerRoutes: Route.() -> Unit = {
                 movePlayer(gameId, playerId, loc)
                 call.respond(HttpStatusCode.OK)
             }
+        }
+
+        get("inventories") {
+            val gameId = call.parameters["gameId"]!!
+            call.respond(getAllPlayerInventories(gameId))
         }
     }
 }

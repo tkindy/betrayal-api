@@ -7,6 +7,10 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
+fun getAllPlayerInventories(gameId: String): List<PlayerInventory> {
+    return getPlayers(gameId).map { getPlayerInventory(gameId, it.id) }
+}
+
 fun getPlayerInventory(gameId: String, playerId: Int): PlayerInventory {
     return transaction {
         assertPlayerInGame(gameId, playerId)
