@@ -19,10 +19,12 @@ fun getPlayers(gameId: String): List<Player> {
 }
 
 fun getPlayer(gameId: String, playerId: Int): Player {
-    return transaction { Players.select { (Players.gameId eq gameId) and (Players.id eq playerId) }
-        .firstOrNull()
-        ?.run(ResultRow::toPlayer)
-        ?: throw IllegalArgumentException("Player $playerId is not in game $gameId") }
+    return transaction {
+        Players.select { (Players.gameId eq gameId) and (Players.id eq playerId) }
+            .firstOrNull()
+            ?.run(ResultRow::toPlayer)
+            ?: throw IllegalArgumentException("Player $playerId is not in game $gameId")
+    }
 }
 
 private fun ResultRow.toPlayer(): Player {
