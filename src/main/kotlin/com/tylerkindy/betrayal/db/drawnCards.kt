@@ -1,7 +1,7 @@
 package com.tylerkindy.betrayal.db
 
 import com.tylerkindy.betrayal.Card
-import com.tylerkindy.betrayal.PlayerInventory
+import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.defs.CardType
 import com.tylerkindy.betrayal.defs.events
 import com.tylerkindy.betrayal.defs.items
@@ -27,7 +27,7 @@ fun discardDrawnCard(gameId: String) {
     }
 }
 
-fun giveDrawnCardToPlayer(gameId: String, playerId: Int): PlayerInventory {
+fun giveDrawnCardToPlayer(gameId: String, playerId: Int): Player {
     return transaction {
         val card = DrawnCards.select { DrawnCards.gameId eq gameId }
             .firstOrNull()
@@ -42,7 +42,7 @@ fun giveDrawnCardToPlayer(gameId: String, playerId: Int): PlayerInventory {
         }
         DrawnCards.deleteWhere { DrawnCards.gameId eq gameId }
 
-        getPlayerInventory(gameId, playerId)
+        getPlayer(gameId, playerId)
     }
 }
 

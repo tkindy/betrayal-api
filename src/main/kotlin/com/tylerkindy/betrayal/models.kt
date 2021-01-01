@@ -26,7 +26,8 @@ data class Player(
     val speed: Trait,
     val might: Trait,
     val sanity: Trait,
-    val knowledge: Trait
+    val knowledge: Trait,
+    val cards: List<HeldCard>
 )
 
 @Suppress("unused")
@@ -170,12 +171,6 @@ sealed class Card {
 data class HeldCard(
     val id: Int,
     val card: Card
-)
-
-@Serializable
-data class PlayerInventory(
-    val playerId: Int,
-    val cards: List<HeldCard>
 )
 
 @Serializable

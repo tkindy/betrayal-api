@@ -4,6 +4,7 @@ import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
+import org.jetbrains.exposed.sql.ResultRow
 import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
@@ -13,23 +14,34 @@ import org.jetbrains.exposed.sql.update
 fun getPlayers(gameId: String): List<Player> {
     return transaction {
         Players.select { Players.gameId eq gameId }
-            .map {
-                val characterId = it[Players.characterId]
-                val characterDef = characters[characterId]
-                    ?: error("No character defined with ID $characterId")
-
-                Player(
-                    id = it[Players.id],
-                    characterName = characterDef.name,
-                    color = characterDef.color,
-                    loc = GridLoc(it[Players.gridX], it[Players.gridY]),
-                    speed = characterDef.speed.toTrait(it[Players.speedIndex].toInt()),
-                    might = characterDef.might.toTrait(it[Players.mightIndex].toInt()),
-                    sanity = characterDef.sanity.toTrait(it[Players.sanityIndex].toInt()),
-                    knowledge = characterDef.knowledge.toTrait(it[Players.knowledgeIndex].toInt())
-                )
-            }
+            .map { it.toPlayer() }
     }
+}
+
+fun getPlayer(gameId: String, playerId: Int): Player {
+    return transaction { Players.select { (Players.gameId eq gameId) and (Players.id eq playerId) }
+        .firstOrNull()
+        ?.run(ResultRow::toPlayer)
+        ?: throw IllegalArgumentException("Player $playerId is not in game $gameId") }
+}
+
+private fun ResultRow.toPlayer(): Player {
+    val id = this[Players.id]
+    val characterId = this[Players.characterId]
+    val characterDef = characters[characterId]
+        ?: error("No character defined with ID $characterId")
+
+    return Player(
+        id = id,
+        characterName = characterDef.name,
+        color = characterDef.color,
+        loc = GridLoc(this[Players.gridX], this[Players.gridY]),
+        speed = characterDef.speed.toTrait(this[Players.speedIndex].toInt()),
+        might = characterDef.might.toTrait(this[Players.mightIndex].toInt()),
+        sanity = characterDef.sanity.toTrait(this[Players.sanityIndex].toInt()),
+        knowledge = characterDef.knowledge.toTrait(this[Players.knowledgeIndex].toInt()),
+        cards = getPlayerInventory(this[Players.gameId], id)
+    )
 }
 
 fun insertStartingPlayers(gameId: String, numPlayers: Int) {
