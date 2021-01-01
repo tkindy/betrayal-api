@@ -1,16 +1,19 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Card
+import com.tylerkindy.betrayal.GiveToPlayerBody
 import com.tylerkindy.betrayal.db.discardDrawnCard
 import com.tylerkindy.betrayal.db.drawEvent
 import com.tylerkindy.betrayal.db.drawItem
 import com.tylerkindy.betrayal.db.drawOmen
 import com.tylerkindy.betrayal.db.getDrawnCard
+import com.tylerkindy.betrayal.db.giveDrawnCardToPlayer
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.content.TextContent
 import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
+import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import io.ktor.routing.get
@@ -54,10 +57,19 @@ val cardRoutes: Route.() -> Unit = {
 
                 call.respondWithCard(card)
             }
+
             post("discard") {
                 val gameId = call.parameters["gameId"]!!
                 discardDrawnCard(gameId)
                 call.respond(HttpStatusCode.OK, "")
+            }
+
+            post("giveToPlayer") {
+                val gameId = call.parameters["gameId"]!!
+                val playerId = call.receiveOrNull<GiveToPlayerBody>()?.playerId
+                    ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing playerId")
+
+                call.respond(giveDrawnCardToPlayer(gameId, playerId))
             }
         }
     }
