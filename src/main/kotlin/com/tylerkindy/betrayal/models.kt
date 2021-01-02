@@ -174,11 +174,6 @@ data class HeldCard(
 )
 
 @Serializable
-data class GiveToPlayerBody(
-    val playerId: Int
-)
-
-@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable

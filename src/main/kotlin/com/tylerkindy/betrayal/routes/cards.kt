@@ -1,7 +1,6 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Card
-import com.tylerkindy.betrayal.GiveToPlayerBody
 import com.tylerkindy.betrayal.db.discardDrawnCard
 import com.tylerkindy.betrayal.db.drawEvent
 import com.tylerkindy.betrayal.db.drawItem
@@ -19,6 +18,7 @@ import io.ktor.routing.Route
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
@@ -87,3 +87,8 @@ suspend inline fun ApplicationCall.respondWithCard(card: Card) {
         )
     )
 }
+
+@Serializable
+data class GiveToPlayerBody(
+    val playerId: Int
+)
