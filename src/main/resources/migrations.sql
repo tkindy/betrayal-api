@@ -89,3 +89,10 @@ CREATE TABLE "playerInventories" (
 );
 
 CREATE INDEX ON "playerInventories" ("playerId");
+
+--changeset tkindy:8
+CREATE TABLE "diceRolls" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "rolls" VARCHAR(15) NOT NULL
+);

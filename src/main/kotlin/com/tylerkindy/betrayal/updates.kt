@@ -1,6 +1,7 @@
 package com.tylerkindy.betrayal
 
 import com.tylerkindy.betrayal.db.getDrawnCard
+import com.tylerkindy.betrayal.db.getLatestRoll
 import com.tylerkindy.betrayal.db.getPlayers
 import com.tylerkindy.betrayal.db.getRoomStackState
 import com.tylerkindy.betrayal.db.getRooms
@@ -26,7 +27,8 @@ private fun buildUpdate(gameId: String) =
         rooms = getRooms(gameId),
         players = getPlayers(gameId),
         roomStack = getRoomStackState(gameId),
-        drawnCard = getDrawnCard(gameId)
+        drawnCard = getDrawnCard(gameId),
+        latestRoll = getLatestRoll(gameId)
     )
 
 @Serializable
@@ -34,5 +36,6 @@ data class GameUpdate(
     val rooms: List<Room>,
     val players: List<Player>,
     val roomStack: RoomStackResponse,
-    val drawnCard: Card?
+    val drawnCard: Card?,
+    val latestRoll: List<Int>?
 )
