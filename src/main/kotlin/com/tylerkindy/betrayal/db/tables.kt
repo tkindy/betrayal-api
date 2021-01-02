@@ -74,3 +74,9 @@ object PlayerInventories : Table("\"playerInventories\"") {
     val cardTypeId = short("cardTypeId")
     val cardDefId = short("cardDefId")
 }
+
+object DiceRolls : Table("\"diceRolls\"") {
+    val id = integer("id").autoIncrement(idSeqName = "diceRolls_id_seq")
+    val gameId = varchar("gameId", 6)
+    val rolls = varchar("rolls", 15)
+}
