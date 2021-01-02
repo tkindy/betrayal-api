@@ -7,6 +7,7 @@ import com.tylerkindy.betrayal.db.flipRoom
 import com.tylerkindy.betrayal.db.getRoomStackState
 import com.tylerkindy.betrayal.db.placeRoom
 import com.tylerkindy.betrayal.db.rotateFlipped
+import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveOrNull
@@ -30,6 +31,7 @@ val roomStackRoutes: Route.() -> Unit = {
                     nextRoom = advanceRoomStack(gameId)
                 )
             )
+            sendUpdate(gameId)
         }
 
         post("flip") {
@@ -39,6 +41,7 @@ val roomStackRoutes: Route.() -> Unit = {
                     flippedRoom = flipRoom(gameId)
                 )
             )
+            sendUpdate(gameId)
         }
 
         post("rotate") {
@@ -48,6 +51,7 @@ val roomStackRoutes: Route.() -> Unit = {
                     flippedRoom = rotateFlipped(gameId)
                 )
             )
+            sendUpdate(gameId)
         }
 
         post("place") {
@@ -57,6 +61,7 @@ val roomStackRoutes: Route.() -> Unit = {
             call.respond(
                 placeRoom(gameId, loc)
             )
+            sendUpdate(gameId)
         }
     }
 }

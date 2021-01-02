@@ -6,6 +6,7 @@ import com.tylerkindy.betrayal.db.getPlayer
 import com.tylerkindy.betrayal.db.getPlayers
 import com.tylerkindy.betrayal.db.giveHeldCardToPlayer
 import com.tylerkindy.betrayal.db.movePlayer
+import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveOrNull
@@ -33,6 +34,7 @@ val playerRoutes: Route.() -> Unit = {
 
                 movePlayer(gameId, playerId, loc)
                 call.respond(HttpStatusCode.OK)
+                sendUpdate(gameId)
             }
 
             route("cards/{cardId}") {
@@ -45,6 +47,7 @@ val playerRoutes: Route.() -> Unit = {
 
                     discardHeldCard(gameId, playerId, cardId)
                     call.respond(getPlayer(gameId, playerId))
+                    sendUpdate(gameId)
                 }
                 post("giveToPlayer") {
                     val gameId = call.parameters["gameId"]!!
@@ -57,6 +60,7 @@ val playerRoutes: Route.() -> Unit = {
 
                     giveHeldCardToPlayer(gameId, fromPlayerId, cardId, toPlayerId)
                     call.respond(getPlayers(gameId))
+                    sendUpdate(gameId)
                 }
             }
         }

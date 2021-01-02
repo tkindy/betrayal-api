@@ -7,6 +7,7 @@ import com.tylerkindy.betrayal.db.drawItem
 import com.tylerkindy.betrayal.db.drawOmen
 import com.tylerkindy.betrayal.db.getDrawnCard
 import com.tylerkindy.betrayal.db.giveDrawnCardToPlayer
+import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.content.TextContent
@@ -28,6 +29,7 @@ val cardRoutes: Route.() -> Unit = {
             post("draw") {
                 val gameId = call.parameters["gameId"]!!
                 call.respondWithCard(drawItem(gameId))
+                sendUpdate(gameId)
             }
         }
 
@@ -35,6 +37,7 @@ val cardRoutes: Route.() -> Unit = {
             post("draw") {
                 val gameId = call.parameters["gameId"]!!
                 call.respondWithCard(drawEvent(gameId))
+                sendUpdate(gameId)
             }
         }
 
@@ -42,6 +45,7 @@ val cardRoutes: Route.() -> Unit = {
             post("draw") {
                 val gameId = call.parameters["gameId"]!!
                 call.respondWithCard(drawOmen(gameId))
+                sendUpdate(gameId)
             }
         }
 
@@ -62,6 +66,7 @@ val cardRoutes: Route.() -> Unit = {
                 val gameId = call.parameters["gameId"]!!
                 discardDrawnCard(gameId)
                 call.respond(HttpStatusCode.OK, "")
+                sendUpdate(gameId)
             }
 
             post("giveToPlayer") {
@@ -70,6 +75,7 @@ val cardRoutes: Route.() -> Unit = {
                     ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing playerId")
 
                 call.respond(giveDrawnCardToPlayer(gameId, playerId))
+                sendUpdate(gameId)
             }
         }
     }
