@@ -6,7 +6,8 @@ import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader
 
 data class TraitDefinition(val scale: List<Int>, val startingIndex: Int) {
-    fun toTrait(index: Int = startingIndex) = Trait(value = scale[index], index = index)
+    fun toTrait(index: Int = startingIndex) =
+        Trait(value = scale[index], index = index, scale = scale)
 }
 
 data class CharacterDefinition(

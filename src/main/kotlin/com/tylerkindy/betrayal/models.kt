@@ -12,7 +12,7 @@ enum class CharacterColor {
 }
 
 @Serializable
-data class Trait(val value: Int, val index: Int)
+data class Trait(val value: Int, val index: Int, val scale: List<Int>)
 
 @Serializable
 data class GridLoc(val gridX: Int, val gridY: Int)
