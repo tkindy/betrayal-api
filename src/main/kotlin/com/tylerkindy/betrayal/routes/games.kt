@@ -18,6 +18,7 @@ import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
 import io.ktor.websocket.webSocket
+import kotlinx.coroutines.flow.collect
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
@@ -46,7 +47,7 @@ val gameRoutes: Routing.() -> Unit = {
 
             webSocket {
                 val gameId = call.parameters["gameId"]!!
-                for (update in getUpdates(gameId)) {
+                getUpdates(gameId).collect { update ->
                     send(Frame.Text(Json.encodeToString(update)))
                 }
             }

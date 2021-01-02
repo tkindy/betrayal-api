@@ -1,19 +1,19 @@
 package com.tylerkindy.betrayal
 
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
 import java.util.concurrent.ConcurrentHashMap
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 
-val gameChannels = ConcurrentHashMap<String, Channel<GameUpdate>>()
+val gameChannels = ConcurrentHashMap<String, MutableSharedFlow<GameUpdate>>()
 
-fun getUpdates(gameId: String): ReceiveChannel<GameUpdate> =
-    getOrCreateChannel(gameId)
+fun getUpdates(gameId: String): SharedFlow<GameUpdate> =
+    getOrCreateFlow(gameId)
 
 suspend fun sendUpdate(gameId: String, update: GameUpdate) =
-    getOrCreateChannel(gameId).send(update)
+    getOrCreateFlow(gameId).emit(update)
 
-private fun getOrCreateChannel(gameId: String) =
-    gameChannels.computeIfAbsent(gameId) { Channel() }
+private fun getOrCreateFlow(gameId: String) =
+    gameChannels.computeIfAbsent(gameId) { MutableSharedFlow() }
 
 // TODO
 data class GameUpdate(
