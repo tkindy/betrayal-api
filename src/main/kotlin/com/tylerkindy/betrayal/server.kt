@@ -10,6 +10,7 @@ import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
+import io.ktor.websocket.WebSockets
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 import org.slf4j.event.Level
@@ -43,6 +44,7 @@ fun main() {
         install(CallLogging) {
             level = Level.INFO
         }
+        install(WebSockets)
 
         routing {
             gameRoutes()

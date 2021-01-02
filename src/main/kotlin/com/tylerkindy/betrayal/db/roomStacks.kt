@@ -56,11 +56,7 @@ fun getRoomStackState(gameId: String): RoomStackResponse {
 
         if (stack.flipped) {
             RoomStackResponse(
-                flippedRoom = FlippedRoom(
-                    name = room.name,
-                    doorDirections = room.doors,
-                    features = room.features
-                )
+                flippedRoom = room.toFlippedRoom(stack.rotation!!)
             )
         } else {
             RoomStackResponse(
@@ -104,13 +100,14 @@ fun flipRoom(gameId: String): FlippedRoom {
         }
 
         getRoomInStack(stack.id, stack.curIndex)
+            ?.toRoomDef()
             ?.toFlippedRoom(rotation)
             ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
     }
 }
 
-fun rotateFlipped(gameId: String): FlippedRoom {
-    return transaction {
+fun rotateFlipped(gameId: String) {
+    transaction {
         val stack = getRoomStack(gameId)
         stack.curIndex ?: throw StackEmptyException()
         if (!stack.flipped) throw NotFlippedException()
@@ -122,10 +119,6 @@ fun rotateFlipped(gameId: String): FlippedRoom {
         RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
             it[rotation] = newRotation
         }
-
-        getRoomInStack(stack.id, stack.curIndex)
-            ?.toFlippedRoom(newRotation)
-            ?: error("No room at index ${stack.curIndex} in room stack ${stack.id}")
     }
 }
 
@@ -239,11 +232,10 @@ fun ResultRow.toRoomDef(): RoomDefinition {
         ?: error("No room def with ID $roomDefId")
 }
 
-fun ResultRow.toFlippedRoom(rotation: Short): FlippedRoom {
-    val room = toRoomDef()
+fun RoomDefinition.toFlippedRoom(rotation: Short): FlippedRoom {
     return FlippedRoom(
-        name = room.name,
-        doorDirections = rotateDoors(room.doors, rotation),
-        features = room.features
+        name = name,
+        doorDirections = rotateDoors(doors, rotation),
+        features = features
     )
 }

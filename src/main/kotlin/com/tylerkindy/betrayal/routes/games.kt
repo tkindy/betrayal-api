@@ -7,14 +7,20 @@ import com.tylerkindy.betrayal.db.createCardStacks
 import com.tylerkindy.betrayal.db.createRoomStack
 import com.tylerkindy.betrayal.db.insertStartingPlayers
 import com.tylerkindy.betrayal.db.insertStartingRooms
+import com.tylerkindy.betrayal.getUpdates
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.cio.websocket.Frame
 import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.routing.post
 import io.ktor.routing.route
+import io.ktor.websocket.webSocket
+import kotlinx.coroutines.flow.collect
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -38,6 +44,13 @@ val gameRoutes: Routing.() -> Unit = {
             playerRoutes()
             roomStackRoutes()
             cardRoutes()
+
+            webSocket {
+                val gameId = call.parameters["gameId"]!!
+                getUpdates(gameId).collect { update ->
+                    send(Frame.Text(Json.encodeToString(update)))
+                }
+            }
         }
 
         post {
