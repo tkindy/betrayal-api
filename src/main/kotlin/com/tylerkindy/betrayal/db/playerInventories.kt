@@ -3,6 +3,8 @@ package com.tylerkindy.betrayal.db
 import com.tylerkindy.betrayal.HeldCard
 import com.tylerkindy.betrayal.defs.CardType
 import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.deleteWhere
+import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -22,6 +24,35 @@ fun getPlayerInventory(gameId: String, playerId: Int): List<HeldCard> {
                     )
                 )
             }
+    }
+}
+
+fun discardHeldCard(gameId: String, playerId: Int, cardId: Int) {
+    transaction {
+        assertPlayerInGame(gameId, playerId)
+
+        PlayerInventories.deleteWhere {
+            (PlayerInventories.playerId eq playerId) and (PlayerInventories.id eq cardId)
+        }
+    }
+}
+
+fun giveHeldCardToPlayer(gameId: String, fromPlayerId: Int, cardId: Int, toPlayerId: Int) {
+    transaction {
+        assertPlayerInGame(gameId, fromPlayerId)
+        assertPlayerInGame(gameId, toPlayerId)
+
+        val cardRow = PlayerInventories.select {
+            (PlayerInventories.id eq cardId) and (PlayerInventories.playerId eq fromPlayerId)
+        }
+            .firstOrNull() ?: throw IllegalArgumentException("Player $fromPlayerId has no card $cardId")
+
+        PlayerInventories.deleteWhere { PlayerInventories.id eq cardId }
+        PlayerInventories.insert {
+            it[playerId] = toPlayerId
+            it[cardTypeId] = cardRow[cardTypeId]
+            it[cardDefId] = cardRow[cardDefId]
+        }
     }
 }
 
