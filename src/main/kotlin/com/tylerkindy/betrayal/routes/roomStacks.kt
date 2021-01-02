@@ -46,11 +46,8 @@ val roomStackRoutes: Route.() -> Unit = {
 
         post("rotate") {
             val gameId = call.parameters["gameId"]!!
-            call.respond(
-                RoomStackResponse(
-                    flippedRoom = rotateFlipped(gameId)
-                )
-            )
+            rotateFlipped(gameId)
+            call.respond(getRoomStackState(gameId))
             sendUpdate(gameId)
         }
 
