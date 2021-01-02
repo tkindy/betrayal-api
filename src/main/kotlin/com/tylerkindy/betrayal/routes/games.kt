@@ -44,6 +44,7 @@ val gameRoutes: Routing.() -> Unit = {
             playerRoutes()
             roomStackRoutes()
             cardRoutes()
+            diceRollRoutes()
 
             webSocket {
                 val gameId = call.parameters["gameId"]!!
