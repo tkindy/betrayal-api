@@ -1,21 +1,35 @@
 package com.tylerkindy.betrayal
 
+import com.tylerkindy.betrayal.db.getDrawnCard
+import com.tylerkindy.betrayal.db.getPlayers
+import com.tylerkindy.betrayal.db.getRoomStackState
+import com.tylerkindy.betrayal.db.getRooms
+import java.util.concurrent.ConcurrentHashMap
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
-import java.util.concurrent.ConcurrentHashMap
 
-val gameChannels = ConcurrentHashMap<String, MutableSharedFlow<GameUpdate>>()
+private val gameUpdateFlows = ConcurrentHashMap<String, MutableSharedFlow<GameUpdate>>()
 
 fun getUpdates(gameId: String): SharedFlow<GameUpdate> =
     getOrCreateFlow(gameId)
 
-suspend fun sendUpdate(gameId: String, update: GameUpdate) =
-    getOrCreateFlow(gameId).emit(update)
+suspend fun sendUpdate(gameId: String) =
+    getOrCreateFlow(gameId).emit(buildUpdate(gameId))
 
 private fun getOrCreateFlow(gameId: String) =
-    gameChannels.computeIfAbsent(gameId) { MutableSharedFlow() }
+    gameUpdateFlows.computeIfAbsent(gameId) { MutableSharedFlow() }
 
-// TODO
+private fun buildUpdate(gameId: String) =
+    GameUpdate(
+    rooms = getRooms(gameId),
+    players = getPlayers(gameId),
+    roomStack = getRoomStackState(gameId),
+    drawnCard = getDrawnCard(gameId)
+)
+
 data class GameUpdate(
-    val players: List<Player>
+    val rooms: List<Room>,
+    val players: List<Player>,
+    val roomStack: RoomStackResponse,
+    val drawnCard: Card?
 )
