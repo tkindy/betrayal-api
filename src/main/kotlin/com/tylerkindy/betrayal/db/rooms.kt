@@ -9,6 +9,7 @@ import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.batchInsert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 fun ResultRow.toRoom(): Room {
     val roomDefId = this[Rooms.roomDefId]
@@ -94,4 +95,52 @@ fun getRoomAtLoc(gameId: String, loc: GridLoc): Room? {
                 (Rooms.gridY eq loc.gridY)
         }.firstOrNull()?.toRoom()
     }
+}
+
+fun moveRoom(gameId: String, roomId: Int, loc: GridLoc) {
+    transaction {
+        assertRoomInGame(gameId, roomId)
+        if (getRoomAtLoc(gameId, loc) != null) {
+            throw IllegalArgumentException("Can't place room in occupied spot")
+        }
+
+        val originalLoc = Rooms.slice(Rooms.gridX, Rooms.gridY)
+            .select { Rooms.id eq roomId }
+            .first()
+            .let {
+                GridLoc(
+                    gridX = it[Rooms.gridX],
+                    gridY = it[Rooms.gridY]
+                )
+            }
+
+        Rooms.update(where = { Rooms.id eq roomId }) {
+            it[gridX] = loc.gridX
+            it[gridY] = loc.gridY
+        }
+        Players.update(
+            where = {
+                (Players.gameId eq gameId) and
+                    (Players.gridX eq originalLoc.gridX) and
+                    (Players.gridY eq originalLoc.gridY)
+            }
+        ) {
+            it[gridX] = loc.gridX
+            it[gridY] = loc.gridY
+        }
+        Monsters.update(where = {
+            (Monsters.gameId eq gameId) and
+                    (Monsters.gridX eq originalLoc.gridX) and
+                    (Monsters.gridY eq originalLoc.gridY)
+        }) {
+            it[gridX] = loc.gridX
+            it[gridY] = loc.gridY
+        }
+    }
+}
+
+fun assertRoomInGame(gameId: String, roomId: Int) {
+    Rooms.select { (Rooms.id eq roomId) and (Rooms.gameId eq gameId) }
+        .firstOrNull()
+        ?: throw IllegalArgumentException("Room $roomId not in game $gameId")
 }
