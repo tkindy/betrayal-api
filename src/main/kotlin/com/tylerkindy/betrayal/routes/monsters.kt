@@ -5,6 +5,7 @@ import com.tylerkindy.betrayal.db.addMonster
 import com.tylerkindy.betrayal.db.entranceHallLoc
 import com.tylerkindy.betrayal.db.getMonsters
 import com.tylerkindy.betrayal.db.moveMonster
+import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.request.receiveOrNull
@@ -24,6 +25,7 @@ val monsterRoutes: Route.() -> Unit = {
         post {
             val gameId = call.parameters["gameId"]!!
             call.respond(addMonster(gameId, entranceHallLoc))
+            sendUpdate(gameId)
         }
 
         route("{monsterId}") {
@@ -35,6 +37,7 @@ val monsterRoutes: Route.() -> Unit = {
                     ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing gridX or gridY")
 
                 call.respond(moveMonster(gameId, monsterId, loc))
+                sendUpdate(gameId)
             }
         }
     }
