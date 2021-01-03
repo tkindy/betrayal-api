@@ -80,3 +80,11 @@ object DiceRolls : Table("\"diceRolls\"") {
     val gameId = varchar("gameId", 6)
     val rolls = varchar("rolls", 15)
 }
+
+object Monsters : Table("\"monsters\"") {
+    val id = integer("id").autoIncrement(idSeqName = "monsters_id_seq")
+    val gameId = varchar("gameId", 6)
+    val number = integer("number")
+    val gridX = integer("gridX")
+    val gridY = integer("gridY")
+}
