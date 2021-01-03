@@ -2,6 +2,7 @@ package com.tylerkindy.betrayal.db
 
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Player
+import com.tylerkindy.betrayal.TraitName
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
 import org.jetbrains.exposed.sql.ResultRow
@@ -83,5 +84,28 @@ fun movePlayer(gameId: String, playerId: Int, loc: GridLoc) {
 
     if (numUpdated == 0) {
         throw IllegalArgumentException("No player $playerId in game $gameId")
+    }
+}
+
+private val traitIndexRange = 0 until 8
+
+fun setTrait(gameId: String, playerId: Int, trait: TraitName, index: Int) {
+    if (!traitIndexRange.contains(index)) {
+        throw IllegalArgumentException("Invalid trait index $index")
+    }
+
+    val column = when (trait) {
+        TraitName.SPEED -> Players.speedIndex
+        TraitName.MIGHT -> Players.mightIndex
+        TraitName.SANITY -> Players.sanityIndex
+        TraitName.KNOWLEDGE -> Players.knowledgeIndex
+    }
+
+    transaction {
+        assertPlayerInGame(gameId, playerId)
+
+        Players.update(where = { Players.id eq playerId }) {
+            it[column] = index.toShort()
+        }
     }
 }
