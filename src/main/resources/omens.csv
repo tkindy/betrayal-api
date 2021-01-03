@@ -10,7 +10,7 @@ You may pass through the Locked Room without removing a Lock. At the start of ea
 Lose 2 Sanity if you lose the Holy Symbol.",
 5,Cat,COMPANION,"It crossed your path, and you’re supposed to have bad luck. But maybe you crossed its path, and it’s the one that isn’t too happy about it. Now it accompanies you.","You may call on the Cat for luck before your trait roll. Roll 1 die:
 <rollTable>
-This omen cannot be dropped, traded, or stolen.","0  Subtract 2 form the result of that trait roll.
+This omen cannot be dropped, traded, or stolen.","0  Subtract 2 from the result of that trait roll.
 1+  Add 2 to the result of the trait roll."
 6,Vial,,The old and crazy woman said you should drink this potion that glows with an amber light. Maybe that’s how she got so old and crazy.,"Once on your turn, you may drink the Vial. Roll 2 dice:
 <rollTable>","0  Poison! Take 2 points of physical damage.
