@@ -11,6 +11,12 @@ enum class CharacterColor {
     RED, YELLOW, GREEN, BLUE, WHITE, PURPLE
 }
 
+@Suppress("unused")
+@Serializable
+enum class TraitName {
+    SPEED, MIGHT, SANITY, KNOWLEDGE
+}
+
 @Serializable
 data class Trait(val value: Int, val index: Int, val scale: List<Int>)
 

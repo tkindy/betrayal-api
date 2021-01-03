@@ -1,11 +1,13 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.GridLoc
+import com.tylerkindy.betrayal.TraitName
 import com.tylerkindy.betrayal.db.discardHeldCard
 import com.tylerkindy.betrayal.db.getPlayer
 import com.tylerkindy.betrayal.db.getPlayers
 import com.tylerkindy.betrayal.db.giveHeldCardToPlayer
 import com.tylerkindy.betrayal.db.movePlayer
+import com.tylerkindy.betrayal.db.setTrait
 import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -34,6 +36,18 @@ val playerRoutes: Route.() -> Unit = {
 
                 movePlayer(gameId, playerId, loc)
                 call.respond(HttpStatusCode.OK)
+                sendUpdate(gameId)
+            }
+
+            post("setTrait") {
+                val gameId = call.parameters["gameId"]!!
+                val playerId = call.parameters["playerId"]!!.toIntOrNull()
+                    ?: return@post call.respond(HttpStatusCode.BadRequest, "Invalid player ID")
+                val body = call.receiveOrNull<SetTraitBody>()
+                    ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing trait or index")
+
+                setTrait(gameId, playerId, body.trait, body.index)
+                call.respond(getPlayer(gameId, playerId))
                 sendUpdate(gameId)
             }
 
@@ -69,3 +83,6 @@ val playerRoutes: Route.() -> Unit = {
 
 @Serializable
 data class GiveHeldCardToPlayerBody(val toPlayerId: Int)
+
+@Serializable
+data class SetTraitBody(val trait: TraitName, val index: Int)
