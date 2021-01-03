@@ -129,11 +129,13 @@ fun moveRoom(gameId: String, roomId: Int, loc: GridLoc) {
             it[gridX] = loc.gridX
             it[gridY] = loc.gridY
         }
-        Monsters.update(where = {
-            (Monsters.gameId eq gameId) and
+        Monsters.update(
+            where = {
+                (Monsters.gameId eq gameId) and
                     (Monsters.gridX eq originalLoc.gridX) and
                     (Monsters.gridY eq originalLoc.gridY)
-        }) {
+            }
+        ) {
             it[gridX] = loc.gridX
             it[gridY] = loc.gridY
         }

@@ -36,7 +36,7 @@ fun addMonster(gameId: String): Monster {
         val number = prevNumber + 1
 
         val loc = Rooms.slice(Rooms.gridX, Rooms.gridY)
-            .select { (Rooms.gameId eq gameId) and (Rooms.roomDefId eq entranceHallDefId ) }
+            .select { (Rooms.gameId eq gameId) and (Rooms.roomDefId eq entranceHallDefId) }
             .first()
             .let {
                 GridLoc(
