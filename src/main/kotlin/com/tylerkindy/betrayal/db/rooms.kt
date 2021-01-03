@@ -40,9 +40,10 @@ private data class StartingRoom(
     val loc: GridLoc
 )
 val entranceHallLoc = GridLoc(4, 3)
+const val entranceHallDefId: Short = 0
 private val startingRooms = listOf(
     // Entrance Hall
-    StartingRoom(0, entranceHallLoc),
+    StartingRoom(entranceHallDefId, entranceHallLoc),
     // Foyer
     StartingRoom(1, GridLoc(3, 3)),
     // Grand Staircase
