@@ -2,7 +2,6 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.db.addMonster
-import com.tylerkindy.betrayal.db.entranceHallLoc
 import com.tylerkindy.betrayal.db.getMonsters
 import com.tylerkindy.betrayal.db.moveMonster
 import com.tylerkindy.betrayal.sendUpdate
@@ -24,7 +23,7 @@ val monsterRoutes: Route.() -> Unit = {
 
         post {
             val gameId = call.parameters["gameId"]!!
-            call.respond(addMonster(gameId, entranceHallLoc))
+            call.respond(addMonster(gameId))
             sendUpdate(gameId)
         }
 

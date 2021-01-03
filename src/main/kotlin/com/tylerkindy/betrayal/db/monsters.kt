@@ -26,7 +26,7 @@ fun getMonsters(gameId: String): List<Monster> {
     }
 }
 
-fun addMonster(gameId: String, loc: GridLoc): Monster {
+fun addMonster(gameId: String): Monster {
     return transaction {
         val prevNumber = Monsters.select { Monsters.gameId eq gameId }
             .orderBy(Monsters.number, SortOrder.DESC)
@@ -34,6 +34,16 @@ fun addMonster(gameId: String, loc: GridLoc): Monster {
             ?.get(Monsters.number)
             ?: 0
         val number = prevNumber + 1
+
+        val loc = Rooms.slice(Rooms.gridX, Rooms.gridY)
+            .select { (Rooms.gameId eq gameId) and (Rooms.roomDefId eq entranceHallDefId) }
+            .first()
+            .let {
+                GridLoc(
+                    gridX = it[Rooms.gridX],
+                    gridY = it[Rooms.gridY]
+                )
+            }
 
         val id = Monsters.insert {
             it[this.gameId] = gameId
