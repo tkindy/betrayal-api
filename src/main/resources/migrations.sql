@@ -96,3 +96,14 @@ CREATE TABLE "diceRolls" (
     "gameId" VARCHAR(6) NOT NULL,
     "rolls" VARCHAR(15) NOT NULL
 );
+
+--changeset tkindy:9
+CREATE TABLE "monsters" (
+    "id" SERIAL PRIMARY KEY,
+    "gameId" VARCHAR(6) NOT NULL,
+    "number" INT NOT NULL,
+    "gridX" INT NOT NULL,
+    "gridY" INT NOT NULL
+);
+
+CREATE INDEX ON "monsters" ("gameId");

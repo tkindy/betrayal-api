@@ -184,3 +184,10 @@ data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
 data class Game(val id: String, val name: String)
+
+@Serializable
+data class Monster(
+    val id: Int,
+    val number: Int,
+    val loc: GridLoc
+)

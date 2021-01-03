@@ -42,6 +42,7 @@ val gameRoutes: Routing.() -> Unit = {
             }
             roomRoutes()
             playerRoutes()
+            monsterRoutes()
             roomStackRoutes()
             cardRoutes()
             diceRollRoutes()
