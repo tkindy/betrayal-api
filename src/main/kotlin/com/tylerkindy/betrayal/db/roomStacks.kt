@@ -179,7 +179,7 @@ private fun getNextIndex(stack: RoomStack): Short? {
         ?: remainingIndices.firstOrNull()
 }
 
-private fun rotate(rotation: Short): Short {
+fun rotate(rotation: Short): Short {
     return ((rotation + 3) % 4).toShort()
 }
 

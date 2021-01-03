@@ -142,6 +142,20 @@ fun moveRoom(gameId: String, roomId: Int, loc: GridLoc) {
     }
 }
 
+fun rotateRoom(gameId: String, roomId: Int) {
+    transaction {
+        assertRoomInGame(gameId, roomId)
+
+        val curRotation = Rooms.slice(Rooms.rotation)
+            .select { Rooms.id eq roomId }
+            .first()[Rooms.rotation]
+
+        Rooms.update(where = { Rooms.id eq roomId }) {
+            it[rotation] = rotate(curRotation)
+        }
+    }
+}
+
 fun assertRoomInGame(gameId: String, roomId: Int) {
     Rooms.select { (Rooms.id eq roomId) and (Rooms.gameId eq gameId) }
         .firstOrNull()
