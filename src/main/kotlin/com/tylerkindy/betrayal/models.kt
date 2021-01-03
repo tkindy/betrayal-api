@@ -126,7 +126,8 @@ data class FlippedRoom(
     val name: String,
     val doorDirections: Set<Direction>,
     val features: List<Feature>,
-    val description: String?
+    val description: String?,
+    val barrier: Barrier?
 )
 
 @Serializable

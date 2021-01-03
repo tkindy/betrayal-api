@@ -237,6 +237,7 @@ fun RoomDefinition.toFlippedRoom(rotation: Short): FlippedRoom {
         name = name,
         doorDirections = rotateDoors(doors, rotation),
         features = features,
-        description = description
+        description = description,
+        barrier = barrier
     )
 }
