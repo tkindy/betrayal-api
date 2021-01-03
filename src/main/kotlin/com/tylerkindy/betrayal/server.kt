@@ -6,11 +6,13 @@ import io.ktor.application.install
 import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
+import io.ktor.http.cio.websocket.pingPeriod
 import io.ktor.routing.routing
 import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.websocket.WebSockets
+import java.time.Duration
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 import org.slf4j.event.Level
@@ -44,7 +46,9 @@ fun main() {
         install(CallLogging) {
             level = Level.INFO
         }
-        install(WebSockets)
+        install(WebSockets) {
+            pingPeriod = Duration.ofSeconds(30)
+        }
 
         routing {
             gameRoutes()
