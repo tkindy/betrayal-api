@@ -125,7 +125,8 @@ data class StackRoom(
 data class FlippedRoom(
     val name: String,
     val doorDirections: Set<Direction>,
-    val features: List<Feature>
+    val features: List<Feature>,
+    val description: String?
 )
 
 @Serializable
