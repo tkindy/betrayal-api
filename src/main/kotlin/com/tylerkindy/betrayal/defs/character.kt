@@ -7,7 +7,12 @@ import java.io.InputStreamReader
 
 data class TraitDefinition(val scale: List<Int>, val startingIndex: Int) {
     fun toTrait(index: Int = startingIndex) =
-        Trait(value = scale[index], index = index, scale = scale)
+        Trait(
+            value = scale[index],
+            index = index,
+            scale = scale,
+            startingIndex = startingIndex
+        )
 }
 
 data class CharacterDefinition(

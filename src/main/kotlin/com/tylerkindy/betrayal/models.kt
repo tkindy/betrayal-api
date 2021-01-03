@@ -18,7 +18,12 @@ enum class TraitName {
 }
 
 @Serializable
-data class Trait(val value: Int, val index: Int, val scale: List<Int>)
+data class Trait(
+    val value: Int,
+    val index: Int,
+    val scale: List<Int>,
+    val startingIndex: Int
+)
 
 @Serializable
 data class GridLoc(val gridX: Int, val gridY: Int)
