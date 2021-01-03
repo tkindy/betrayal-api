@@ -180,7 +180,7 @@ private fun getNextIndex(stack: RoomStack): Short? {
 }
 
 private fun rotate(rotation: Short): Short {
-    return ((rotation + 1) % 4).toShort()
+    return ((rotation + 3) % 4).toShort()
 }
 
 class StackEmptyException : IllegalStateException()
