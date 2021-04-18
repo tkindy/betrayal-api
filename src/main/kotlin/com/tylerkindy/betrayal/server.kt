@@ -12,10 +12,10 @@ import io.ktor.serialization.json
 import io.ktor.server.engine.embeddedServer
 import io.ktor.server.netty.Netty
 import io.ktor.websocket.WebSockets
-import java.time.Duration
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
 import org.slf4j.event.Level
+import java.time.Duration
 
 fun main() {
     Database.connect(
