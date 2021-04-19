@@ -7,12 +7,12 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.4.32"
-    kotlin("plugin.serialization") version "1.4.20"
+    kotlin("jvm") version "1.4.+"
+    kotlin("plugin.serialization") version "1.4.+"
     application
-    id("org.jmailen.kotlinter") version "3.3.0"
-    id("com.github.ben-manes.versions") version "0.36.0"
-    id("org.liquibase.gradle") version "2.0.4"
+    id("org.jmailen.kotlinter") version "3.+"
+    id("com.github.ben-manes.versions") version "0.+"
+    id("org.liquibase.gradle") version "2.+"
 }
 group = "com.tylerkindy"
 version = "1.0-SNAPSHOT"
@@ -28,27 +28,27 @@ repositories {
     }
 }
 
-val ktorVersion = "1.4.2"
-val postgresVersion = "42.2.18"
-val exposedVersion = "0.28.1"
-val kotestVersion = "4.3.1"
+val ktorVersion = "1.4.+"
+val postgresVersion = "42.+"
+val exposedVersion = "0.+"
+val kotestVersion = "4.+"
 
 dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
     implementation("io.ktor:ktor-serialization:$ktorVersion")
     implementation("io.ktor:ktor-websockets:$ktorVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.+")
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
-    implementation("com.zaxxer:HikariCP:3.4.5")
-    implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation("org.apache.commons:commons-csv:1.8")
+    implementation("com.zaxxer:HikariCP:3.+")
+    implementation("ch.qos.logback:logback-classic:1.+")
+    implementation("org.apache.commons:commons-csv:1.+")
 
-    liquibaseRuntime("org.liquibase:liquibase-core:4.2.0")
+    liquibaseRuntime("org.liquibase:liquibase-core:4.+")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")
-    liquibaseRuntime("javax.xml.bind:jaxb-api:2.3.1")
+    liquibaseRuntime("javax.xml.bind:jaxb-api:2.+")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
