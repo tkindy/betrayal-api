@@ -84,4 +84,5 @@ tasks.withType<Test> {
 
 dependencyLocking {
     lockAllConfigurations()
+    lockMode.set(LockMode.STRICT)
 }
