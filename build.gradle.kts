@@ -10,7 +10,6 @@ plugins {
     kotlin("jvm") version "1.4.+"
     kotlin("plugin.serialization") version "1.4.+"
     application
-    id("org.jmailen.kotlinter") version "3.+"
     id("com.github.ben-manes.versions") version "0.+"
     id("org.liquibase.gradle") version "2.+"
 }
