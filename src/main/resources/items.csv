@@ -29,7 +29,7 @@ With the Revolver, you can attack anyone in the same room or within line of sigh
 You can’t use another weapon while you’re using this one.",
 11,Music Box,,"A hand-crafted antique.
 It plays a haunting melody that gets stuck in your head.","Once per turn, you can open or close the Music Box.
-When the Music Box is open, any explorer or monster with a Sanity trait that enters of starts its turn in the same room must make a Sanity rool of 4+. If the roll fails, the explorer or monster ends its turn as it is mesmerized by the music.
+When the Music Box is open, any explorer or monster with a Sanity trait that enters or starts its turn in the same room must make a Sanity roll of 4+. If the roll fails, the explorer or monster ends its turn as it is mesmerized by the music.
 If an explorer or monster carrying the Music Box is mesmerized, it drops the Music Box. If the Music Box is open when it is dropped, it remains open.",
 12,Pickpocket’s Gloves,,Helping yourself has never seemed so easy.,"When you are in the same room as another explorer, you can discard this item to take any item that explorer is carrying.",
 13,Effigy,,"Handmade with care, the doll is dressed in a tiny copy of your own clothes.","While you have the Effigy, add 1 die to all trait rolls, except when you attack or defend.
@@ -58,7 +58,7 @@ Discard this item after you use it.","6  Choose a room and put  your explorer th
 21,Idol,,Perhaps it’s chosen you for some greater purpose. Like human sacrifice.,"Once per turn, you can rub the Idol before making any trait, combat, or event roll to add 2 dice to the roll (to a maximum of 8 dice). Each time you do, lose 1 Sanity.",
 22,Smelling Salts,,"Whew, that’s a lungful.","If your or another living explorer’s Knowledge is below its starting value, and you’re in the same room, you can raise that trait to its starting value by using the Smelling Salts.
 Discard this item after you use it.",
-23,Device,,A jumble of wires and glass instruments used to measure thing that are not of this world.,"At the end of your turn, if you are in the same room as an opponent, gain 1 Knowledge.
+23,Device,,A jumble of wires and glass instruments used to measure things that are not of this world.,"At the end of your turn, if you are in the same room as an opponent, gain 1 Knowledge.
 Discard this card to add 3 dice to your attack roll, but you may only use that attack to steal something.",
 24,Armor,,"It’s just prop armor from a Renaissance fair, but it’s still metal.","Any time (not just once per turn) you take physical damage, take 1 less point of damage.
 This item can’t be stolen.",
@@ -76,7 +76,7 @@ You can’t use another weapon while you’re using this one.",
 28,Rabbit’s Foot,,Not so lucky for the rabbit.,"Once during your turn, you can reroll 1 die. You must keep the second roll.",
 29,Medical Kit,,"A doctor’s bag, depleted in some critical resources.","Once during your turn, you can attempt a Knowledge roll to heal yourself or another explorer in the same room:
 <rollTable>
-You can’t raise a trait above its starting value with the Medical Kit.","8+  Gain up to 3 poins of physical traits.
+You can’t raise a trait above its starting value with the Medical Kit.","8+  Gain up to 3 points of physical traits.
 6-7  Gain up to 2 points of physical traits.
 4-5  Gain 1 point in a physical trait.
 0-3  Nothing happens."
