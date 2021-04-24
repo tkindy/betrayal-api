@@ -76,7 +76,7 @@ You can’t use another weapon while you’re using this one.",
 28,Rabbit’s Foot,,Not so lucky for the rabbit.,"Once during your turn, you can reroll 1 die. You must keep the second roll.",
 29,Medical Kit,,"A doctor’s bag, depleted in some critical resources.","Once during your turn, you can attempt a Knowledge roll to heal yourself or another explorer in the same room:
 <rollTable>
-You can’t raise a trait above its starting value with the Medical Kit.","8+  Gain up to 3 poins of physical traits.
+You can’t raise a trait above its starting value with the Medical Kit.","8+  Gain up to 3 points of physical traits.
 6-7  Gain up to 2 points of physical traits.
 4-5  Gain 1 point in a physical trait.
 0-3  Nothing happens."
