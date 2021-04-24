@@ -26,9 +26,7 @@ val gameRoutes: Routing.() -> Unit = {
                 val game = transaction {
                     Games.select { Games.id eq gameId }
                         .firstOrNull()
-                        ?.let {
-                            Game(id = it[Games.id], name = it[Games.name])
-                        }
+                        ?.toGame()
                 } ?: return@get call.respond(HttpStatusCode.NotFound)
 
                 call.respond(game)
