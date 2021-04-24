@@ -103,7 +103,7 @@ If you roll a 2+ on all 4 rolls, gain 1 additional point in a trait of your choi
 2-3  Out, out, you must get out. Put your explorer in the Entrance Hall.
 0-1  You burst into falems! Take 1 die of physical damage. Then take 1 die of mental damage as you put out the flames."
 28,Secret Stairs,,A horrible creaking sound echoes around you. You’ve discovered a secret stairwell.,"Put one Secret Stairs token in this room and a second Secret Stairs token in an existing room on another floor. Moving from one Secret Stairs token to the other counts as moving one space. (The stairs don’t count as a space.)
-You can follow the stairs right now, even if you don’t have any movement left. You do follow them this turn, draw an event card in the new room.",
+You can follow the stairs right now, even if you don’t have any movement left. If you do follow them this turn, draw an event card in the new room.",
 29,Webs,,"Casually, you reach up to brush some webs aside… but they wont brush away. They cling.","You must attempt a Might roll:
 <rollTable>
 If you’re stuck, you can’t do anything until you’re freed. Once during an explorer’s turn, any explorer can attempt a Might roll to free you. (You can also attempt this roll.)
