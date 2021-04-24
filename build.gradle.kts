@@ -19,7 +19,6 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    jcenter()
     maven {
         url = uri("https://dl.bintray.com/kotlin/ktor")
     }
