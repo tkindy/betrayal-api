@@ -4,7 +4,9 @@ import com.tylerkindy.betrayal.routes.gameRoutes
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
@@ -46,6 +48,15 @@ fun main() {
         }
         install(WebSockets) {
             pingPeriod = Duration.ofSeconds(30)
+        }
+        install(StatusPages) {
+            exception<IllegalArgumentException> {
+                call.respond(
+                    HttpStatusCode.BadRequest,
+                    mapOf("message" to it.message)
+                )
+                throw it
+            }
         }
 
         routing {
