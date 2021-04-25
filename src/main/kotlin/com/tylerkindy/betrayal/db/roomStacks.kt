@@ -214,6 +214,11 @@ fun getRoomInStack(stackId: Int, index: Short): ResultRow? {
 
 fun shuffleRoomStack(gameId: String) {
     val stack = getRoomStack(gameId)
+    if (stack.curIndex == null) {
+        throw IllegalArgumentException(
+            "Can't shuffle room stack ${stack.id} because it's empty"
+        )
+    }
     if (stack.flipped) {
         throw IllegalArgumentException(
             "Can't shuffle room stack ${stack.id} because a room is currently flipped"
