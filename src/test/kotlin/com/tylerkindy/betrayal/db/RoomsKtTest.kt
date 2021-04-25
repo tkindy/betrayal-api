@@ -16,7 +16,9 @@ import io.kotest.property.checkAll
 import io.kotest.property.exhaustive.ints
 import io.kotest.property.exhaustive.map
 import io.kotest.property.forAll
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.random.nextInt
 
@@ -28,18 +30,11 @@ val invalidRotations = arbitrary(listOf(Short.MIN_VALUE, -1, 4, Short.MAX_VALUE)
 }
 
 class RoomsKtTest : DescribeSpec({
-    beforeAny {
-
-    }
+    useDatabase()
 
     describe("returnRoomToStack") {
         it("returns to empty stack") {
-            Database.connect(
-                "jdbc:h2:mem:regular;MODE=PostgreSQL"
-            )
             transaction {
-                SchemaUtils.create(RoomStacks, RoomStackContents, Rooms, Players, Monsters)
-
                 val gameId = "ABCDEF"
                 val stackId =
                     RoomStacks.insert {
