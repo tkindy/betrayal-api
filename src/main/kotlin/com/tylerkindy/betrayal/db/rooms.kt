@@ -158,6 +158,11 @@ fun returnRoomToStack(gameId: String, roomId: Int) {
     transaction {
         val room = assertRoomInGame(gameId, roomId)
 
+        if (startingRoomIds.contains(room.roomDefId)) {
+            throw IllegalArgumentException(
+                "Can't return room $roomId since it's a starting room"
+            )
+        }
         if (containsPlayers(room) || containsMonsters(room)) {
             throw IllegalArgumentException(
                 "Can't return room $roomId since it contains players or monsters"
