@@ -30,6 +30,7 @@ val ktorVersion = "1.4.+"
 val postgresVersion = "42.+"
 val exposedVersion = "0.+"
 val kotestVersion = "4.+"
+val testcontainersVersion = "1.+"
 
 dependencies {
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
@@ -51,6 +52,8 @@ dependencies {
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
     testImplementation("io.kotest:kotest-property:$kotestVersion")
+    testImplementation("org.testcontainers:testcontainers:$testcontainersVersion")
+    testImplementation("org.testcontainers:postgresql:$testcontainersVersion")
 }
 
 application {

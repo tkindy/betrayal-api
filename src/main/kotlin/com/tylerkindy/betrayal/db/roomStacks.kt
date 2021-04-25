@@ -158,14 +158,36 @@ private fun getRoomStack(gameId: String): RoomStack {
 private fun getNextIndex(stack: RoomStack): Short? {
     stack.curIndex ?: throw StackEmptyException()
 
-    val remainingIndices = RoomStackContents
+    val remainingIndices = getRemainingRoomStackIndices(stack)
+
+    return remainingIndices.firstOrNull { it > stack.curIndex }
+        ?: remainingIndices.firstOrNull()
+}
+
+fun getRemainingRoomStackIndices(stack: RoomStack) =
+    RoomStackContents
         .slice(RoomStackContents.index)
         .select { RoomStackContents.stackId eq stack.id }
         .orderBy(RoomStackContents.index, SortOrder.ASC)
         .map { it[RoomStackContents.index] }
 
-    return remainingIndices.firstOrNull { it > stack.curIndex }
-        ?: remainingIndices.firstOrNull()
+fun addToEndOfRoomStack(gameId: String, roomDefId: Short) {
+    val stack = getRoomStack(gameId)
+    val remainingIndices = getRemainingRoomStackIndices(stack)
+
+    val index = (remainingIndices.lastOrNull()?.let { it + 1 } ?: 0).toShort()
+
+    RoomStackContents.insert {
+        it[this.stackId] = stack.id
+        it[this.index] = index
+        it[this.roomDefId] = roomDefId
+    }
+
+    if (stack.curIndex == null) {
+        RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+            it[this.curIndex] = 0
+        }
+    }
 }
 
 fun rotate(rotation: Short): Short {
@@ -194,6 +216,35 @@ fun getRoomInStack(stackId: Int, index: Short): ResultRow? {
         (RoomStackContents.stackId eq stackId) and (RoomStackContents.index eq index)
     }
         .firstOrNull()
+}
+
+fun shuffleRoomStack(gameId: String) {
+    val stack = getRoomStack(gameId)
+    if (stack.curIndex == null) {
+        throw IllegalArgumentException(
+            "Can't shuffle room stack ${stack.id} because it's empty"
+        )
+    }
+    if (stack.flipped) {
+        throw IllegalArgumentException(
+            "Can't shuffle room stack ${stack.id} because a room is currently flipped"
+        )
+    }
+
+    val contentRowIds = RoomStackContents.slice(RoomStackContents.id)
+        .select { RoomStackContents.stackId eq stack.id }
+        .map { it[RoomStackContents.id] }
+        .shuffled()
+
+    contentRowIds.forEachIndexed { newIndex, rowId ->
+        RoomStackContents.update(where = { RoomStackContents.id eq rowId }) {
+            it[index] = newIndex.toShort()
+        }
+    }
+
+    RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+        it[curIndex] = 0
+    }
 }
 
 fun ResultRow.toRoomStack(): RoomStack {

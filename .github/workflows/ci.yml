@@ -20,4 +20,4 @@ jobs:
       - name: Cache Gradle packages
         uses: burrunan/gradle-cache-action@v1
       - name: Build & test
-        run: ./gradlew --no-daemon build
+        run: ./gradlew --no-daemon --info build

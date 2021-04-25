@@ -154,8 +154,64 @@ fun rotateRoom(gameId: String, roomId: Int) {
     }
 }
 
-fun assertRoomInGame(gameId: String, roomId: Int) {
+fun returnRoomToStack(gameId: String, roomId: Int) {
+    transaction {
+        val room = assertRoomInGame(gameId, roomId)
+
+        if (startingRoomIds.contains(room.roomDefId)) {
+            throw IllegalArgumentException(
+                "Can't return room $roomId since it's a starting room"
+            )
+        }
+        if (containsPlayers(room) || containsMonsters(room)) {
+            throw IllegalArgumentException(
+                "Can't return room $roomId since it contains players or monsters"
+            )
+        }
+
+        Rooms.deleteWhere { Rooms.id eq room.id }
+        addToEndOfRoomStack(gameId, room.roomDefId)
+        shuffleRoomStack(gameId)
+    }
+}
+
+fun assertRoomInGame(gameId: String, roomId: Int): DbRoom =
     Rooms.select { (Rooms.id eq roomId) and (Rooms.gameId eq gameId) }
         .firstOrNull()
+        ?.toDbRoom()
         ?: throw IllegalArgumentException("Room $roomId not in game $gameId")
-}
+
+fun containsPlayers(room: DbRoom) =
+    Players.select {
+        (Players.gameId eq room.gameId) and
+                (Players.gridX eq room.gridX) and
+                (Players.gridY eq room.gridY)
+    }
+        .any()
+
+fun containsMonsters(room: DbRoom) =
+    Monsters.select {
+        (Monsters.gameId eq room.gameId) and
+                (Monsters.gridX eq room.gridX) and
+                (Monsters.gridY eq room.gridY)
+    }
+        .any()
+
+data class DbRoom(
+    val id: Int,
+    val gameId: String,
+    val roomDefId: Short,
+    val gridX: Int,
+    val gridY: Int,
+    val rotation: Short
+)
+
+fun ResultRow.toDbRoom() =
+    DbRoom(
+        id = this[Rooms.id],
+        gameId = this[Rooms.gameId],
+        roomDefId = this[Rooms.roomDefId],
+        gridX = this[Rooms.gridX],
+        gridY = this[Rooms.gridY],
+        rotation = this[Rooms.rotation]
+    )
