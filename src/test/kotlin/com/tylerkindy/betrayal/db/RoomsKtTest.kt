@@ -61,6 +61,11 @@ class RoomsKtTest : DescribeSpec({
                 stackRows.first().should {
                     it[RoomStacks.curIndex].shouldBe(0)
                 }
+                RoomStackContents.select { RoomStackContents.stackId eq stackId }
+                    .first().should {
+                        it[RoomStackContents.index].shouldBe(0)
+                        it[RoomStackContents.roomDefId].shouldBe(14)
+                    }
             }
         }
 
