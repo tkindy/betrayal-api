@@ -4,6 +4,7 @@ import com.tylerkindy.betrayal.Direction
 import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.collections.shouldBeEmpty
+import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.should
 import io.kotest.matchers.shouldBe
 import io.kotest.property.Arb
@@ -42,7 +43,6 @@ class RoomsKtTest : DescribeSpec({
                         it[curIndex] = null
                         it[flipped] = false
                     } get RoomStacks.id
-
                 val roomId =
                     Rooms.insert {
                         it[this.gameId] = gameId
@@ -51,7 +51,6 @@ class RoomsKtTest : DescribeSpec({
                         it[gridY] = 0
                         it[rotation] = 0
                     } get Rooms.id
-
 
                 returnRoomToStack(gameId, roomId)
 
@@ -62,6 +61,46 @@ class RoomsKtTest : DescribeSpec({
                 stackRows.first().should {
                     it[RoomStacks.curIndex].shouldBe(0)
                 }
+            }
+        }
+
+        it("returns to non-empty stack") {
+            transaction {
+                val gameId = "ABCDEF"
+                val stackId = RoomStacks.insert {
+                    it[this.gameId] = gameId
+                    it[curIndex] = 17
+                    it[flipped] = false
+                } get RoomStacks.id
+                RoomStackContents.insert {
+                    it[this.stackId] = stackId
+                    it[index] = 25
+                    it[roomDefId] = 9
+                }
+                RoomStackContents.insert {
+                    it[this.stackId] = stackId
+                    it[index] = 17
+                    it[roomDefId] = 13
+                }
+                RoomStackContents.insert {
+                    it[this.stackId] = stackId
+                    it[index] = 3
+                    it[roomDefId] = 23
+                }
+                val roomId = Rooms.insert {
+                    it[this.gameId] = gameId
+                    it[roomDefId] = 14
+                    it[gridX] = 0
+                    it[gridY] = 0
+                    it[rotation] = 0
+                } get Rooms.id
+
+                returnRoomToStack(gameId, roomId)
+
+                Rooms.selectAll().shouldBeEmpty()
+                RoomStackContents.selectAll()
+                    .map { it[RoomStackContents.index] }
+                    .shouldContainExactlyInAnyOrder(0, 1, 2, 3)
             }
         }
     }
