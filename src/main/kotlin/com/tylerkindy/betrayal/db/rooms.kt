@@ -177,11 +177,19 @@ fun assertRoomInGame(gameId: String, roomId: Int): DbRoom =
         ?: throw IllegalArgumentException("Room $roomId not in game $gameId")
 
 fun containsPlayers(room: DbRoom) =
-    Players.select { (Players.gridX eq room.gridX) and (Players.gridY eq room.gridY) }
+    Players.select {
+        (Players.gameId eq room.gameId) and
+                (Players.gridX eq room.gridX) and
+                (Players.gridY eq room.gridY)
+    }
         .any()
 
 fun containsMonsters(room: DbRoom) =
-    Monsters.select { (Monsters.gridX eq room.gridX) and (Monsters.gridY eq room.gridY) }
+    Monsters.select {
+        (Monsters.gameId eq room.gameId) and
+                (Monsters.gridX eq room.gridX) and
+                (Monsters.gridY eq room.gridY)
+    }
         .any()
 
 data class DbRoom(
