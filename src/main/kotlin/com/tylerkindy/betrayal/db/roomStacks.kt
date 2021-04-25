@@ -182,6 +182,12 @@ fun addToEndOfRoomStack(gameId: String, roomDefId: Short) {
         it[this.index] = index
         it[this.roomDefId] = roomDefId
     }
+
+    if (stack.curIndex == null) {
+        RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+            it[this.curIndex] = 0
+        }
+    }
 }
 
 fun rotate(rotation: Short): Short {
