@@ -14,6 +14,7 @@ import io.kotest.property.checkAll
 import io.kotest.property.exhaustive.ints
 import io.kotest.property.exhaustive.map
 import io.kotest.property.forAll
+import org.jetbrains.exposed.sql.Database
 import kotlin.random.nextInt
 
 val directionSets = Arb.set(Arb.enum<Direction>(), 0..Direction.values().size)
@@ -24,6 +25,12 @@ val invalidRotations = arbitrary(listOf(Short.MIN_VALUE, -1, 4, Short.MAX_VALUE)
 }
 
 class RoomsKtTest : DescribeSpec({
+    beforeAny {
+        Database.connect(
+            "jdbc:h2:mem:regular;MODE=PostgreSQL;DATABASE_TO_LOWER=TRUE",
+            "org.h2.Driver"
+        )
+    }
 
     describe("rotateDoors") {
         it("maintains number of directions") {
