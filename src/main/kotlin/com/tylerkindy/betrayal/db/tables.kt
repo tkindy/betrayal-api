@@ -30,6 +30,8 @@ object Rooms : Table() {
     val gridX = integer("gridX")
     val gridY = integer("gridY")
     val rotation = short("rotation")
+
+    override val primaryKey = PrimaryKey(id)
 }
 
 object RoomStacks : Table("\"roomStacks\"") {
@@ -38,6 +40,8 @@ object RoomStacks : Table("\"roomStacks\"") {
     val curIndex = short("curIndex").nullable()
     val flipped = bool("flipped")
     val rotation = short("rotation").nullable()
+
+    override val primaryKey = PrimaryKey(id)
 }
 
 object RoomStackContents : Table("\"roomStackContents\"") {
@@ -45,6 +49,8 @@ object RoomStackContents : Table("\"roomStackContents\"") {
     val stackId = integer("stackId")
     val index = short("index")
     val roomDefId = short("roomDefId")
+
+    override val primaryKey = PrimaryKey(id)
 }
 
 object CardStacks : Table("\"cardStacks\"") {
@@ -87,4 +93,6 @@ object Monsters : Table("\"monsters\"") {
     val number = integer("number")
     val gridX = integer("gridX")
     val gridY = integer("gridY")
+
+    override val primaryKey = PrimaryKey(id)
 }

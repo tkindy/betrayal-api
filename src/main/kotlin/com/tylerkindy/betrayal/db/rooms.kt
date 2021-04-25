@@ -164,6 +164,7 @@ fun returnRoomToStack(gameId: String, roomId: Int) {
             )
         }
 
+        Rooms.deleteWhere { Rooms.id eq room.id }
         addToEndOfRoomStack(gameId, room.roomDefId)
         shuffleRoomStack(gameId)
     }
