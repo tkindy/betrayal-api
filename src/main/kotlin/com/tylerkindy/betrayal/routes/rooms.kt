@@ -3,6 +3,7 @@ package com.tylerkindy.betrayal.routes
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.db.getRooms
 import com.tylerkindy.betrayal.db.moveRoom
+import com.tylerkindy.betrayal.db.returnRoomToStack
 import com.tylerkindy.betrayal.db.rotateRoom
 import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.*
@@ -37,6 +38,16 @@ val roomRoutes: Route.() -> Unit = {
                     ?: return@post call.respond(HttpStatusCode.BadRequest, "Invalid room ID")
 
                 rotateRoom(gameId, roomId)
+                call.respond(HttpStatusCode.OK, "")
+                sendUpdate(gameId)
+            }
+
+            post("return") {
+                val gameId = call.parameters["gameId"]!!
+                val roomId = call.parameters["roomId"]?.toInt()
+                    ?: return@post call.respond(HttpStatusCode.BadRequest, "Invalid room ID")
+
+                returnRoomToStack(gameId, roomId)
                 call.respond(HttpStatusCode.OK, "")
                 sendUpdate(gameId)
             }

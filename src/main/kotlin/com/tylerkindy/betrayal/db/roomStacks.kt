@@ -158,14 +158,30 @@ private fun getRoomStack(gameId: String): RoomStack {
 private fun getNextIndex(stack: RoomStack): Short? {
     stack.curIndex ?: throw StackEmptyException()
 
-    val remainingIndices = RoomStackContents
+    val remainingIndices = getRemainingRoomStackIndices(stack)
+
+    return remainingIndices.firstOrNull { it > stack.curIndex }
+        ?: remainingIndices.firstOrNull()
+}
+
+fun getRemainingRoomStackIndices(stack: RoomStack) =
+    RoomStackContents
         .slice(RoomStackContents.index)
         .select { RoomStackContents.stackId eq stack.id }
         .orderBy(RoomStackContents.index, SortOrder.ASC)
         .map { it[RoomStackContents.index] }
 
-    return remainingIndices.firstOrNull { it > stack.curIndex }
-        ?: remainingIndices.firstOrNull()
+fun addToEndOfRoomStack(gameId: String, roomDefId: Short) {
+    val stack = getRoomStack(gameId)
+    val remainingIndices = getRemainingRoomStackIndices(stack)
+
+    val index = ((remainingIndices.lastOrNull() ?: 0) + 1).toShort()
+
+    RoomStackContents.insert {
+        it[this.stackId] = stack.id
+        it[this.index] = index
+        it[this.roomDefId] = roomDefId
+    }
 }
 
 fun rotate(rotation: Short): Short {
