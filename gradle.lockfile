@@ -6,6 +6,7 @@ ch.qos.logback:logback-core:1.3.0-alpha5=compileClasspath,implementationDependen
 com.github.ajalt:colormath:1.2.0=testCompileClasspath,testRuntimeClasspath
 com.github.ajalt:mordant:1.2.1=testCompileClasspath,testRuntimeClasspath
 com.github.mifmif:generex:1.0.2=testRuntimeClasspath
+com.h2database:h2:1.4.200=testCompileClasspath,testRuntimeClasspath
 com.sun.mail:javax.mail:1.6.2=runtimeClasspath,testRuntimeClasspath
 com.typesafe:config:1.3.1=compileClasspath,runtimeClasspath,testCompileClasspath,testRuntimeClasspath
 com.zaxxer:HikariCP:3.4.5=compileClasspath,implementationDependenciesMetadata,runtimeClasspath,testCompileClasspath,testImplementationDependenciesMetadata,testRuntimeClasspath
