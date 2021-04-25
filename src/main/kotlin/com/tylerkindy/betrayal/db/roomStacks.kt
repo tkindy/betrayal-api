@@ -175,7 +175,7 @@ fun addToEndOfRoomStack(gameId: String, roomDefId: Short) {
     val stack = getRoomStack(gameId)
     val remainingIndices = getRemainingRoomStackIndices(stack)
 
-    val index = ((remainingIndices.lastOrNull() ?: 0) + 1).toShort()
+    val index = (remainingIndices.lastOrNull()?.let { it + 1 } ?: 0).toShort()
 
     RoomStackContents.insert {
         it[this.stackId] = stack.id
