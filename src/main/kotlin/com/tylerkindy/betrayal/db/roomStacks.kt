@@ -196,6 +196,30 @@ fun getRoomInStack(stackId: Int, index: Short): ResultRow? {
         .firstOrNull()
 }
 
+fun shuffleRoomStack(gameId: String) {
+    val stack = getRoomStack(gameId)
+    if (stack.flipped) {
+        throw IllegalArgumentException(
+            "Can't shuffle room stack ${stack.id} because a room is currently flipped"
+        )
+    }
+
+    val contentRowIds = RoomStackContents.slice(RoomStackContents.id)
+        .select { RoomStackContents.stackId eq stack.id }
+        .map { it[RoomStackContents.id] }
+        .shuffled()
+
+    contentRowIds.forEachIndexed { newIndex, rowId ->
+        RoomStackContents.update(where = { RoomStackContents.id eq rowId }) {
+            it[index] = newIndex.toShort()
+        }
+    }
+
+    RoomStacks.update(where = { RoomStacks.id eq stack.id }) {
+        it[curIndex] = 0
+    }
+}
+
 fun ResultRow.toRoomStack(): RoomStack {
     return RoomStack(
         id = this[RoomStacks.id],
