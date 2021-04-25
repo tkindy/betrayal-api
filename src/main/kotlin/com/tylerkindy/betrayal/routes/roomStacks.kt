@@ -2,20 +2,13 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.RoomStackResponse
-import com.tylerkindy.betrayal.db.advanceRoomStack
-import com.tylerkindy.betrayal.db.flipRoom
-import com.tylerkindy.betrayal.db.getRoomStackState
-import com.tylerkindy.betrayal.db.placeRoom
-import com.tylerkindy.betrayal.db.rotateFlipped
+import com.tylerkindy.betrayal.db.*
 import com.tylerkindy.betrayal.sendUpdate
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.request.receiveOrNull
-import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 
 val roomStackRoutes: Route.() -> Unit = {
     route("roomStack") {

@@ -5,15 +5,8 @@ import com.tylerkindy.betrayal.defs.CardType
 import com.tylerkindy.betrayal.defs.events
 import com.tylerkindy.betrayal.defs.items
 import com.tylerkindy.betrayal.defs.omens
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.batchInsert
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 fun createCardStacks(gameId: String) {
     val itemStackContents = items.values.shuffled()

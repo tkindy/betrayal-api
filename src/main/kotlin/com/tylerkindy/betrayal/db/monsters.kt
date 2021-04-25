@@ -2,13 +2,8 @@ package com.tylerkindy.betrayal.db
 
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Monster
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 fun getMonsters(gameId: String): List<Monster> {
     return transaction {

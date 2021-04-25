@@ -1,22 +1,11 @@
 package com.tylerkindy.betrayal.db
 
-import com.tylerkindy.betrayal.FlippedRoom
-import com.tylerkindy.betrayal.GridLoc
-import com.tylerkindy.betrayal.PlaceRoomResponse
-import com.tylerkindy.betrayal.RoomStackResponse
-import com.tylerkindy.betrayal.StackRoom
+import com.tylerkindy.betrayal.*
 import com.tylerkindy.betrayal.defs.RoomDefinition
 import com.tylerkindy.betrayal.defs.initialStackRooms
 import com.tylerkindy.betrayal.defs.rooms
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.SortOrder
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.batchInsert
-import org.jetbrains.exposed.sql.deleteWhere
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 fun createRoomStack(gameId: String) {
     val roomStackContents = initialStackRooms.shuffled()

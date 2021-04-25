@@ -4,12 +4,8 @@ import com.tylerkindy.betrayal.Direction
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.Room
 import com.tylerkindy.betrayal.defs.rooms
-import org.jetbrains.exposed.sql.ResultRow
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.batchInsert
-import org.jetbrains.exposed.sql.select
+import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
-import org.jetbrains.exposed.sql.update
 
 fun ResultRow.toRoom(): Room {
     val roomDefId = this[Rooms.roomDefId]
@@ -39,6 +35,7 @@ private data class StartingRoom(
     val roomDefId: Short,
     val loc: GridLoc
 )
+
 val entranceHallLoc = GridLoc(4, 3)
 const val entranceHallDefId: Short = 0
 private val startingRooms = listOf(
@@ -75,6 +72,7 @@ private val rotated = mapOf(
     Direction.WEST to Direction.SOUTH,
     Direction.SOUTH to Direction.EAST
 )
+
 internal fun rotateDoors(directions: Set<Direction>, rotation: Short): Set<Direction> {
     if (!(0..3).contains(rotation)) {
         throw IllegalArgumentException("Invalid rotation $rotation")
@@ -92,8 +90,8 @@ fun getRoomAtLoc(gameId: String, loc: GridLoc): Room? {
     return transaction {
         Rooms.select {
             (Rooms.gameId eq gameId) and
-                (Rooms.gridX eq loc.gridX) and
-                (Rooms.gridY eq loc.gridY)
+                    (Rooms.gridX eq loc.gridX) and
+                    (Rooms.gridY eq loc.gridY)
         }.firstOrNull()?.toRoom()
     }
 }
@@ -122,8 +120,8 @@ fun moveRoom(gameId: String, roomId: Int, loc: GridLoc) {
         Players.update(
             where = {
                 (Players.gameId eq gameId) and
-                    (Players.gridX eq originalLoc.gridX) and
-                    (Players.gridY eq originalLoc.gridY)
+                        (Players.gridX eq originalLoc.gridX) and
+                        (Players.gridY eq originalLoc.gridY)
             }
         ) {
             it[gridX] = loc.gridX
@@ -132,8 +130,8 @@ fun moveRoom(gameId: String, roomId: Int, loc: GridLoc) {
         Monsters.update(
             where = {
                 (Monsters.gameId eq gameId) and
-                    (Monsters.gridX eq originalLoc.gridX) and
-                    (Monsters.gridY eq originalLoc.gridY)
+                        (Monsters.gridX eq originalLoc.gridX) and
+                        (Monsters.gridY eq originalLoc.gridY)
             }
         ) {
             it[gridX] = loc.gridX

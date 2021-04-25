@@ -2,21 +2,13 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.TraitName
-import com.tylerkindy.betrayal.db.discardHeldCard
-import com.tylerkindy.betrayal.db.getPlayer
-import com.tylerkindy.betrayal.db.getPlayers
-import com.tylerkindy.betrayal.db.giveHeldCardToPlayer
-import com.tylerkindy.betrayal.db.movePlayer
-import com.tylerkindy.betrayal.db.setTrait
+import com.tylerkindy.betrayal.db.*
 import com.tylerkindy.betrayal.sendUpdate
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.request.receiveOrNull
-import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import kotlinx.serialization.Serializable
 
 val playerRoutes: Route.() -> Unit = {

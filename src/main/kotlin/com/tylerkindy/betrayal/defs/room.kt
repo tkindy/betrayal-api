@@ -1,10 +1,6 @@
 package com.tylerkindy.betrayal.defs
 
-import com.tylerkindy.betrayal.Barrier
-import com.tylerkindy.betrayal.BarrierDirection
-import com.tylerkindy.betrayal.Direction
-import com.tylerkindy.betrayal.Feature
-import com.tylerkindy.betrayal.Floor
+import com.tylerkindy.betrayal.*
 import com.tylerkindy.betrayal.db.startingRoomIds
 import org.apache.commons.csv.CSVFormat
 import java.io.InputStreamReader

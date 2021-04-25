@@ -21,7 +21,7 @@ class CardsKtTest : StringSpec({
         val target: RollTarget = RollTarget.ExactRollTarget(7)
 
         Json.encodeToString(target) shouldBe
-            """
+                """
                 {"type":"EXACT","target":7}
             """.trimIndent()
     }
@@ -30,7 +30,7 @@ class CardsKtTest : StringSpec({
         val target: RollTarget = RollTarget.RangeRollTarget(3..5)
 
         Json.encodeToString(target) shouldBe
-            """
+                """
                 {"type":"RANGE","start":3,"end":5}
             """.trimIndent()
     }
@@ -39,7 +39,7 @@ class CardsKtTest : StringSpec({
         val target: RollTarget = RollTarget.MinRollTarget(3)
 
         Json.encodeToString(target) shouldBe
-            """
+                """
                 {"type":"MIN","minimum":3}
             """.trimIndent()
     }

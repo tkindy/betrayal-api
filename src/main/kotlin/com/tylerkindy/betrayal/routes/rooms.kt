@@ -5,14 +5,11 @@ import com.tylerkindy.betrayal.db.getRooms
 import com.tylerkindy.betrayal.db.moveRoom
 import com.tylerkindy.betrayal.db.rotateRoom
 import com.tylerkindy.betrayal.sendUpdate
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.request.receiveOrNull
-import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.routing.get
-import io.ktor.routing.post
-import io.ktor.routing.route
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 
 val roomRoutes: Route.() -> Unit = {
     route("rooms") {
