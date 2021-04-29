@@ -42,6 +42,11 @@ fun main() {
                 schemes = listOf("https"),
                 subDomains = listOf("betrayal-ui")
             )
+            host(
+                "tylerkindy.com",
+                schemes = listOf("http", "https"),
+                subDomains = listOf("betrayal")
+            )
         }
         install(CallLogging) {
             level = Level.INFO
