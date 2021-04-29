@@ -46,15 +46,17 @@ private fun ResultRow.toPlayer(): Player {
 fun insertStartingPlayers(gameId: String, numPlayers: Int) {
     val characters = getRandomCharacters(numPlayers)
     transaction {
-        Players.batchInsert(characters) { character ->
-            this[Players.gameId] = gameId
-            this[Players.characterId] = character.id
-            this[Players.gridX] = entranceHallLoc.gridX
-            this[Players.gridY] = entranceHallLoc.gridY
-            this[Players.speedIndex] = character.speed.startingIndex.toShort()
-            this[Players.mightIndex] = character.might.startingIndex.toShort()
-            this[Players.sanityIndex] = character.sanity.startingIndex.toShort()
-            this[Players.knowledgeIndex] = character.knowledge.startingIndex.toShort()
+        characters.forEach { character ->
+            Players.insert {
+                it[this.gameId] = gameId
+                it[characterId] = character.id
+                it[gridX] = entranceHallLoc.gridX
+                it[gridY] = entranceHallLoc.gridY
+                it[speedIndex] = character.speed.startingIndex.toShort()
+                it[mightIndex] = character.might.startingIndex.toShort()
+                it[sanityIndex] = character.sanity.startingIndex.toShort()
+                it[knowledgeIndex] = character.knowledge.startingIndex.toShort()
+            }
         }
     }
 }
