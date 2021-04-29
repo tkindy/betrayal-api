@@ -107,3 +107,6 @@ CREATE TABLE "monsters" (
 );
 
 CREATE INDEX ON "monsters" ("gameId");
+
+--changeset tkindy:10
+ALTER TABLE "rooms" ADD COLUMN "floor" VARCHAR(1);
