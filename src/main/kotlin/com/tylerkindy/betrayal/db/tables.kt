@@ -30,8 +30,10 @@ object Rooms : Table() {
     val gridX = integer("gridX")
     val gridY = integer("gridY")
     val rotation = short("rotation")
+    val floor = varchar("floor", 1).nullable()
 
-    override val primaryKey = PrimaryKey(id)
+    override
+    val primaryKey = PrimaryKey(id)
 }
 
 object RoomStacks : Table("\"roomStacks\"") {
