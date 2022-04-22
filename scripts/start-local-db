@@ -1,0 +1,3 @@
+#!/bin/zsh
+
+docker run --name betrayal-db -e POSTGRES_PASSWORD=mysecretpassword -d postgres
