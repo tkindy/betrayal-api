@@ -16,7 +16,7 @@ suspend fun sendUpdate(gameId: String) {
 }
 
 private fun getOrCreateFlow(gameId: String) =
-    gameUpdateFlows.computeIfAbsent(gameId) { MutableSharedFlow() }
+    gameUpdateFlows.computeIfAbsent(gameId) { MutableSharedFlow(replay = 1) }
 
 private fun buildUpdate(gameId: String) =
     GameUpdate(
