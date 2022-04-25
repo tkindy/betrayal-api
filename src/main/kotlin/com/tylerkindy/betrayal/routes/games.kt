@@ -4,6 +4,7 @@ import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
 import com.tylerkindy.betrayal.db.*
 import com.tylerkindy.betrayal.getUpdates
+import com.tylerkindy.betrayal.sendUpdate
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.http.cio.websocket.*
@@ -72,6 +73,8 @@ val gameRoutes: Routing.() -> Unit = {
             insertStartingPlayers(gameId, gameRequest.numPlayers)
             createRoomStack(gameId)
             createCardStacks(gameId)
+
+            sendUpdate(gameId)
 
             call.respond(Game(id = gameId, name = gameRequest.name))
         }
