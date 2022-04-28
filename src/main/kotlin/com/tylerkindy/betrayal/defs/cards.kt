@@ -163,7 +163,9 @@ data class OmenDefinition(
     }
 }
 
-val events = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
+val csvFormat = CSVFormat.DEFAULT.builder().setNullString("").setHeader().setSkipHeaderRecord(true).build()
+
+val events = csvFormat
     .parse(InputStreamReader(EventDefinition::class.java.getResourceAsStream("/events.csv")))
     .map {
         EventDefinition(
@@ -176,7 +178,7 @@ val events = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
         )
     }
     .associateBy { it.id }
-val items = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
+val items = csvFormat
     .parse(InputStreamReader(ItemDefinition::class.java.getResourceAsStream("/items.csv")))
     .map {
         ItemDefinition(
@@ -189,7 +191,7 @@ val items = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
         )
     }
     .associateBy { it.id }
-val omens = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
+val omens = csvFormat
     .parse(InputStreamReader(OmenDefinition::class.java.getResourceAsStream("/omens.csv")))
     .map {
         OmenDefinition(

@@ -7,8 +7,8 @@ buildscript {
 }
 
 plugins {
-    kotlin("jvm") version "1.4.+"
-    kotlin("plugin.serialization") version "1.4.+"
+    kotlin("jvm") version "1.6.+"
+    kotlin("plugin.serialization") version "1.6.+"
     application
     id("com.github.ben-manes.versions") version "0.+"
     id("org.liquibase.gradle") version "2.+"
@@ -18,25 +18,24 @@ version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
-    maven {
-        url = uri("https://dl.bintray.com/kotlin/ktor")
-    }
-    maven {
-        url = uri("https://dl.bintray.com/kotlin/kotlinx")
-    }
 }
 
-val ktorVersion = "1.4.+"
+val ktorVersion = "2.+"
 val postgresVersion = "42.+"
 val exposedVersion = "0.+"
 val kotestVersion = "4.+"
 val testcontainersVersion = "1.+"
 
 dependencies {
+    implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-server-netty:$ktorVersion")
-    implementation("io.ktor:ktor-serialization:$ktorVersion")
-    implementation("io.ktor:ktor-websockets:$ktorVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.4.+")
+    implementation("io.ktor:ktor-serialization-kotlinx-json:$ktorVersion")
+    implementation("io.ktor:ktor-server-websockets:$ktorVersion")
+    implementation("io.ktor:ktor-server-content-negotiation:$ktorVersion")
+    implementation("io.ktor:ktor-server-cors:$ktorVersion")
+    implementation("io.ktor:ktor-server-call-logging:$ktorVersion")
+    implementation("io.ktor:ktor-server-status-pages:$ktorVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.+")
     implementation("org.postgresql:postgresql:$postgresVersion")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")

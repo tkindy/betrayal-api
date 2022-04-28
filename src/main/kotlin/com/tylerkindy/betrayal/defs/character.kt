@@ -26,7 +26,7 @@ data class CharacterDefinition(
 )
 
 private val fileStream = CharacterDefinition::class.java.getResourceAsStream("/characters.csv")
-val characters = CSVFormat.DEFAULT.withFirstRecordAsHeader()
+val characters = CSVFormat.DEFAULT.builder().setHeader().setSkipHeaderRecord(true).build()
     .parse(InputStreamReader(fileStream))
     .map {
         CharacterDefinition(

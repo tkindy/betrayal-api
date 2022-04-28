@@ -3,11 +3,11 @@ package com.tylerkindy.betrayal.routes
 import com.tylerkindy.betrayal.db.getLatestRoll
 import com.tylerkindy.betrayal.db.rollDice
 import com.tylerkindy.betrayal.sendUpdate
-import io.ktor.application.*
 import io.ktor.http.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.server.application.*
+import io.ktor.server.request.*
+import io.ktor.server.response.*
+import io.ktor.server.routing.*
 import kotlinx.serialization.Serializable
 
 val diceRollRoutes: Route.() -> Unit = {
