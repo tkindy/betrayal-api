@@ -2,6 +2,21 @@ package com.tylerkindy.betrayal.db
 
 import org.jetbrains.exposed.sql.Table
 
+object Lobbies: Table() {
+    val id = varchar("id", 6)
+    val hostId = integer("hostId").nullable()
+
+    override val primaryKey = PrimaryKey(id)
+}
+
+object LobbyPlayers: Table() {
+    val id = integer("id").autoIncrement()
+    val name = varchar("name", 20)
+    val password = varchar("password", 8)
+
+    override val primaryKey = PrimaryKey(id)
+}
+
 object Games : Table() {
     val id = varchar("id", 6)
     val name = varchar("name", 32)
@@ -12,6 +27,8 @@ object Games : Table() {
 object Players : Table() {
     val id = integer("id")
     val gameId = varchar("gameId", 6)
+    val name = varchar("name", 20).nullable()
+    val password = varchar("password", 8).nullable()
     val characterId = short("characterId")
     val gridX = integer("gridX")
     val gridY = integer("gridY")
