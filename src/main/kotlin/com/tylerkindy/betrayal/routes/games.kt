@@ -3,8 +3,7 @@ package com.tylerkindy.betrayal.routes
 import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
 import com.tylerkindy.betrayal.db.*
-import com.tylerkindy.betrayal.getUpdates
-import com.tylerkindy.betrayal.sendUpdate
+import com.tylerkindy.betrayal.gameUpdateManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -42,7 +41,7 @@ val gameRoutes: Routing.() -> Unit = {
 
             webSocket {
                 val gameId = call.parameters["gameId"]!!
-                getUpdates(gameId).collect { update ->
+                gameUpdateManager.getUpdates(gameId).collect { update ->
                     send(Frame.Text(Json.encodeToString(update)))
                 }
             }
@@ -73,7 +72,7 @@ val gameRoutes: Routing.() -> Unit = {
             createRoomStack(gameId)
             createCardStacks(gameId)
 
-            sendUpdate(gameId)
+            gameUpdateManager.sendUpdate(gameId)
 
             call.respond(Game(id = gameId, name = gameRequest.name))
         }

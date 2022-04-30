@@ -2,7 +2,7 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.db.getLatestRoll
 import com.tylerkindy.betrayal.db.rollDice
-import com.tylerkindy.betrayal.sendUpdate
+import com.tylerkindy.betrayal.gameUpdateManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -26,7 +26,7 @@ val diceRollRoutes: Route.() -> Unit = {
                 ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing numDice")
 
             call.respond(rollDice(gameId, numDice))
-            sendUpdate(gameId)
+            gameUpdateManager.sendUpdate(gameId)
         }
     }
 }

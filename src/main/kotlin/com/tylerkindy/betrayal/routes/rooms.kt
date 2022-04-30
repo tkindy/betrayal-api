@@ -5,7 +5,7 @@ import com.tylerkindy.betrayal.db.getRooms
 import com.tylerkindy.betrayal.db.moveRoom
 import com.tylerkindy.betrayal.db.returnRoomToStack
 import com.tylerkindy.betrayal.db.rotateRoom
-import com.tylerkindy.betrayal.sendUpdate
+import com.tylerkindy.betrayal.gameUpdateManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -29,7 +29,7 @@ val roomRoutes: Route.() -> Unit = {
 
                 moveRoom(gameId, roomId, loc)
                 call.respond(HttpStatusCode.OK, "")
-                sendUpdate(gameId)
+                gameUpdateManager.sendUpdate(gameId)
             }
 
             post("rotate") {
@@ -39,7 +39,7 @@ val roomRoutes: Route.() -> Unit = {
 
                 rotateRoom(gameId, roomId)
                 call.respond(HttpStatusCode.OK, "")
-                sendUpdate(gameId)
+                gameUpdateManager.sendUpdate(gameId)
             }
 
             post("return") {
@@ -49,7 +49,7 @@ val roomRoutes: Route.() -> Unit = {
 
                 returnRoomToStack(gameId, roomId)
                 call.respond(HttpStatusCode.OK, "")
-                sendUpdate(gameId)
+                gameUpdateManager.sendUpdate(gameId)
             }
         }
     }
