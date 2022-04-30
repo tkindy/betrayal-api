@@ -1,8 +1,10 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.LobbyRequest
+import com.tylerkindy.betrayal.addUpdateRoute
 import com.tylerkindy.betrayal.db.Lobbies
 import com.tylerkindy.betrayal.db.LobbyPlayers
+import com.tylerkindy.betrayal.lobbyUpdateManager
 import com.tylerkindy.betrayal.validatePlayerName
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -38,6 +40,10 @@ val lobbyRoutes: Routing.() -> Unit = {
             }
 
             call.respond(HttpStatusCode.NoContent, "")
+        }
+
+        route("{lobbyId}") {
+            addUpdateRoute(lobbyUpdateManager, "lobbyId")
         }
     }
 }
