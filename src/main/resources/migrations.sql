@@ -127,4 +127,4 @@ ALTER TABLE "players"
   ADD COLUMN "password" VARCHAR(8) NULL;
 
 --changeset tkindy:13
-CREATE INDEX ON "players" ("name", "password");
+CREATE INDEX ON "players" ("gameId", "name", "password");
