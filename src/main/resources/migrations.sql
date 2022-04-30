@@ -129,3 +129,6 @@ ALTER TABLE "players"
 
 --changeset tkindy:13
 CREATE INDEX ON "players" ("gameId", "name", "password");
+
+--changeset tkindy:14
+CREATE INDEX ON "lobbyPlayers" ("lobbyId", "name", "password");
