@@ -38,7 +38,7 @@ data class GameUpdate(
     val monsters: List<Monster>
 )
 
-class UpdateSender<T>(private val buildUpdate: (String) -> T) {
+class UpdateManager<T>(private val buildUpdate: (String) -> T) {
     private val flows = ConcurrentHashMap<String, MutableSharedFlow<T>>()
 
     suspend fun sendUpdate(id: String) {
