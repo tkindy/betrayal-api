@@ -47,6 +47,7 @@ dependencies {
     liquibaseRuntime("org.liquibase:liquibase-core:4.+")
     liquibaseRuntime("org.postgresql:postgresql:$postgresVersion")
     liquibaseRuntime("javax.xml.bind:jaxb-api:2.+")
+    liquibaseRuntime("info.picocli:picocli:4.+")
 
     testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
     testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")

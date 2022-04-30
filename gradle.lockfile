@@ -14,6 +14,7 @@ com.typesafe:config:1.4.1=compileClasspath,runtimeClasspath,testCompileClasspath
 com.zaxxer:HikariCP:3.4.5=compileClasspath,implementationDependenciesMetadata,runtimeClasspath,testCompileClasspath,testImplementationDependenciesMetadata,testRuntimeClasspath
 commons-io:commons-io:2.6=testRuntimeClasspath
 dk.brics.automaton:automaton:1.11-8=testRuntimeClasspath
+info.picocli:picocli:4.6.3=liquibaseRuntime
 io.github.classgraph:classgraph:4.8.105=testCompileClasspath,testRuntimeClasspath
 io.github.java-diff-utils:java-diff-utils:4.9=testRuntimeClasspath
 io.kotest:kotest-assertions-api-jvm:4.6.4=testCompileClasspath,testRuntimeClasspath
