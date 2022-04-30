@@ -1,9 +1,14 @@
 package com.tylerkindy.betrayal
 
 import com.tylerkindy.betrayal.db.*
+import io.ktor.server.routing.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.concurrent.ConcurrentHashMap
 
 val lobbyUpdateManager = UpdateManager { lobbyId ->
@@ -51,4 +56,16 @@ class UpdateManager<T>(private val buildUpdate: (String) -> T) {
 
     private fun getOrCreateFlow(id: String) =
         flows.computeIfAbsent(id) { MutableSharedFlow(replay = 1) }
+}
+
+inline fun <reified T> Route.addUpdateRoute(
+    updateManager: UpdateManager<T>,
+    idParam: String
+) {
+    webSocket {
+        val id = call.parameters[idParam]!!
+        updateManager.getUpdates(id).collect { update ->
+            send(Frame.Text(Json.encodeToString(update)))
+        }
+    }
 }

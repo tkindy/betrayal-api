@@ -2,6 +2,7 @@ package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Game
 import com.tylerkindy.betrayal.GameRequest
+import com.tylerkindy.betrayal.addUpdateRoute
 import com.tylerkindy.betrayal.db.*
 import com.tylerkindy.betrayal.gameUpdateManager
 import io.ktor.http.*
@@ -9,10 +10,6 @@ import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.websocket.*
-import io.ktor.websocket.*
-import kotlinx.serialization.encodeToString
-import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -39,12 +36,7 @@ val gameRoutes: Routing.() -> Unit = {
             cardRoutes()
             diceRollRoutes()
 
-            webSocket {
-                val gameId = call.parameters["gameId"]!!
-                gameUpdateManager.getUpdates(gameId).collect { update ->
-                    send(Frame.Text(Json.encodeToString(update)))
-                }
-            }
+            addUpdateRoute(gameUpdateManager, "gameId")
         }
 
         post {
