@@ -64,8 +64,15 @@ inline fun <reified T> Route.addUpdateRoute(
 ) {
     webSocket {
         val id = call.parameters[idParam]!!
-        updateManager.getUpdates(id).collect { update ->
-            send(Frame.Text(Json.encodeToString(update)))
-        }
+        sendUpdates(updateManager, id)
+    }
+}
+
+suspend inline fun <reified T> WebSocketSession.sendUpdates(
+    updateManager: UpdateManager<T>,
+    id: String
+) {
+    updateManager.getUpdates(id).collect { update ->
+        send(Frame.Text(Json.encodeToString(update)))
     }
 }

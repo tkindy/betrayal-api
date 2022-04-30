@@ -9,6 +9,9 @@ import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
+import io.ktor.server.websocket.*
+import io.ktor.websocket.*
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -70,7 +73,42 @@ val lobbyRoutes: Routing.() -> Unit = {
                 call.respond(HttpStatusCode.NoContent, "")
             }
 
-            addUpdateRoute(lobbyUpdateManager, "lobbyId")
+            webSocket {
+                val lobbyId = call.parameters["lobbyId"]!!
+                transaction {
+                    Lobbies.select { Lobbies.id eq lobbyId }
+                        .firstOrNull()
+                } ?: return@webSocket close(
+                    CloseReason(
+                        CloseReason.Codes.VIOLATED_POLICY,
+                        "Unknown lobby"
+                    )
+                )
+
+                val (name, password) = call.sessions.get<UserSession>()
+                    ?: return@webSocket close(
+                        CloseReason(
+                            CloseReason.Codes.VIOLATED_POLICY,
+                            "Missing auth"
+                        )
+                    )
+
+                transaction {
+                    LobbyPlayers.select {
+                        (LobbyPlayers.lobbyId eq lobbyId) and
+                                (LobbyPlayers.name eq name) and
+                                (LobbyPlayers.password eq password)
+                    }
+                        .firstOrNull()
+                } ?: return@webSocket close(
+                    CloseReason(
+                        CloseReason.Codes.VIOLATED_POLICY,
+                        "Invalid auth"
+                    )
+                )
+
+                sendUpdates(lobbyUpdateManager, lobbyId)
+            }
         }
     }
 }
@@ -87,6 +125,7 @@ private val playerPasswordCharacters =
     ('A'..'Z').toList() +
             ('a'..'z').toList() +
             ('0'..'9').toList()
+
 private fun buildPlayerPassword(): String {
     return (0 until 8)
         .map { playerPasswordCharacters.random() }
