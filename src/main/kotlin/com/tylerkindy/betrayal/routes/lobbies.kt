@@ -1,16 +1,14 @@
 package com.tylerkindy.betrayal.routes
 
-import com.tylerkindy.betrayal.LobbyRequest
-import com.tylerkindy.betrayal.addUpdateRoute
+import com.tylerkindy.betrayal.*
 import com.tylerkindy.betrayal.db.Lobbies
 import com.tylerkindy.betrayal.db.LobbyPlayers
-import com.tylerkindy.betrayal.lobbyUpdateManager
-import com.tylerkindy.betrayal.validatePlayerName
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -39,6 +37,7 @@ val lobbyRoutes: Routing.() -> Unit = {
                 }
             }
 
+            call.sessions.set(UserSession(name = hostName, password = hostPassword))
             call.respond(HttpStatusCode.NoContent, "")
         }
 

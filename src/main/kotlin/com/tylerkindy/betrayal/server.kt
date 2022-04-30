@@ -13,6 +13,7 @@ import io.ktor.server.plugins.cors.*
 import io.ktor.server.plugins.statuspages.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import io.ktor.server.sessions.*
 import io.ktor.server.websocket.*
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.Database
@@ -35,6 +36,9 @@ fun main() {
                     isLenient = true
                 }
             )
+        }
+        install(Sessions) {
+            cookie<UserSession>("betrayal_user_session")
         }
         install(CORS) {
             allowNonSimpleContentTypes = true
