@@ -6,6 +6,12 @@ import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
 
+val lobbyUpdateManager = UpdateManager { lobbyId ->
+    LobbyUpdate(
+        hostId = getHostId(lobbyId),
+        players = getLobbyPlayers(lobbyId)
+    )
+}
 val gameUpdateManager = UpdateManager { gameId ->
     GameUpdate(
         rooms = getRooms(gameId),
@@ -16,6 +22,12 @@ val gameUpdateManager = UpdateManager { gameId ->
         monsters = getMonsters(gameId)
     )
 }
+
+@Serializable
+data class LobbyUpdate(
+    val hostId: Int,
+    val players: List<LobbyPlayer>
+)
 
 @Serializable
 data class GameUpdate(
