@@ -187,6 +187,9 @@ data class HeldCard(
 )
 
 @Serializable
+data class LobbyRequest(val hostName: String)
+
+@Serializable
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
