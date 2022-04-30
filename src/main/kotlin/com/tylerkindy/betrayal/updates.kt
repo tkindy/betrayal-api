@@ -37,3 +37,14 @@ data class GameUpdate(
     val latestRoll: List<Int>?,
     val monsters: List<Monster>
 )
+
+class UpdateSender<T>(private val buildUpdate: (String) -> T) {
+    private val flows = ConcurrentHashMap<String, MutableSharedFlow<T>>()
+
+    suspend fun sendUpdate(id: String) {
+        getOrCreateFlow(id).emit(buildUpdate(id))
+    }
+
+    private fun getOrCreateFlow(id: String) =
+        flows.computeIfAbsent(id) { MutableSharedFlow(replay = 1) }
+}
