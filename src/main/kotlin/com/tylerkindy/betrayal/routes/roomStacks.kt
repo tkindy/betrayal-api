@@ -3,7 +3,7 @@ package com.tylerkindy.betrayal.routes
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.RoomStackResponse
 import com.tylerkindy.betrayal.db.*
-import com.tylerkindy.betrayal.sendUpdate
+import com.tylerkindy.betrayal.gameUpdateManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -24,7 +24,7 @@ val roomStackRoutes: Route.() -> Unit = {
                     nextRoom = advanceRoomStack(gameId)
                 )
             )
-            sendUpdate(gameId)
+            gameUpdateManager.sendUpdate(gameId)
         }
 
         post("flip") {
@@ -34,14 +34,14 @@ val roomStackRoutes: Route.() -> Unit = {
                     flippedRoom = flipRoom(gameId)
                 )
             )
-            sendUpdate(gameId)
+            gameUpdateManager.sendUpdate(gameId)
         }
 
         post("rotate") {
             val gameId = call.parameters["gameId"]!!
             rotateFlipped(gameId)
             call.respond(getRoomStackState(gameId))
-            sendUpdate(gameId)
+            gameUpdateManager.sendUpdate(gameId)
         }
 
         post("place") {
@@ -51,7 +51,7 @@ val roomStackRoutes: Route.() -> Unit = {
             call.respond(
                 placeRoom(gameId, loc)
             )
-            sendUpdate(gameId)
+            gameUpdateManager.sendUpdate(gameId)
         }
     }
 }

@@ -3,7 +3,7 @@ package com.tylerkindy.betrayal.routes
 import com.tylerkindy.betrayal.GridLoc
 import com.tylerkindy.betrayal.TraitName
 import com.tylerkindy.betrayal.db.*
-import com.tylerkindy.betrayal.sendUpdate
+import com.tylerkindy.betrayal.gameUpdateManager
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -28,7 +28,7 @@ val playerRoutes: Route.() -> Unit = {
 
                 movePlayer(gameId, playerId, loc)
                 call.respond(HttpStatusCode.OK)
-                sendUpdate(gameId)
+                gameUpdateManager.sendUpdate(gameId)
             }
 
             post("setTrait") {
@@ -40,7 +40,7 @@ val playerRoutes: Route.() -> Unit = {
 
                 setTrait(gameId, playerId, body.trait, body.index)
                 call.respond(getPlayer(gameId, playerId))
-                sendUpdate(gameId)
+                gameUpdateManager.sendUpdate(gameId)
             }
 
             route("cards/{cardId}") {
@@ -53,7 +53,7 @@ val playerRoutes: Route.() -> Unit = {
 
                     discardHeldCard(gameId, playerId, cardId)
                     call.respond(getPlayer(gameId, playerId))
-                    sendUpdate(gameId)
+                    gameUpdateManager.sendUpdate(gameId)
                 }
                 post("giveToPlayer") {
                     val gameId = call.parameters["gameId"]!!
@@ -66,7 +66,7 @@ val playerRoutes: Route.() -> Unit = {
 
                     giveHeldCardToPlayer(gameId, fromPlayerId, cardId, toPlayerId)
                     call.respond(getPlayers(gameId))
-                    sendUpdate(gameId)
+                    gameUpdateManager.sendUpdate(gameId)
                 }
             }
         }
