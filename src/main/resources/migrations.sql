@@ -107,3 +107,28 @@ CREATE TABLE "monsters" (
 );
 
 CREATE INDEX ON "monsters" ("gameId");
+
+--changeset tkindy:10
+CREATE TABLE "lobbies" (
+  "id" VARCHAR(6) PRIMARY KEY,
+  "hostId" INT NULL
+);
+
+--changeset tkindy:11
+CREATE TABLE "lobbyPlayers" (
+  "id" SERIAL PRIMARY KEY,
+  "lobbyId" VARCHAR(6) NOT NULL,
+  "name" VARCHAR(20) NOT NULL,
+  "password" VARCHAR(8) NOT NULL
+);
+
+--changeset tkindy:12
+ALTER TABLE "players"
+  ADD COLUMN "name" VARCHAR(20) NULL,
+  ADD COLUMN "password" VARCHAR(8) NULL;
+
+--changeset tkindy:13
+CREATE INDEX ON "players" ("gameId", "name", "password");
+
+--changeset tkindy:14
+CREATE INDEX ON "lobbyPlayers" ("lobbyId", "name", "password");
