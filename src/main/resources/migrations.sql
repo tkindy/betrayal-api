@@ -117,6 +117,7 @@ CREATE TABLE "lobbies" (
 --changeset tkindy:11
 CREATE TABLE "lobbyPlayers" (
   "id" SERIAL PRIMARY KEY,
+  "lobbyId" VARCHAR(6) NOT NULL,
   "name" VARCHAR(20) NOT NULL,
   "password" VARCHAR(8) NOT NULL
 );

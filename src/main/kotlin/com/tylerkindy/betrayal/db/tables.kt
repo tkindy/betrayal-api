@@ -11,6 +11,7 @@ object Lobbies: Table() {
 
 object LobbyPlayers: Table() {
     val id = integer("id").autoIncrement()
+    val lobbyId = varchar("lobbyId", 6)
     val name = varchar("name", 20)
     val password = varchar("password", 8)
 
