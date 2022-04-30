@@ -10,6 +10,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.sessions.*
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
 val lobbyRoutes: Routing.() -> Unit = {
@@ -42,6 +43,33 @@ val lobbyRoutes: Routing.() -> Unit = {
         }
 
         route("{lobbyId}") {
+            post("join") {
+                val lobbyId = call.parameters["lobbyId"]!!
+                transaction {
+                    Lobbies.select { Lobbies.id eq lobbyId }
+                        .firstOrNull()
+                } ?: return@post call.respond(HttpStatusCode.NotFound, "")
+
+                val joinRequest = call.receiveOrNull<JoinLobbyRequest>()
+                    ?: return@post call.respond(HttpStatusCode.BadRequest, "'name' is required")
+
+                val (name) = joinRequest
+                validatePlayerName(name, lobbyId)
+
+                val password = buildPlayerPassword()
+
+                transaction {
+                    LobbyPlayers.insert {
+                        it[this.lobbyId] = lobbyId
+                        it[this.name] = name
+                        it[this.password] = password
+                    }
+                }
+
+                call.sessions.set(UserSession(name = name, password = password))
+                call.respond(HttpStatusCode.NoContent, "")
+            }
+
             addUpdateRoute(lobbyUpdateManager, "lobbyId")
         }
     }
