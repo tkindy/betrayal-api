@@ -41,6 +41,9 @@ data class GameUpdate(
 class UpdateManager<T>(private val buildUpdate: (String) -> T) {
     private val flows = ConcurrentHashMap<String, MutableSharedFlow<T>>()
 
+    fun getUpdates(id: String): SharedFlow<T> =
+        getOrCreateFlow(id)
+
     suspend fun sendUpdate(id: String) {
         getOrCreateFlow(id).emit(buildUpdate(id))
     }
