@@ -225,5 +225,3 @@ data class DiceRoll(
     val values: List<Int>,
     val type: DiceRollType
 )
-
-data class UserSession(val name: String, val password: String)

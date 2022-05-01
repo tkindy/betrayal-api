@@ -1,20 +1,18 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.*
-import com.tylerkindy.betrayal.db.Lobbies
-import com.tylerkindy.betrayal.db.LobbyPlayers
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
-import io.ktor.server.sessions.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
-import org.jetbrains.exposed.sql.and
-import org.jetbrains.exposed.sql.insert
-import org.jetbrains.exposed.sql.select
-import org.jetbrains.exposed.sql.transactions.transaction
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
+import kotlin.collections.set
 
 val lobbyRoutes: Routing.() -> Unit = {
     route("lobbies") {
@@ -26,90 +24,73 @@ val lobbyRoutes: Routing.() -> Unit = {
             validatePlayerName(hostName)
 
             val lobbyId = buildLobbyId()
-            val hostPassword = buildPlayerPassword()
-
-            transaction {
-                val hostId = LobbyPlayers.insert {
-                    it[this.lobbyId] = lobbyId
-                    it[name] = hostName
-                    it[password] = hostPassword
-                } get LobbyPlayers.id
-
-                Lobbies.insert {
-                    it[id] = lobbyId
-                    it[this.hostId] = hostId
-                }
-            }
-
-            lobbyUpdateManager.sendUpdate(lobbyId)
-
-            call.sessions.set(UserSession(name = hostName, password = hostPassword))
+            lobbyStates[lobbyId] = LobbyState()
             call.respond(Lobby(id = lobbyId))
         }
 
         route("{lobbyId}") {
-            post("join") {
-                val lobbyId = call.parameters["lobbyId"]!!
-                transaction {
-                    Lobbies.select { Lobbies.id eq lobbyId }
-                        .firstOrNull()
-                } ?: return@post call.respond(HttpStatusCode.NotFound, "")
-
-                val joinRequest = call.receiveOrNull<JoinLobbyRequest>()
-                    ?: return@post call.respond(HttpStatusCode.BadRequest, "'name' is required")
-
-                val (name) = joinRequest
-                validatePlayerName(name, lobbyId)
-
-                val password = buildPlayerPassword()
-
-                transaction {
-                    LobbyPlayers.insert {
-                        it[this.lobbyId] = lobbyId
-                        it[this.name] = name
-                        it[this.password] = password
-                    }
-                }
-
-                call.sessions.set(UserSession(name = name, password = password))
-                call.respond(HttpStatusCode.NoContent, "")
-            }
-
             webSocket {
                 val lobbyId = call.parameters["lobbyId"]!!
-                transaction {
-                    Lobbies.select { Lobbies.id eq lobbyId }
-                        .firstOrNull()
-                } ?: return@webSocket close(
+                val curState = lobbyStates[lobbyId] ?: return@webSocket close(
                     CloseReason(
                         CloseReason.Codes.VIOLATED_POLICY,
                         "Unknown lobby"
                     )
                 )
 
-                val (name, password) = call.sessions.get<UserSession>()
+                val (name) = parseMessage<NameMessage>(incoming.receive())
                     ?: return@webSocket close(
                         CloseReason(
                             CloseReason.Codes.VIOLATED_POLICY,
-                            "Missing auth"
+                            "Expected name message"
                         )
                     )
 
-                transaction {
-                    LobbyPlayers.select {
-                        (LobbyPlayers.lobbyId eq lobbyId) and
-                                (LobbyPlayers.name eq name) and
-                                (LobbyPlayers.password eq password)
-                    }
-                        .firstOrNull()
-                } ?: return@webSocket close(
-                    CloseReason(
-                        CloseReason.Codes.VIOLATED_POLICY,
-                        "Invalid auth"
-                    )
-                )
+                validatePlayerName(name)?.let {
+                    return@webSocket close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, it))
+                }
 
-                sendUpdates(lobbyUpdateManager, lobbyId)
+                if (name in curState.players.map { it.name }) {
+                    return@webSocket close(
+                        CloseReason(
+                            CloseReason.Codes.VIOLATED_POLICY,
+                            "A player in the lobby is already using the name $name"
+                        )
+                    )
+                }
+
+                val player = PlayerState(name, this)
+                val newState = lobbyStates.computeIfPresent(lobbyId) { _, state ->
+                    state.copy(
+                        players = state.players + player
+                    )
+                }!!
+
+                val playerNamesFrame =
+                    Frame.Text(
+                        Json.encodeToString(
+                            newState.players.map { it.name }
+                        )
+                    )
+                newState.players.forEach { player ->
+                    player.session.send(playerNamesFrame)
+                }
+
+                // Wait for client to close the WebSocket
+                incoming.receiveCatching()
+
+                val removedState = lobbyStates.computeIfPresent(lobbyId) { _, state ->
+                    state.copy(
+                        players = state.players - player
+                    )
+                }!!
+
+                val newPlayerNamesFrame = Frame.Text(Json.encodeToString(
+                    removedState.players.map { it.name }
+                ))
+                removedState.players.forEach { player ->
+                    player.session.send(newPlayerNamesFrame)
+                }
             }
         }
     }
@@ -134,3 +115,14 @@ private fun buildPlayerPassword(): String {
         .fold(StringBuilder(), StringBuilder::append)
         .toString()
 }
+
+private inline fun <reified T> parseMessage(frame: Frame): T? {
+    val textFrame = frame as? Frame.Text
+        ?: return null
+    return Json.decodeFromString(textFrame.readText())
+}
+
+@Serializable
+data class NameMessage(val name: String)
+
+class Connection(val session: DefaultWebSocketSession)
