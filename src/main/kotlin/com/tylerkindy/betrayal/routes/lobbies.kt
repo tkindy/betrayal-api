@@ -41,6 +41,8 @@ val lobbyRoutes: Routing.() -> Unit = {
                 }
             }
 
+            lobbyUpdateManager.sendUpdate(lobbyId)
+
             call.sessions.set(UserSession(name = hostName, password = hostPassword))
             call.respond(HttpStatusCode.NoContent, "")
         }
