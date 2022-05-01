@@ -202,6 +202,9 @@ data class JoinLobbyRequest(val name: String)
 data class GameRequest(val name: String, val numPlayers: Int)
 
 @Serializable
+data class Lobby(val id: String)
+
+@Serializable
 data class Game(val id: String, val name: String)
 
 @Serializable
