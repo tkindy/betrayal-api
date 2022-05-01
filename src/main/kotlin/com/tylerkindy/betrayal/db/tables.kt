@@ -9,7 +9,7 @@ object Lobbies: Table() {
     override val primaryKey = PrimaryKey(id)
 }
 
-object LobbyPlayers: Table() {
+object LobbyPlayers: Table("\"lobbyPlayers\"") {
     val id = integer("id").autoIncrement()
     val lobbyId = varchar("lobbyId", 6)
     val name = varchar("name", 20)
