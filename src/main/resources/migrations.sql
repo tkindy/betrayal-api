@@ -132,3 +132,7 @@ CREATE INDEX ON "players" ("gameId", "name", "password");
 
 --changeset tkindy:14
 CREATE INDEX ON "lobbyPlayers" ("lobbyId", "name", "password");
+
+--changeset tkindy:15
+ALTER TABLE "diceRolls"
+  ADD COLUMN "type" VARCHAR(16) NULL;

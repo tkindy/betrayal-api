@@ -23,7 +23,7 @@ data class GameUpdate(
     val players: List<Player>,
     val roomStack: RoomStackResponse,
     val drawnCard: Card?,
-    val latestRoll: List<Int>?,
+    val latestRoll: DiceRoll?,
     val monsters: List<Monster>
 )
 

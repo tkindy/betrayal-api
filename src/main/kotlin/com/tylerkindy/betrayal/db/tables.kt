@@ -103,6 +103,7 @@ object DiceRolls : Table("\"diceRolls\"") {
     val id = integer("id").autoIncrement()
     val gameId = varchar("gameId", 6)
     val rolls = varchar("rolls", 15)
+    val type = varchar("type", 16).nullable()
 }
 
 object Monsters : Table("\"monsters\"") {
