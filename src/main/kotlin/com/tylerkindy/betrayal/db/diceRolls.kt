@@ -1,5 +1,7 @@
 package com.tylerkindy.betrayal.db
 
+import com.tylerkindy.betrayal.DiceRoll
+import com.tylerkindy.betrayal.DiceRollType
 import org.jetbrains.exposed.sql.SortOrder
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.select
@@ -9,31 +11,38 @@ import kotlin.random.nextInt
 
 private val numDiceRange = 1..8
 
-fun getLatestRoll(gameId: String): List<Int>? {
+fun getLatestRoll(gameId: String): DiceRoll? {
     return transaction {
         DiceRolls.select { DiceRolls.gameId eq gameId }
             .orderBy(DiceRolls.id, SortOrder.DESC)
             .firstOrNull()
-            ?.let {
-                it[DiceRolls.rolls].split("|")
-                    .map(String::toInt)
+            ?.let { row ->
+                DiceRoll(
+                    id = row[DiceRolls.id],
+                    values = row[DiceRolls.rolls]
+                        .split("|")
+                        .map(String::toInt),
+                    type = row[DiceRolls.type]?.let { DiceRollType.valueOf(it) }
+                        ?: DiceRollType.AD_HOC
+                )
             }
     }
 }
 
-fun rollDice(gameId: String, numDice: Int): List<Int> {
+fun rollDice(gameId: String, numDice: Int, type: DiceRollType): DiceRoll {
     if (!numDiceRange.contains(numDice)) {
         throw IllegalArgumentException("Invalid number of dice $numDice")
     }
 
-    val rolls = (0 until numDice).map { Random.nextInt(0..2) }
+    val values = (0 until numDice).map { Random.nextInt(0..2) }
 
-    transaction {
+    val id = transaction {
         DiceRolls.insert {
             it[this.gameId] = gameId
-            it[this.rolls] = rolls.joinToString("|")
+            it[this.rolls] = values.joinToString("|")
+            it[this.type] = type.name
         }
-    }
+    } get DiceRolls.id
 
-    return rolls
+    return DiceRoll(id = id, values = values, type = type)
 }

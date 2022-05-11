@@ -198,3 +198,15 @@ data class Monster(
     val number: Int,
     val loc: GridLoc
 )
+
+@Serializable
+enum class DiceRollType {
+    AD_HOC, HAUNT
+}
+
+@Serializable
+data class DiceRoll(
+    val id: Int,
+    val values: List<Int>,
+    val type: DiceRollType
+)

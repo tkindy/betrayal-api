@@ -1,5 +1,6 @@
 package com.tylerkindy.betrayal.routes
 
+import com.tylerkindy.betrayal.DiceRollType
 import com.tylerkindy.betrayal.db.getLatestRoll
 import com.tylerkindy.betrayal.db.rollDice
 import com.tylerkindy.betrayal.gameUpdateManager
@@ -22,14 +23,17 @@ val diceRollRoutes: Route.() -> Unit = {
 
         post {
             val gameId = call.parameters["gameId"]!!
-            val numDice = call.receiveOrNull<RollDiceBody>()?.numDice
+            val body = call.receiveOrNull<RollDiceBody>()
                 ?: return@post call.respond(HttpStatusCode.BadRequest, "Missing numDice")
 
-            call.respond(rollDice(gameId, numDice))
+            call.respond(rollDice(gameId, body.numDice, body.type))
             gameUpdateManager.sendUpdate(gameId)
         }
     }
 }
 
 @Serializable
-data class RollDiceBody(val numDice: Int)
+data class RollDiceBody(
+    val numDice: Int,
+    val type: DiceRollType = DiceRollType.AD_HOC
+)
