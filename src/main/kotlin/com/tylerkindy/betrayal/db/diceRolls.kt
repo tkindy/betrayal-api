@@ -18,6 +18,7 @@ fun getLatestRoll(gameId: String): DiceRoll? {
             .firstOrNull()
             ?.let { row ->
                 DiceRoll(
+                    id = row[DiceRolls.id],
                     values = row[DiceRolls.rolls]
                         .split("|")
                         .map(String::toInt),
@@ -35,13 +36,13 @@ fun rollDice(gameId: String, numDice: Int, type: DiceRollType): DiceRoll {
 
     val values = (0 until numDice).map { Random.nextInt(0..2) }
 
-    transaction {
+    val id = transaction {
         DiceRolls.insert {
             it[this.gameId] = gameId
             it[this.rolls] = values.joinToString("|")
             it[this.type] = type.name
         }
-    }
+    } get DiceRolls.id
 
-    return DiceRoll(values = values, type = type)
+    return DiceRoll(id = id, values = values, type = type)
 }

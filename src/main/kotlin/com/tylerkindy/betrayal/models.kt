@@ -206,6 +206,7 @@ enum class DiceRollType {
 
 @Serializable
 data class DiceRoll(
+    val id: Int,
     val values: List<Int>,
     val type: DiceRollType
 )
