@@ -1,6 +1,7 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.*
+import com.tylerkindy.betrayal.routes.LobbyServerMessage.PlayersMessage
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -70,7 +71,7 @@ val lobbyRoutes: Routing.() -> Unit = {
                 val playerNamesFrame =
                     Frame.Text(
                         Json.encodeToString(
-                            LobbyServerMessage.PlayersMessage(players = newState.players.map { it.name }) as LobbyServerMessage
+                            PlayersMessage(players = newState.players.map { it.name }) as LobbyServerMessage
                         )
                     )
                 newState.players.forEach { player ->
