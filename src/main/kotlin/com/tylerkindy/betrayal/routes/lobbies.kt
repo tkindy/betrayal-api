@@ -8,6 +8,7 @@ import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
@@ -69,7 +70,7 @@ val lobbyRoutes: Routing.() -> Unit = {
                 val playerNamesFrame =
                     Frame.Text(
                         Json.encodeToString(
-                            newState.players.map { it.name }
+                            LobbyServerMessage.PlayersMessage(players = newState.players.map { it.name }) as LobbyServerMessage
                         )
                     )
                 newState.players.forEach { player ->
@@ -126,3 +127,11 @@ private inline fun <reified T> parseMessage(frame: Frame): T? {
 data class NameMessage(val name: String)
 
 class Connection(val session: DefaultWebSocketSession)
+
+
+@Serializable
+sealed class LobbyServerMessage {
+    @Serializable
+    @SerialName("players")
+    data class PlayersMessage(val players: List<String>): LobbyServerMessage()
+}
