@@ -127,9 +127,6 @@ private inline fun <reified T> parseMessage(frame: Frame): T? {
 @Serializable
 data class NameMessage(val name: String)
 
-class Connection(val session: DefaultWebSocketSession)
-
-
 @Serializable
 sealed class LobbyServerMessage {
     @Serializable
