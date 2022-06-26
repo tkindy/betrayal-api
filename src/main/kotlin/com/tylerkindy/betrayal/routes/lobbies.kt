@@ -1,6 +1,7 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.*
+import com.tylerkindy.betrayal.db.*
 import com.tylerkindy.betrayal.routes.LobbyServerMessage.PlayersMessage
 import io.ktor.http.*
 import io.ktor.server.application.*
@@ -14,6 +15,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.transactions.transaction
 import kotlin.collections.set
 
 val lobbyRoutes: Routing.() -> Unit = {
@@ -94,7 +97,37 @@ val lobbyRoutes: Routing.() -> Unit = {
                     player.session.send(newPlayerNamesMessage)
                 }
             }
+
+            post("start-game") {
+                val lobbyId = call.parameters["lobbyId"]!!
+                val state = lobbyStates[lobbyId] ?: return@post call.respond(HttpStatusCode.NotFound, Unit)
+                val gameName = "name"
+
+                transaction {
+                    Games.insert {
+                        it[id] = lobbyId
+                        it[name] = gameName
+                    }
+                }
+
+                insertStartingRooms(lobbyId)
+                insertStartingPlayers(lobbyId, state.players)
+                createRoomStack(lobbyId)
+                createCardStacks(lobbyId)
+
+                gameUpdateManager.sendUpdate(lobbyId)
+
+                val joinGameMessage = Json.encodeToString(
+                    LobbyServerMessage.JoinGame as LobbyServerMessage
+                )
+                state.players.forEach { player ->
+                    player.session.send(joinGameMessage)
+                }
+
+                call.respond(Game(id = lobbyId, name = gameName))
+            }
         }
+
     }
 }
 
@@ -120,4 +153,29 @@ sealed class LobbyServerMessage {
     @Serializable
     @SerialName("players")
     data class PlayersMessage(val players: List<String>) : LobbyServerMessage()
+
+    @Serializable
+    @SerialName("join")
+    object JoinGame : LobbyServerMessage()
+}
+
+private fun insertStartingPlayers(gameId: String, players: List<PlayerState>) {
+    val characters = getRandomCharacters(players.size)
+    transaction {
+        players.shuffled()
+            .zip(characters.shuffled())
+            .forEach { (player, character) ->
+                Players.insert {
+                    it[this.gameId] = gameId
+                    it[name] = player.name
+                    it[characterId] = character.id
+                    it[gridX] = entranceHallLoc.gridX
+                    it[gridY] = entranceHallLoc.gridY
+                    it[speedIndex] = character.speed.startingIndex.toShort()
+                    it[mightIndex] = character.might.startingIndex.toShort()
+                    it[sanityIndex] = character.sanity.startingIndex.toShort()
+                    it[knowledgeIndex] = character.knowledge.startingIndex.toShort()
+                }
+            }
+    }
 }

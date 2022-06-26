@@ -61,7 +61,7 @@ fun insertStartingPlayers(gameId: String, numPlayers: Int) {
     }
 }
 
-private fun getRandomCharacters(numPlayers: Int): List<CharacterDefinition> {
+fun getRandomCharacters(numPlayers: Int): List<CharacterDefinition> {
     return characters.values
         .groupBy { it.color }.values
         .map { it.random() } // randomly pick one of each color
