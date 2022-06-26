@@ -79,8 +79,18 @@ val lobbyRoutes: Routing.() -> Unit = {
                     player.session.send(playerNamesMessage)
                 }
 
-                // Wait for client to close the WebSocket
-                incoming.receiveCatching()
+                for (frame in incoming) {
+                    val message = Json.decodeFromString<LobbyClientMessage>(
+                        (frame as Frame.Text).readText()
+                    )
+
+                    when (message) {
+                        is LobbyClientMessage.StartGame -> {
+                            startGame(lobbyId)
+                            return@webSocket close(CloseReason(CloseReason.Codes.NORMAL, "Game started"))
+                        }
+                    }
+                }
 
                 val removedState = lobbyStates.computeIfPresent(lobbyId) { _, state ->
                     state.copy(
@@ -96,35 +106,6 @@ val lobbyRoutes: Routing.() -> Unit = {
                 removedState.players.forEach { player ->
                     player.session.send(newPlayerNamesMessage)
                 }
-            }
-
-            post("start-game") {
-                val lobbyId = call.parameters["lobbyId"]!!
-                val state = lobbyStates[lobbyId] ?: return@post call.respond(HttpStatusCode.NotFound, Unit)
-                val gameName = "name"
-
-                transaction {
-                    Games.insert {
-                        it[id] = lobbyId
-                        it[name] = gameName
-                    }
-                }
-
-                insertStartingRooms(lobbyId)
-                insertStartingPlayers(lobbyId, state.players)
-                createRoomStack(lobbyId)
-                createCardStacks(lobbyId)
-
-                gameUpdateManager.sendUpdate(lobbyId)
-
-                val joinGameMessage = Json.encodeToString(
-                    LobbyServerMessage.JoinGame as LobbyServerMessage
-                )
-                state.players.forEach { player ->
-                    player.session.send(joinGameMessage)
-                }
-
-                call.respond(Game(id = lobbyId, name = gameName))
             }
         }
 
@@ -157,6 +138,39 @@ sealed class LobbyServerMessage {
     @Serializable
     @SerialName("join")
     object JoinGame : LobbyServerMessage()
+}
+
+@Serializable
+sealed class LobbyClientMessage {
+    @Serializable
+    @SerialName("start-game")
+    object StartGame : LobbyClientMessage()
+}
+
+private suspend fun startGame(lobbyId: String) {
+    val state = lobbyStates[lobbyId]!!
+    val gameName = "name"
+
+    transaction {
+        Games.insert {
+            it[id] = lobbyId
+            it[name] = gameName
+        }
+    }
+
+    insertStartingRooms(lobbyId)
+    insertStartingPlayers(lobbyId, state.players)
+    createRoomStack(lobbyId)
+    createCardStacks(lobbyId)
+
+    gameUpdateManager.sendUpdate(lobbyId)
+
+    val joinGameMessage = Json.encodeToString(
+        LobbyServerMessage.JoinGame as LobbyServerMessage
+    )
+    state.players.forEach { player ->
+        player.session.send(joinGameMessage)
+    }
 }
 
 private fun insertStartingPlayers(gameId: String, players: List<PlayerState>) {
