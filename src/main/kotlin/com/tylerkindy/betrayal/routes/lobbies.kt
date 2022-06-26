@@ -25,8 +25,10 @@ val lobbyRoutes: Routing.() -> Unit = {
             val lobbyRequest = call.receiveOrNull<LobbyRequest>()
                 ?: return@post call.respond(HttpStatusCode.BadRequest, "'hostName' is required")
 
-            val (hostName) = lobbyRequest;
-            validatePlayerName(hostName)
+            val (hostName) = lobbyRequest
+            validatePlayerName(hostName)?.let { error ->
+                return@post call.respond(HttpStatusCode.BadRequest, error)
+            }
 
             val lobbyId = buildLobbyId()
             lobbyStates[lobbyId] = LobbyState()
@@ -36,12 +38,13 @@ val lobbyRoutes: Routing.() -> Unit = {
         route("{lobbyId}") {
             webSocket {
                 val lobbyId = call.parameters["lobbyId"]!!
-                val curState = lobbyStates[lobbyId] ?: return@webSocket close(
-                    CloseReason(
-                        CloseReason.Codes.VIOLATED_POLICY,
-                        "Unknown lobby"
+                val curState = lobbyStates[lobbyId]
+                    ?: return@webSocket close(
+                        CloseReason(
+                            CloseReason.Codes.VIOLATED_POLICY,
+                            "Unknown lobby"
+                        )
                     )
-                )
 
                 val (name) = parseMessage<NameMessage>(incoming.receive())
                     ?: return@webSocket close(
@@ -51,17 +54,8 @@ val lobbyRoutes: Routing.() -> Unit = {
                         )
                     )
 
-                validatePlayerName(name)?.let {
-                    return@webSocket close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, it))
-                }
-
-                if (name in curState.players.map { it.name }) {
-                    return@webSocket close(
-                        CloseReason(
-                            CloseReason.Codes.VIOLATED_POLICY,
-                            "A player in the lobby is already using the name $name"
-                        )
-                    )
+                validatePlayerName(name, curState)?.let { error ->
+                    return@webSocket close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, error))
                 }
 
                 val player = PlayerState(name, this)
@@ -98,20 +92,7 @@ val lobbyRoutes: Routing.() -> Unit = {
                     }
                 }
 
-                val removedState = lobbyStates.computeIfPresent(lobbyId) { _, state ->
-                    state.copy(
-                        players = state.players - player
-                    )
-                }!!
-
-                val newPlayerNamesMessage =
-                    Json.encodeToString(
-                        PlayersMessage(players = removedState.players.map { it.name }) as LobbyServerMessage
-                    )
-
-                removedState.players.forEach { player ->
-                    player.session.send(newPlayerNamesMessage)
-                }
+                removePlayerThatLeft(lobbyId, player)
             }
         }
 
@@ -212,5 +193,22 @@ private fun insertStartingPlayers(gameId: String, players: List<PlayerState>) {
                     it[knowledgeIndex] = character.knowledge.startingIndex.toShort()
                 }
             }
+    }
+}
+
+private suspend fun removePlayerThatLeft(lobbyId: String, player: PlayerState) {
+    val removedState = lobbyStates.computeIfPresent(lobbyId) { _, state ->
+        state.copy(
+            players = state.players - player
+        )
+    }!!
+
+    val newPlayerNamesMessage =
+        Json.encodeToString(
+            PlayersMessage(players = removedState.players.map { it.name }) as LobbyServerMessage
+        )
+
+    removedState.players.forEach { player ->
+        player.session.send(newPlayerNamesMessage)
     }
 }
