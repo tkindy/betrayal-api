@@ -12,7 +12,6 @@ import io.ktor.server.websocket.*
 import io.ktor.websocket.*
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
@@ -74,9 +73,8 @@ val lobbyRoutes: Routing.() -> Unit = {
                 }
 
                 for (frame in incoming) {
-                    val message = Json.decodeFromString<LobbyClientMessage>(
-                        (frame as Frame.Text).readText()
-                    )
+                    val message =
+                        parseMessage<LobbyClientMessage>(frame) ?: continue
 
                     when (message) {
                         is LobbyClientMessage.StartGame -> {
@@ -105,12 +103,6 @@ private fun buildLobbyId(): String {
         .map { lobbyIdCharacters.random() }
         .fold(StringBuilder()) { builder, char -> builder.append(char) }
         .toString()
-}
-
-private inline fun <reified T> parseMessage(frame: Frame): T? {
-    val textFrame = frame as? Frame.Text
-        ?: return null
-    return Json.decodeFromString(textFrame.readText())
 }
 
 @Serializable
