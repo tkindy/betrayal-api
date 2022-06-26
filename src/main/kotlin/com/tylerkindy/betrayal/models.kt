@@ -29,12 +29,6 @@ data class Trait(
 data class GridLoc(val gridX: Int, val gridY: Int)
 
 @Serializable
-data class LobbyPlayer(
-    val id: Int,
-    val name: String
-)
-
-@Serializable
 data class Player(
     val id: Int,
     val characterName: String,
@@ -194,9 +188,6 @@ data class HeldCard(
 
 @Serializable
 data class LobbyRequest(val hostName: String)
-
-@Serializable
-data class JoinLobbyRequest(val name: String)
 
 @Serializable
 data class GameRequest(val name: String, val numPlayers: Int)

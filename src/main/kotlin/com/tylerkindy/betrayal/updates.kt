@@ -16,10 +16,6 @@ val lobbyStates = ConcurrentHashMap<String, LobbyState>()
 data class LobbyState(val players: List<PlayerState> = listOf())
 data class PlayerState(val name: String, val session: DefaultWebSocketSession)
 
-
-val lobbyUpdateManager = UpdateManager { lobbyId ->
-    lobbyStates[lobbyId] ?: throw IllegalArgumentException("No lobby with ID $lobbyId")
-}
 val gameUpdateManager = UpdateManager { gameId ->
     GameUpdate(
         rooms = getRooms(gameId),
@@ -30,12 +26,6 @@ val gameUpdateManager = UpdateManager { gameId ->
         monsters = getMonsters(gameId)
     )
 }
-
-@Serializable
-data class LobbyUpdate(
-    val hostId: Int,
-    val players: List<LobbyPlayer>
-)
 
 @Serializable
 data class GameUpdate(
