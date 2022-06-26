@@ -86,8 +86,14 @@ val lobbyRoutes: Routing.() -> Unit = {
 
                     when (message) {
                         is LobbyClientMessage.StartGame -> {
-                            startGame(lobbyId)
-                            return@webSocket close(CloseReason(CloseReason.Codes.NORMAL, "Game started"))
+                            if (startGame(lobbyId)) {
+                                return@webSocket close(
+                                    CloseReason(
+                                        CloseReason.Codes.NORMAL,
+                                        "Game started"
+                                    )
+                                )
+                            }
                         }
                     }
                 }
@@ -138,6 +144,10 @@ sealed class LobbyServerMessage {
     @Serializable
     @SerialName("join")
     object JoinGame : LobbyServerMessage()
+
+    @Serializable
+    @SerialName("start-game/error")
+    data class StartGameError(val reason: String) : LobbyServerMessage()
 }
 
 @Serializable
@@ -147,9 +157,18 @@ sealed class LobbyClientMessage {
     object StartGame : LobbyClientMessage()
 }
 
-private suspend fun startGame(lobbyId: String) {
+private suspend fun DefaultWebSocketServerSession.startGame(lobbyId: String): Boolean {
+    suspend fun error(reason: String): Boolean {
+        send(Frame.Text(Json.encodeToString(LobbyServerMessage.StartGameError(reason))))
+        return false
+    }
+
     val state = lobbyStates[lobbyId]!!
     val gameName = "name"
+
+    if (!(3..6).contains(state.players.size)) {
+        return error("Must have between 3 and 6 players")
+    }
 
     transaction {
         Games.insert {
@@ -171,6 +190,8 @@ private suspend fun startGame(lobbyId: String) {
     state.players.forEach { player ->
         player.session.send(joinGameMessage)
     }
+
+    return true
 }
 
 private fun insertStartingPlayers(gameId: String, players: List<PlayerState>) {
