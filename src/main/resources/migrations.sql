@@ -142,3 +142,7 @@ DROP TABLE "lobbyPlayers";
 
 --changeset tkindy:17
 DROP TABLE "lobbies";
+
+--changeset tkindy:18
+ALTER TABLE "players"
+  DROP COLUMN "password";

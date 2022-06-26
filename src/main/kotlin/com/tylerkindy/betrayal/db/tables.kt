@@ -13,7 +13,6 @@ object Players : Table() {
     val id = integer("id")
     val gameId = varchar("gameId", 6)
     val name = varchar("name", 20).nullable()
-    val password = varchar("password", 8).nullable()
     val characterId = short("characterId")
     val gridX = integer("gridX")
     val gridY = integer("gridY")

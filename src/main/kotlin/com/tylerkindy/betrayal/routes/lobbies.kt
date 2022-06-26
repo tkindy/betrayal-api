@@ -106,18 +106,6 @@ private fun buildLobbyId(): String {
         .toString()
 }
 
-private val playerPasswordCharacters =
-    ('A'..'Z').toList() +
-            ('a'..'z').toList() +
-            ('0'..'9').toList()
-
-private fun buildPlayerPassword(): String {
-    return (0 until 8)
-        .map { playerPasswordCharacters.random() }
-        .fold(StringBuilder(), StringBuilder::append)
-        .toString()
-}
-
 private inline fun <reified T> parseMessage(frame: Frame): T? {
     val textFrame = frame as? Frame.Text
         ?: return null
