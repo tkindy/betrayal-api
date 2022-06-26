@@ -130,9 +130,9 @@ sealed class LobbyClientMessage {
     object StartGame : LobbyClientMessage()
 }
 
-private suspend fun DefaultWebSocketServerSession.startGame(lobbyId: String): Boolean {
+private suspend fun WebSocketSession.startGame(lobbyId: String): Boolean {
     suspend fun error(reason: String): Boolean {
-        send(Frame.Text(Json.encodeToString(LobbyServerMessage.StartGameError(reason))))
+        send(Json.encodeToString(LobbyServerMessage.StartGameError(reason)))
         return false
     }
 
