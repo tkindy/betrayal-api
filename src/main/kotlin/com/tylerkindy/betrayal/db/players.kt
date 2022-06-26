@@ -32,6 +32,7 @@ private fun ResultRow.toPlayer(): Player {
 
     return Player(
         id = id,
+        name = this[Players.name],
         characterName = characterDef.name,
         color = characterDef.color,
         loc = GridLoc(this[Players.gridX], this[Players.gridY]),

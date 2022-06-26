@@ -31,6 +31,7 @@ data class GridLoc(val gridX: Int, val gridY: Int)
 @Serializable
 data class Player(
     val id: Int,
+    val name: String,
     val characterName: String,
     val color: CharacterColor,
     val loc: GridLoc,
