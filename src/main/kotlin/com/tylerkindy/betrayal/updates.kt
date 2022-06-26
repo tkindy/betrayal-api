@@ -1,16 +1,10 @@
 package com.tylerkindy.betrayal
 
 import com.tylerkindy.betrayal.db.*
-import io.ktor.websocket.*
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.serialization.Serializable
 import java.util.concurrent.ConcurrentHashMap
-
-val lobbyStates = ConcurrentHashMap<String, LobbyState>()
-
-data class LobbyState(val players: List<PlayerState> = listOf())
-data class PlayerState(val name: String, val session: DefaultWebSocketSession)
 
 val gameUpdateManager = UpdateManager { gameId ->
     GameUpdate(

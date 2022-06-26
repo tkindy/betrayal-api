@@ -1,8 +1,11 @@
 package com.tylerkindy.betrayal.routes
 
-import com.tylerkindy.betrayal.*
+import com.tylerkindy.betrayal.Lobby
+import com.tylerkindy.betrayal.LobbyRequest
 import com.tylerkindy.betrayal.db.*
+import com.tylerkindy.betrayal.gameUpdateManager
 import com.tylerkindy.betrayal.routes.LobbyServerMessage.PlayersMessage
+import com.tylerkindy.betrayal.validatePlayerName
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -16,7 +19,13 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import org.jetbrains.exposed.sql.insert
 import org.jetbrains.exposed.sql.transactions.transaction
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.collections.set
+
+data class LobbyState(val players: List<PlayerState> = listOf())
+data class PlayerState(val name: String, val session: WebSocketSession)
+
+val lobbyStates = ConcurrentHashMap<String, LobbyState>()
 
 val lobbyRoutes: Routing.() -> Unit = {
     route("lobbies") {
