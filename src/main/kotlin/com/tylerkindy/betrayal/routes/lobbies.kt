@@ -131,5 +131,5 @@ data class NameMessage(val name: String)
 sealed class LobbyServerMessage {
     @Serializable
     @SerialName("players")
-    data class PlayersMessage(val players: List<String>): LobbyServerMessage()
+    data class PlayersMessage(val players: List<String>) : LobbyServerMessage()
 }
