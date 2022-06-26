@@ -68,14 +68,12 @@ val lobbyRoutes: Routing.() -> Unit = {
                     )
                 }!!
 
-                val playerNamesFrame =
-                    Frame.Text(
-                        Json.encodeToString(
-                            PlayersMessage(players = newState.players.map { it.name }) as LobbyServerMessage
-                        )
+                val playerNamesMessage =
+                    Json.encodeToString(
+                        PlayersMessage(players = newState.players.map { it.name }) as LobbyServerMessage
                     )
                 newState.players.forEach { player ->
-                    player.session.send(playerNamesFrame)
+                    player.session.send(playerNamesMessage)
                 }
 
                 // Wait for client to close the WebSocket
@@ -87,11 +85,13 @@ val lobbyRoutes: Routing.() -> Unit = {
                     )
                 }!!
 
-                val newPlayerNamesFrame = Frame.Text(Json.encodeToString(
-                    removedState.players.map { it.name }
-                ))
+                val newPlayerNamesMessage =
+                    Json.encodeToString(
+                        PlayersMessage(players = removedState.players.map { it.name }) as LobbyServerMessage
+                    )
+
                 removedState.players.forEach { player ->
-                    player.session.send(newPlayerNamesFrame)
+                    player.session.send(newPlayerNamesMessage)
                 }
             }
         }
