@@ -5,8 +5,11 @@ import com.tylerkindy.betrayal.Player
 import com.tylerkindy.betrayal.TraitName
 import com.tylerkindy.betrayal.defs.CharacterDefinition
 import com.tylerkindy.betrayal.defs.characters
-import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.ResultRow
+import org.jetbrains.exposed.sql.and
+import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
+import org.jetbrains.exposed.sql.update
 
 fun getPlayers(gameId: String): List<Player> {
     return transaction {
@@ -42,24 +45,6 @@ private fun ResultRow.toPlayer(): Player {
         knowledge = characterDef.knowledge.toTrait(this[Players.knowledgeIndex].toInt()),
         cards = getPlayerInventory(this[Players.gameId], id)
     )
-}
-
-fun insertStartingPlayers(gameId: String, numPlayers: Int) {
-    val characters = getRandomCharacters(numPlayers)
-    transaction {
-        characters.forEach { character ->
-            Players.insert {
-                it[this.gameId] = gameId
-                it[characterId] = character.id
-                it[gridX] = entranceHallLoc.gridX
-                it[gridY] = entranceHallLoc.gridY
-                it[speedIndex] = character.speed.startingIndex.toShort()
-                it[mightIndex] = character.might.startingIndex.toShort()
-                it[sanityIndex] = character.sanity.startingIndex.toShort()
-                it[knowledgeIndex] = character.knowledge.startingIndex.toShort()
-            }
-        }
-    }
 }
 
 fun getRandomCharacters(numPlayers: Int): List<CharacterDefinition> {
