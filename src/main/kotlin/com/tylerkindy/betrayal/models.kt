@@ -31,6 +31,7 @@ data class GridLoc(val gridX: Int, val gridY: Int)
 @Serializable
 data class Player(
     val id: Int,
+    val name: String,
     val characterName: String,
     val color: CharacterColor,
     val loc: GridLoc,
@@ -187,7 +188,10 @@ data class HeldCard(
 )
 
 @Serializable
-data class GameRequest(val name: String, val numPlayers: Int)
+data class LobbyRequest(val hostName: String)
+
+@Serializable
+data class Lobby(val id: String)
 
 @Serializable
 data class Game(val id: String, val name: String)

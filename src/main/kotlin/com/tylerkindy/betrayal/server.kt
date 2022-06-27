@@ -1,6 +1,7 @@
 package com.tylerkindy.betrayal
 
 import com.tylerkindy.betrayal.routes.gameRoutes
+import com.tylerkindy.betrayal.routes.lobbyRoutes
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
@@ -67,6 +68,7 @@ fun main() {
         }
 
         routing {
+            lobbyRoutes()
             gameRoutes()
         }
     }.start(wait = true)

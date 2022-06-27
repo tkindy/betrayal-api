@@ -1,19 +1,21 @@
 package com.tylerkindy.betrayal.routes
 
 import com.tylerkindy.betrayal.Game
-import com.tylerkindy.betrayal.GameRequest
-import com.tylerkindy.betrayal.db.*
+import com.tylerkindy.betrayal.db.Games
+import com.tylerkindy.betrayal.db.Players
 import com.tylerkindy.betrayal.gameUpdateManager
+import com.tylerkindy.betrayal.routes.GameClientMessage.NameMessage
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
 import io.ktor.server.websocket.*
 import io.ktor.websocket.*
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.and
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.transactions.transaction
 
@@ -40,49 +42,39 @@ val gameRoutes: Routing.() -> Unit = {
             diceRollRoutes()
 
             webSocket {
-                val gameId = call.parameters["gameId"]!!
-                gameUpdateManager.getUpdates(gameId).collect { update ->
-                    send(Frame.Text(Json.encodeToString(update)))
+                val id = call.parameters["gameId"]!!
+
+                val (name) = parseMessage<GameClientMessage>(incoming.receive())
+                        as? NameMessage
+                    ?: return@webSocket close(
+                        CloseReason(
+                            CloseReason.Codes.VIOLATED_POLICY,
+                            "Expected name message"
+                        )
+                    )
+
+                transaction {
+                    Players.select { (Players.gameId eq id) and (Players.name eq name) }
+                        .firstOrNull()
+                }
+                    ?: return@webSocket close(
+                        CloseReason(
+                            CloseReason.Codes.VIOLATED_POLICY,
+                            "Player $name is not part of this game"
+                        )
+                    )
+
+                gameUpdateManager.getUpdates(id).collect { update ->
+                    send(Json.encodeToString(update))
                 }
             }
-        }
-
-        post {
-            val gameRequest = call.receiveOrNull<GameRequest>()
-                ?: return@post call.respond(HttpStatusCode.BadRequest, "'name' and 'numPlayers' are required")
-
-            if (gameRequest.name.length > 32) {
-                return@post call.respond(HttpStatusCode.BadRequest, "Name can only be up to 32 characters")
-            }
-            if (!(3..6).contains(gameRequest.numPlayers)) {
-                return@post call.respond(HttpStatusCode.BadRequest, "Must have between 3 and 6 players")
-            }
-
-            val gameId = buildGameId()
-
-            transaction {
-                Games.insert {
-                    it[id] = gameId
-                    it[name] = gameRequest.name
-                }
-            }
-
-            insertStartingRooms(gameId)
-            insertStartingPlayers(gameId, gameRequest.numPlayers)
-            createRoomStack(gameId)
-            createCardStacks(gameId)
-
-            gameUpdateManager.sendUpdate(gameId)
-
-            call.respond(Game(id = gameId, name = gameRequest.name))
         }
     }
 }
 
-private val gameIdCharacters = ('A'..'Z').toList()
-private fun buildGameId(): String {
-    return (0 until 6)
-        .map { gameIdCharacters.random() }
-        .fold(StringBuilder()) { builder, char -> builder.append(char) }
-        .toString()
+@Serializable
+sealed class GameClientMessage {
+    @Serializable
+    @SerialName("name")
+    data class NameMessage(val name: String) : GameClientMessage()
 }
