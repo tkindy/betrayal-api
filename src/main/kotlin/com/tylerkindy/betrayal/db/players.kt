@@ -15,6 +15,7 @@ fun getPlayers(gameId: String): List<Player> {
     return transaction {
         Players.select { Players.gameId eq gameId }
             .map { it.toPlayer() }
+            .sortedBy { it.id }
     }
 }
 
