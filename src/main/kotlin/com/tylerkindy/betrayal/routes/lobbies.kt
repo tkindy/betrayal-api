@@ -141,7 +141,11 @@ sealed class LobbyClientMessage {
 
 private suspend fun WebSocketSession.startGame(lobbyId: String): Boolean {
     suspend fun error(reason: String): Boolean {
-        send(Json.encodeToString(LobbyServerMessage.StartGameError(reason)))
+        send(
+            Json.encodeToString(
+                LobbyServerMessage.StartGameError(reason) as LobbyServerMessage
+            )
+        )
         return false
     }
 
