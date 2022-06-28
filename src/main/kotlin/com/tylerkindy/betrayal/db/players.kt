@@ -28,6 +28,14 @@ fun getPlayer(gameId: String, playerId: Int): Player {
     }
 }
 
+fun getPlayerByName(gameId: String, name: String): Player? {
+    return transaction {
+        Players.select { (Players.gameId eq gameId) and (Players.name eq name) }
+            .firstOrNull()
+            ?.run(ResultRow::toPlayer)
+    }
+}
+
 private fun ResultRow.toPlayer(): Player {
     val id = this[Players.id]
     val characterId = this[Players.characterId]

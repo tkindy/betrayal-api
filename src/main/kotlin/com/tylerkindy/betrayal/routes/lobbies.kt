@@ -46,13 +46,6 @@ val lobbyRoutes: Routing.() -> Unit = {
         route("{lobbyId}") {
             webSocket {
                 val lobbyId = call.parameters["lobbyId"]!!
-                val curState = lobbyStates[lobbyId]
-                    ?: return@webSocket close(
-                        CloseReason(
-                            CloseReason.Codes.VIOLATED_POLICY,
-                            "Unknown lobby"
-                        )
-                    )
 
                 val (name) = parseMessage<NameMessage>(incoming.receive())
                     ?: return@webSocket close(
@@ -61,6 +54,14 @@ val lobbyRoutes: Routing.() -> Unit = {
                             "Expected name message"
                         )
                     )
+                val curState = lobbyStates[lobbyId]
+                if (curState == null) {
+                    getPlayerByName(lobbyId, name)?.let {
+                        send(Json.encodeToString(LobbyServerMessage.JoinGame as LobbyServerMessage))
+                        return@webSocket close(CloseReason(CloseReason.Codes.NORMAL, "Game has already started"))
+                    }
+                    return@webSocket close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, "Unknown lobby"))
+                }
 
                 validatePlayerName(name, curState)?.let { error ->
                     return@webSocket close(CloseReason(CloseReason.Codes.VIOLATED_POLICY, error))
@@ -88,6 +89,7 @@ val lobbyRoutes: Routing.() -> Unit = {
                     when (message) {
                         is LobbyClientMessage.StartGame -> {
                             if (startGame(lobbyId)) {
+                                lobbyStates -= lobbyId
                                 return@webSocket close(
                                     CloseReason(
                                         CloseReason.Codes.NORMAL,
