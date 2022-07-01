@@ -43,4 +43,32 @@ class CardsKtTest : StringSpec({
                 {"type":"MIN","minimum":3}
             """.trimIndent()
     }
+
+    "parsing of events" {
+        events[3] shouldBe EventDefinition(
+            id = 3,
+            name = "Phone Call",
+            condition = null,
+            flavorText = "A phone rings in the room. You feel compelled to answer it.",
+            description = "Roll 2 dice. A sweet little granny voice says:\n<rollTable>",
+            rollTable = listOf(
+                RollTableRow(
+                    RollTarget.ExactRollTarget(4),
+                    "“Tea and cakes! Tea and cakes! You always were my favorite!” Gain 1 Sanity."
+                ),
+                RollTableRow(
+                    RollTarget.ExactRollTarget(3),
+                    "“I’m always here for you, Pattycakes. Watching…” Gain 1 Knowledge."
+                ),
+                RollTableRow(
+                    RollTarget.RangeRollTarget(1..2),
+                    "“I’m here, Sweetums! Give us a kiss!” Take 1 die of mental damage."
+                ),
+                RollTableRow(
+                    RollTarget.ExactRollTarget(0),
+                    "“Bad little children must be punished!” Take 2 dice of physical damage."
+                )
+            )
+        )
+    }
 })
