@@ -163,7 +163,8 @@ data class OmenDefinition(
     }
 }
 
-val csvFormat = CSVFormat.DEFAULT.builder().setNullString("").setHeader().setSkipHeaderRecord(true).build()
+val csvFormat: CSVFormat =
+    CSVFormat.DEFAULT.builder().setNullString("").setHeader().build()
 
 val events = csvFormat
     .parse(InputStreamReader(EventDefinition::class.java.getResourceAsStream("/events.csv")))
