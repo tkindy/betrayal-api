@@ -16,7 +16,7 @@ data class RoomDefinition(
 )
 
 private val fileStream = RoomDefinition::class.java.getResourceAsStream("/rooms.csv")
-val rooms = CSVFormat.DEFAULT.withNullString("").withFirstRecordAsHeader()
+val rooms = CSVFormat.DEFAULT.builder().setNullString("").setHeader().build()
     .parse(InputStreamReader(fileStream))
     .map {
         RoomDefinition(
