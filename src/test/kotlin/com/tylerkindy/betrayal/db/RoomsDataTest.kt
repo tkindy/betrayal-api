@@ -30,7 +30,7 @@ val invalidRotations = arbitrary(listOf(Short.MIN_VALUE, -1, 4, Short.MAX_VALUE)
     it.random.nextInt(invalidRotationValues.indices).let { i -> invalidRotationValues[i] }.toShort()
 }
 
-class RoomsKtTest : DescribeSpec({
+class RoomsDataTest : DescribeSpec({
     useDatabase()
 
     describe("returnRoomToStack") {

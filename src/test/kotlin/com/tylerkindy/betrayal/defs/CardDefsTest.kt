@@ -5,7 +5,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
-class CardsKtTest : StringSpec({
+class CardDefsTest : StringSpec({
     "parsing of RangeRollTargets" {
         val target = RollTarget.parse("3-5")
 

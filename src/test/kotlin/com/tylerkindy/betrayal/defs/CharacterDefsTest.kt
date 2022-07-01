@@ -5,7 +5,7 @@ import io.kotest.assertions.throwables.shouldThrow
 import io.kotest.core.spec.style.DescribeSpec
 import io.kotest.matchers.shouldBe
 
-class CharacterKtTest : DescribeSpec({
+class CharacterDefsTest : DescribeSpec({
     describe("characters") {
         it("parses correctly") {
             characters[2] shouldBe CharacterDefinition(
