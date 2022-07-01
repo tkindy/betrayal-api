@@ -78,8 +78,8 @@ val lobbyRoutes: Routing.() -> Unit = {
                     Json.encodeToString(
                         PlayersMessage(players = newState.players.map { it.name }) as LobbyServerMessage
                     )
-                newState.players.forEach { player ->
-                    player.session.send(playerNamesMessage)
+                newState.players.forEach {
+                    it.session.send(playerNamesMessage)
                 }
 
                 for (frame in incoming) {
@@ -215,7 +215,7 @@ private suspend fun removePlayerThatLeft(lobbyId: String, player: PlayerState) {
             PlayersMessage(players = removedState.players.map { it.name }) as LobbyServerMessage
         )
 
-    removedState.players.forEach { player ->
-        player.session.send(newPlayerNamesMessage)
+    removedState.players.forEach {
+        it.session.send(newPlayerNamesMessage)
     }
 }
