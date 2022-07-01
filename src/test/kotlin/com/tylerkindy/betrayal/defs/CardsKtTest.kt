@@ -71,4 +71,28 @@ class CardsKtTest : StringSpec({
             )
         )
     }
+
+    "parsing of items" {
+        items[2] shouldBe ItemDefinition(
+            id = 2,
+            name = "Bell",
+            subtype = null,
+            flavorText = "A brass bell that makes a resonant clang.",
+            description = """
+                Gain 1 Sanity now.
+                Lose 1 Sanity if you lose the Bell.
+                Once during your turn after the haunt is revealed, you can attempt a Sanity roll to use the Bell:
+                <rollTable>""".trimIndent(),
+            rollTable = listOf(
+                RollTableRow(
+                    RollTarget.MinRollTarget(5),
+                    "Move any number of unimpeded heroes 1 space closer to you."
+                ),
+                RollTableRow(
+                    RollTarget.RangeRollTarget(0..4),
+                    "The traitor can move any number of monsters 1 space closer to you. (If you are the traitor, this result has no effect.) If there is no traitor, all monsters move 1 space closer to you."
+                )
+            )
+        )
+    }
 })
