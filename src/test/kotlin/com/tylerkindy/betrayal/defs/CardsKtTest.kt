@@ -95,4 +95,27 @@ class CardsKtTest : StringSpec({
             )
         )
     }
+
+    "parsing of omens" {
+        omens[5] shouldBe OmenDefinition(
+            id = 5,
+            name = "Cat",
+            subtype = Subtype.COMPANION,
+            flavorText = "It crossed your path, and you’re supposed to have bad luck. But maybe you crossed its path, and it’s the one that isn’t too happy about it. Now it accompanies you.",
+            description = """
+                You may call on the Cat for luck before your trait roll. Roll 1 die:
+                <rollTable>
+                This omen cannot be dropped, traded, or stolen.""".trimIndent(),
+            rollTable = listOf(
+                RollTableRow(
+                    RollTarget.ExactRollTarget(0),
+                    "Subtract 2 from the result of that trait roll."
+                ),
+                RollTableRow(
+                    RollTarget.MinRollTarget(1),
+                    "Add 2 to the result of the trait roll."
+                )
+            )
+        )
+    }
 })
