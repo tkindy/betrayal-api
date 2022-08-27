@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
@@ -12,6 +13,7 @@ plugins {
     application
     id("com.github.ben-manes.versions") version "0.+"
     id("org.liquibase.gradle") version "2.+"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
 }
 group = "com.tylerkindy"
 version = "1.0-SNAPSHOT"
@@ -57,7 +59,7 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.tylerkindy.betrayal.ServerKt")
+    mainClass.set("com.tylerkindy.betrayal.MainKt")
 }
 
 liquibase {
@@ -81,6 +83,10 @@ tasks.register("stage") {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+tasks.withType<ShadowJar> {
+    archiveClassifier.set("standalone")
 }
 
 dependencyLocking {
