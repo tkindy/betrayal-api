@@ -154,8 +154,8 @@ private suspend fun WebSocketSession.startGame(lobbyId: String): Boolean {
     val state = lobbyStates[lobbyId]!!
     val gameName = "name"
 
-    if (!(3..6).contains(state.players.size)) {
-        return error("Must have between 3 and 6 players")
+    if (state.players.size > 6) {
+        return error("Must have fewer than 6 players")
     }
 
     transaction {
