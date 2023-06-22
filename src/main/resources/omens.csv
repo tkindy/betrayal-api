@@ -22,7 +22,7 @@ This omen cannot be dropped, traded, or stolen.","0  Subtract 2 from the result 
 <rollTable>","4+  You see the truth. Search the item or event stack for a card of your choice. Shuffle that stack. Then place that card on top.
 1-3  You avert your eyes. Lose 1 Sanity.
 0  You stare into Hell. Lose 2 Sanity."
-8,Mask,,A somber mask to hide your intentions.,"Once your during your turn, you can attempt a Sanity roll to use the Mask:
+8,Mask,,A somber mask to hide your intentions.,"Once during your turn, you can attempt a Sanity roll to use the Mask:
 <rollTable>","4+  You can put on or take off the Mask. If you put on the Mask, gain 2 Knowledge and lose 2 Sanity. If you take off the Mask, gain 2 Sanity and lose 2 Knowledge.
 0-3  You can’t use the Mask this turn."
 9,Girl,COMPANION,"A girl.
